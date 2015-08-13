@@ -1,0 +1,22 @@
+#!/usr/bin/env python
+
+import build
+import test
+import yaml
+
+configpath = "~/.dapple"
+
+buildpath = "build.yaml"
+with open(buildpath) as buildfile:
+    app = yaml.load(buildfile)
+    for name, _ in app.iteritems():
+        build.load_module(name, app)
+    paths = []
+    for name, module_paths in build.modules.iteritems():
+        paths.extend(module_paths)
+    #TODO these need to be copied from their sources
+    # to a temp directory with packages moved to their
+    # correct locations. Right now this works because
+    # the true source path matches the import path.
+    pack = build.compile_sources(paths, ".")
+    test.run_tests(pack)

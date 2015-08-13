@@ -1,7 +1,6 @@
 import yaml
 import subprocess
 import json
-import test
 
 # Module name to list of paths
 modules = {}
@@ -42,18 +41,3 @@ def load_module(module_name, app_yaml):
     paths = get_paths(module["src"])
     modules[module_name] = paths
 
-
-buildpath = "build.yaml"
-with open(buildpath) as buildfile:
-    build = yaml.load(buildfile)
-    for name, _ in build.iteritems():
-        load_module(name, build)
-    paths = []
-    for name, module_paths in modules.iteritems():
-        paths.extend(module_paths)
-    #TODO these need to be copied from their sources
-    # to a temp directory with packages moved to their
-    # correct locations. Right now this works because
-    # the true source path matches the import path.
-    pack = compile_sources(paths, ".")
-    test.run_tests(pack)
