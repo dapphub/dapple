@@ -24,14 +24,14 @@ def run_tests(pack):
         print "Testing", typename
         binary = info["binary"].decode('hex')
         try:
-            tmp = EvmContract(abi, binary, typename, [], gas=3000000) 
+            tmp = EvmContract(abi, binary, typename, [], gas=10**10) 
         except Exception, e:
         #    print typename, info
             raise e
         for func in dir(tmp):
             if func.startswith("test"):
                 print "  " + func
-                contract = EvmContract(abi, binary, typename, [], gas=3000000) 
+                contract = EvmContract(abi, binary, typename, [], gas=10**10) 
                 if hasattr(contract, "setUp"):
                     contract.setUp()
                 getattr(contract, func)()
