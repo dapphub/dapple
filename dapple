@@ -3,6 +3,7 @@
 import build
 import test
 import yaml
+import sys
 
 configpath = "~/.dapple"
 
@@ -19,4 +20,8 @@ with open(buildpath) as buildfile:
     # correct locations. Right now this works because
     # the true source path matches the import path.
     pack = build.compile_sources(paths, ".")
-    test.run_tests(pack)
+    if len(sys.argv) < 3:
+        test.run_tests(pack)
+    else:
+        if sys.argv[1] == "test":
+            test.run_tests(pack, sys.argv[2])
