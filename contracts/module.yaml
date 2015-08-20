@@ -1,3 +1,4 @@
-example:
-    "simple.sol": true
-    "simple_test.sol": true
+srcs:
+    example:
+        "simple.sol": true
+        "simple_test.sol": true

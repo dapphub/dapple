@@ -13,6 +13,7 @@ with open(buildpath) as buildfile:
     for name, _ in app.iteritems():
         build.load_module(name, app)
     paths = []
+    bins = []
     for name, module_paths in build.modules.iteritems():
         paths.extend(module_paths)
     #TODO these need to be copied from their sources
@@ -20,8 +21,11 @@ with open(buildpath) as buildfile:
     # correct locations. Right now this works because
     # the true source path matches the import path.
     pack = build.compile_sources(paths, ".")
-    if len(sys.argv) < 3:
+    if len(sys.argv) < 2:
         test.run_tests(pack)
     else:
         if sys.argv[1] == "test":
             test.run_tests(pack, sys.argv[2])
+        if sys.argv[1] == "build":
+            print build.bins
+            build.write_binaries("bins.json", pack, build.bins)
