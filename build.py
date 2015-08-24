@@ -51,5 +51,7 @@ def write_binaries(path, pack, names):
     bins = []
     with open(path, "w") as f:
         for name in names:
-            bins.append(pack[name])
-        f.write(json.dumps(bins));
+            contract = pack[name]
+            contract["typename"] = name
+            bins.append(contract)
+        f.write(json.dumps(bins, indent=4));
