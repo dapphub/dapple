@@ -35,7 +35,7 @@ def run_tests(pack, testregex=None):
         for func in dir(tmp):
             if func.startswith("test"):
                 print "  " + func
-                contract = EvmContract(abi, binary, typename, [], gas=10**9) 
+                contract = EvmContract(abi, binary, typename, [], gas=10**9, endowment=1000000) 
                 if hasattr(contract, "setUp"):
                     contract.setUp()
                 getattr(contract, func)()
