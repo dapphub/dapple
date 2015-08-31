@@ -16,6 +16,9 @@ with open(buildpath) as buildfile:
             buildobj = yaml.load(buildfile)
             app = build.AppBuilder(buildobj)
             app.build()
-            app.test(sys.argv[2])
+            test_regex = ""
+            if len(sys.argv) >= 3:
+                test_regex = sys.argv[2]
+            app.test(test_regex)
         if sys.argv[1] == "build":
             print "UNIMPLEMENTED - use `test`"
