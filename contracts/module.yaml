@@ -2,3 +2,5 @@ srcs:
     example:
         "simple.sol": true
         "simple_test.sol": true
+    "test.sol": true
+    "debug.sol": true

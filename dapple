@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-import build
-import test
+import dapple
 import yaml
 import sys
 
@@ -14,12 +13,12 @@ with open(buildpath) as buildfile:
     else:
         if sys.argv[1] == "test":
             buildobj = yaml.load(buildfile)
-            app = build.AppBuilder(buildobj)
-            app.build()
+            dapp = dapple.Dapp(buildobj)
+            dapp.build()
             test_regex = ""
             if len(sys.argv) >= 3:
                 test_regex = sys.argv[2]
-            app.test(test_regex)
-            app.write_binaries("/tmp/pack.json")
+            dapp.test(test_regex)
+            dapp.write_binaries("/tmp/pack.json")
         if sys.argv[1] == "build":
             print "UNIMPLEMENTED - use `test`"

@@ -8,7 +8,7 @@ import time
 import string
 from ethertdd import EvmContract
 
-class AppBuilder():
+class Dapp():
     def __init__(self, buildobj):
         self.buildobj = buildobj
         self.modules = {}
