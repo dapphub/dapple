@@ -20,5 +20,6 @@ with open(buildpath) as buildfile:
             if len(sys.argv) >= 3:
                 test_regex = sys.argv[2]
             app.test(test_regex)
+            app.write_binaries("/tmp/pack.json")
         if sys.argv[1] == "build":
             print "UNIMPLEMENTED - use `test`"

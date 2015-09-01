@@ -25,7 +25,7 @@ class AppBuilder():
         build_paths = []
         for name, module in self.modules.iteritems():
             alias_root_dir = module["alias_dir"]
-            module_alias_dir = alias_root_dir + "/" + name
+            module_alias_dir = alias_root_dir + "/" + module["alias"]
             if not os.path.exists(module_alias_dir):
                 os.makedirs(module_alias_dir)
 
@@ -33,7 +33,7 @@ class AppBuilder():
                 dirname = os.path.dirname(paths["aliased_src"])
                 if not os.path.exists(dirname):
                     os.makedirs(dirname)
-
+                
                 shutil.copy(paths["real_src"], paths["aliased_src"])
                 build_paths.append(paths["solc_src"])
 
@@ -45,7 +45,18 @@ class AppBuilder():
 
 
         self.built_pack = compile_sources(build_paths, self.build_dir)
-            
+
+    def write_binaries(self, path):
+        bins = []
+        with open(path, "w") as f:
+            for name, module in self.modules.iteritems():
+                if "bins" in module.keys():
+                    for name, ok in module["bins"].iteritems():
+                        if ok and name in self.built_pack.keys():
+                            contract = self.built_pack[name]
+                            contract["typename"] = name
+                            bins.append(contract)
+            f.write(json.dumps(bins, indent=4));
 
     def load_module(self, name, descriptor):
         alias_dir = self.build_dir
@@ -146,14 +157,5 @@ def compile_sources(source_paths, cwd):
     pack = json.loads(p)["contracts"]
     return pack
 
-
-def write_binaries(path, pack, names):
-    bins = []
-    with open(path, "w") as f:
-        for name in names:
-            contract = pack[name]
-            contract["typename"] = name
-            bins.append(contract)
-        f.write(json.dumps(bins, indent=4));
 
 
