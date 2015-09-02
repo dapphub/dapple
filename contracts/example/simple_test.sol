@@ -1,5 +1,5 @@
-import "dapple/contracts/test.sol";
-import "dapple/contracts/example/simple.sol";
+import "dapple/test.sol";
+import "dapple/example/simple.sol";
 
 contract ExampleTest is Test {
     function testBasicThing() 
