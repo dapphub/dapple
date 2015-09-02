@@ -1,4 +1,4 @@
-import "dapple/test/test.sol";
+import "dapple/contracts/test.sol";
 import "dapple/contracts/example/simple.sol";
 
 contract ExampleTest is Test {
