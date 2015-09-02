@@ -156,7 +156,7 @@ def compile_sources(source_paths, cwd):
         cmd.extend(source_paths)
         p = subprocess.check_output(cmd, cwd=cwd)
 
-    except IOError:
+    except subprocess.CalledProcessError:
         cmd = ['solc']
         cmd.extend(['--combined-json', 'abi,bin,interface'])
         cmd.extend(source_paths)
