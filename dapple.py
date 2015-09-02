@@ -25,7 +25,7 @@ class Dapp():
         build_paths = []
         for name, module in self.modules.iteritems():
             alias_root_dir = module["alias_dir"]
-            module_alias_dir = alias_root_dir + "/" + module["alias"]
+            module_alias_dir = alias_root_dir + "/" + module.get("alias", name)
             if not os.path.exists(module_alias_dir):
                 os.makedirs(module_alias_dir)
 
@@ -65,7 +65,7 @@ class Dapp():
             "name": name,
             "src_dir": real_dir,
             "alias_dir": alias_dir,
-            "alias": descriptor["alias"],
+            "alias": descriptor.get("alias", name),
             "sources": []
         }
 
@@ -98,15 +98,16 @@ class Dapp():
         suite = {}
 
         for typename, info in self.built_pack.iteritems():
+            binary = info.get("binary", info["bin"])
             if testregex is not None:
                 if not re.match(".*"+testregex+".*", typename, flags=re.IGNORECASE):
                     continue
             if typename == "Test": # base test matches too often
                 continue
             
-            if info["binary"] == "": # Abstract classes
+            if binary == "": # Abstract classes
                 continue
-            abi = info["json-abi"]
+            abi = info.get("json-abi", info["abi"])
             jabi = json.loads(abi)
             is_test = False
             for item in jabi:
@@ -116,7 +117,7 @@ class Dapp():
                 continue
 
             print "Testing", typename
-            binary = info["binary"].decode('hex')
+            binary = binary.decode('hex')
             tmp = None
             try:
                 tmp = EvmContract(abi, binary, typename, [], gas=10**9) 
@@ -149,10 +150,18 @@ def get_source_paths(descriptor_path, srcs=None):
 def compile_sources(source_paths, cwd):
     # copy contracts from true source files to temp directory
     # with imported contract names
-    cmd = ['solc']
-    cmd.extend(['--combined-json', 'json-abi,binary,sol-abi'])
-    cmd.extend(source_paths)
-    p = subprocess.check_output(cmd, cwd=cwd)
+    try:
+        cmd = ['solc']
+        cmd.extend(['--combined-json', 'json-abi,binary,sol-abi'])
+        cmd.extend(source_paths)
+        p = subprocess.check_output(cmd, cwd=cwd)
+
+    except subprocess.CalledProcessError:
+        cmd = ['solc']
+        cmd.extend(['--combined-json', 'abi,bin,interface'])
+        cmd.extend(source_paths)
+        p = subprocess.check_output(cmd, cwd=cwd)
+
     #print p
     pack = json.loads(p)["contracts"]
     return pack
