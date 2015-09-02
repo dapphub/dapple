@@ -39,6 +39,8 @@ class Dapp():
 
             cogfile_src = module["src_dir"] + "cogfile"
             cogfile_dest = module_alias_dir + "/cogfile"
+            #print alias_root_dir, module_alias_dir
+            #print cogfile_src, cogfile_dest
             if os.path.exists(cogfile_src):
                 shutil.copy(cogfile_src, cogfile_dest)
                 subprocess.check_output("python -m cogapp -r @cogfile", cwd=module_alias_dir, shell=True)
@@ -98,7 +100,11 @@ class Dapp():
         suite = {}
 
         for typename, info in self.built_pack.iteritems():
-            binary = info.get("binary", info["bin"])
+            binary = ""
+            if "binary" in info.keys():
+                binary = info["binary"]
+            else:
+                binary = info["bin"]
             if testregex is not None:
                 if not re.match(".*"+testregex+".*", typename, flags=re.IGNORECASE):
                     continue
@@ -107,7 +113,11 @@ class Dapp():
             
             if binary == "": # Abstract classes
                 continue
-            abi = info.get("json-abi", info["abi"])
+            abi = ""
+            if "json-abi" in info.keys():
+                abi = info["json-abi"]
+            else:
+                abi = info["abi"]
             jabi = json.loads(abi)
             is_test = False
             for item in jabi:

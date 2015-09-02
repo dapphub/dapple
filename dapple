@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+#TODO  use this:  https://docs.python.org/2/library/argparse.html#module-argparse
+
 
 import dapple
 import yaml
@@ -11,14 +13,18 @@ with open(buildpath) as buildfile:
     if len(sys.argv) < 2:
         print "bad usage"
     else:
-        if sys.argv[1] == "test":
+        cmd = sys.argv[1]
+        dapp = None
+        if cmd == "test" or cmd == "build" or cmd == "stage":
             buildobj = yaml.load(buildfile)
             dapp = dapple.Dapp(buildobj)
+        if cmd == "test":
             dapp.build()
             test_regex = ""
             if len(sys.argv) >= 3:
                 test_regex = sys.argv[2]
             dapp.test(test_regex)
+        if cmd == "build":
+            dapp.build()
             dapp.write_binaries("/tmp/pack.json")
-        if sys.argv[1] == "build":
-            print "UNIMPLEMENTED - use `test`"
+
