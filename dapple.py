@@ -6,7 +6,7 @@ import os
 import shutil
 import time
 import string
-from ethertdd import EvmContract
+from ethertdd import set_gas_limit, EvmContract
 
 class Dapp():
     def __init__(self, buildobj):
@@ -14,6 +14,7 @@ class Dapp():
         self.modules = {}
         self.built_pack = []
         self.build_dir = ""
+        set_gas_limit(100000000) # arbitrarily high limit
 
     def build(self):
         self.build_dir = "/tmp/dapple-build/"
