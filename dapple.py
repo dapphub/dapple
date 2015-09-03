@@ -132,7 +132,6 @@ class Dapp():
             try:
                 tmp = EvmContract(abi, binary, typename, [], gas=10**9) 
             except Exception, e:
-                print typename, info
                 raise e
             for func in dir(tmp):
                 if func.startswith("test"):
