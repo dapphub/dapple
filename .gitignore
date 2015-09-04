@@ -1,2 +1,3 @@
 *.pyc
 *.sw*
+*bower_components*

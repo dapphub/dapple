@@ -26,5 +26,8 @@ with open(buildpath) as buildfile:
             dapp.test(test_regex)
         if cmd == "build":
             dapp.build()
-            dapp.write_binaries("/tmp/pack.json")
+            path = "/tmp/pack.json"
+            if len(sys.argv) >= 3:
+                path = sys.argv[2]
+            dapp.write_binaries(path)
 
