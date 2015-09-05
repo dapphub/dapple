@@ -18,16 +18,19 @@ with open(buildpath) as buildfile:
         if cmd == "test" or cmd == "build" or cmd == "stage":
             buildobj = yaml.load(buildfile)
             dapp = dapple.Dapp(buildobj)
-        if cmd == "test":
+        elif cmd == "test":
             dapp.build()
             test_regex = ""
             if len(sys.argv) >= 3:
                 test_regex = sys.argv[2]
             dapp.test(test_regex)
-        if cmd == "build":
+        elif cmd == "stage":
             dapp.build()
             path = "/tmp/pack.json"
             if len(sys.argv) >= 3:
                 path = sys.argv[2]
             dapp.write_binaries(path)
+        else:
+            print "Unrecognized option: " + sys.argv[1]
+
 

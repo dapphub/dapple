@@ -1,7 +1,7 @@
-var pack =
 /*[[[cog
 import cog
 with open('latest.pack') as latest:
+    cog.outl("var pack = ")
     cog.outl(latest.read())
 ]]]*/
 
