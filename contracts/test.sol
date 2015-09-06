@@ -17,14 +17,12 @@ contract Test is Debug {
     function fail() {
         failed = true;
     }
-    // TODO generate assets: type x has_error_msg
     function assertTrue(bool what) {
         if( !what ) {
             logs("assertTrue was false");
             fail();
         }
     }
-
     function assertTrue(bool what, bytes32 error) {
         if( !what ) {
             logs("assertTrue was false");
@@ -45,8 +43,6 @@ contract Test is Debug {
             fail();
         }
     }
-
-
     function assertEq0(bytes a, bytes b) {
         var len = a.length;
         var ok = true;
@@ -64,7 +60,6 @@ contract Test is Debug {
             fail();
         }
     }
-
     function assertEq0(bytes a, bytes b, bytes32 err) {
         var len = a.length;
         var ok = true;
