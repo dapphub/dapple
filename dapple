@@ -7,7 +7,6 @@ import yaml
 import sys
 
 configpath = "~/.dapple"
-
 buildpath = "build.yaml"
 with open(buildpath) as buildfile:
     if len(sys.argv) < 2:
@@ -18,7 +17,8 @@ with open(buildpath) as buildfile:
         if cmd == "test" or cmd == "build" or cmd == "stage":
             buildobj = yaml.load(buildfile)
             dapp = dapple.Dapp(buildobj)
-        elif cmd == "test":
+
+        if cmd == "test":
             dapp.build()
             test_regex = ""
             if len(sys.argv) >= 3:
