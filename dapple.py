@@ -8,6 +8,8 @@ import time
 import string
 from ethertdd import EvmContract
 
+import click
+
 def cog(infile, outfile=None, env=None, cwd=".", replace=False):
     cmd = "python -m cogapp"
     if outfile != None:

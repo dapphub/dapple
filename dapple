@@ -1,40 +1,44 @@
 #!/usr/bin/env python
-#TODO  use this:  https://docs.python.org/2/library/argparse.html#module-argparse
-
 
 import dapple
 import yaml
 import sys
-
 import subprocess
+import click
 
-configpath = "~/.dapple"
-buildpath = "build.yaml"
-with open(buildpath) as buildfile:
-    if len(sys.argv) < 2:
-        print "bad usage"
+def load_dapp(buildpath="build.yaml"):
+    with open(buildpath) as buildfile:
+        buildobj = yaml.load(buildfile)
+        dapp = dapple.Dapp(buildobj)
+        return dapp
+
+
+@click.group()
+def cli():
+    pass
+
+
+@cli.command()
+@click.option('-r', '--regex', default="")
+def test(regex):
+    dapp = load_dapp()
+    dapp.build()
+    dapp.test(regex)
+
+@cli.command()
+@click.option('--stagedir', default="dapple/staging")
+def stage(stagedir):
+    dapp = load_dapp()
+    dapp.build()
+    dapp.write_binaries(stagedir)
+
+@cli.command()
+@click.argument("env")
+def chain(env):
+    if env == "testnet":
+        subprocess.call("geth --datadir devdatadir --networkid 42 --unlock 0 --password devdatadir/pass.txt --mine console", shell=True)
     else:
-        cmd = sys.argv[1]
-        dapp = None
-        if cmd == "test" or cmd == "build" or cmd == "stage":
-            buildobj = yaml.load(buildfile)
-            dapp = dapple.Dapp(buildobj)
+        click.echo("Unknown chain environment")
 
-        if cmd == "test":
-            dapp.build()
-            test_regex = ""
-            if len(sys.argv) >= 3:
-                test_regex = sys.argv[2]
-            dapp.test(test_regex)
-        elif cmd == "stage":
-            dapp.build()
-            staging_dir = "/tmp/stage"
-            if len(sys.argv) >= 3:
-                staging_dir = sys.argv[2]
-            dapp.write_binaries(staging_dir)
-        elif cmd == "testnet": #TODO
-            subprocess.call("geth --datadir devdatadir --networkid 42 --unlock 0 --password devdatadir/pass.txt --mine console", shell=True)
-        else:
-            print "Unrecognized option: " + sys.argv[1]
-
-
+if __name__ == "__main__":
+    cli()
