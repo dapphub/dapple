@@ -8,6 +8,18 @@ import time
 import string
 from ethertdd import EvmContract
 
+def cog(infile, outfile=None, env=None, cwd=".", replace=False):
+    cmd = "python -m cogapp"
+    if outfile != None:
+        cmd += " -o " + outfile
+    if env != None:
+        k, v = env
+        cmd += " -D " + k + "=" + v
+    if replace:
+        cmd += " -r"
+    cmd += " " + infile
+    return subprocess.check_output(cmd, cwd=cwd, shell=True)
+
 class Dapp():
     def __init__(self, buildobj):
         self.buildobj = buildobj
@@ -15,7 +27,7 @@ class Dapp():
         self.built_pack = []
         self.build_dir = ""
 
-    def build(self):
+    def build(self, context=""):
         self.build_dir = "/tmp/dapple-build/"
         self.build_dir += string.replace(str(time.time()), ".", "")
 
@@ -39,11 +51,9 @@ class Dapp():
 
             cogfile_src = module["src_dir"] + "cogfile"
             cogfile_dest = module_alias_dir + "/cogfile"
-            #print alias_root_dir, module_alias_dir
-            #print cogfile_src, cogfile_dest
             if os.path.exists(cogfile_src):
                 shutil.copy(cogfile_src, cogfile_dest)
-                subprocess.check_output("python -m cogapp -r @cogfile", cwd=module_alias_dir, shell=True)
+                cog("@cogfile", replace=True, cwd=module_alias_dir)
 
 
         self.built_pack = compile_sources(build_paths, self.build_dir)
@@ -63,12 +73,13 @@ class Dapp():
                             bins[name] = contract
                         
             f.write(json.dumps(bins, indent=4));
-        if os.path.exists(staging_dir + "/latest.template"):
-            subprocess.check_output("python -m cogapp -o latest.js latest.template", cwd=staging_dir, shell=True)
+        if os.path.exists(staging_dir + "/latest.cog"):
+            cog("latest.cog", outfile="latest.js", cwd=staging_dir)
 
         for name, info in bins.iteritems():
-            subprocess.check_output("python -m cogapp -o deploy_js/%s.js -D typename=%s deploy.cog" % (name, name), cwd=staging_dir, shell=True)
-        
+            out = "deploy_js/%s.js" % name
+            e = ("typename", name)
+            cog("deploy.cog", outfile=out, env=e, cwd=staging_dir)
 
 
     def load_module(self, name, descriptor):
