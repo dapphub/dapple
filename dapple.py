@@ -6,7 +6,7 @@ import os
 import shutil
 import time
 import string
-from ethertdd import EvmContract
+from ethertdd import set_gas_limit, EvmContract
 
 import click
 
@@ -28,6 +28,7 @@ class Dapp():
         self.modules = {}
         self.built_pack = []
         self.build_dir = ""
+        set_gas_limit(100000000) # arbitrarily high limit
 
     def build(self, context=""):
         self.build_dir = "/tmp/dapple-build/"
@@ -156,7 +157,6 @@ class Dapp():
             try:
                 tmp = EvmContract(abi, binary, typename, [], gas=10**9) 
             except Exception, e:
-                print typename, info
                 raise e
             for func in dir(tmp):
                 if func.startswith("test"):
