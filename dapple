@@ -6,6 +6,8 @@ import dapple
 import yaml
 import sys
 
+import subprocess
+
 configpath = "~/.dapple"
 buildpath = "build.yaml"
 with open(buildpath) as buildfile:
@@ -26,10 +28,12 @@ with open(buildpath) as buildfile:
             dapp.test(test_regex)
         elif cmd == "stage":
             dapp.build()
-            path = "/tmp/pack.json"
+            staging_dir = "/tmp/stage"
             if len(sys.argv) >= 3:
-                path = sys.argv[2]
-            dapp.write_binaries(path)
+                staging_dir = sys.argv[2]
+            dapp.write_binaries(staging_dir)
+        elif cmd == "testnet": #TODO
+            subprocess.call("geth --datadir devdatadir --networkid 42 --unlock 0 --password devdatadir/pass.txt --mine console", shell=True)
         else:
             print "Unrecognized option: " + sys.argv[1]
 

@@ -48,17 +48,28 @@ class Dapp():
 
         self.built_pack = compile_sources(build_paths, self.build_dir)
 
-    def write_binaries(self, path):
-        bins = []
-        with open(path, "w") as f:
+    def write_binaries(self, staging_dir):
+        bins = {}
+        pack_js_path = staging_dir + "/latest.pack.json";
+        if not os.path.exists(staging_dir + "/deploy_js"):
+            os.makedirs(staging_dir + "/deploy_js")
+        with open(pack_js_path, "w") as f:
             for name, module in self.modules.iteritems():
                 if "bins" in module.keys():
                     for name, ok in module["bins"].iteritems():
                         if ok and name in self.built_pack.keys():
                             contract = self.built_pack[name]
                             contract["typename"] = name
-                            bins.append(contract)
+                            bins[name] = contract
+                        
             f.write(json.dumps(bins, indent=4));
+        if os.path.exists(staging_dir + "/latest.template"):
+            subprocess.check_output("python -m cogapp -o latest.js latest.template", cwd=staging_dir, shell=True)
+
+        for name, info in bins.iteritems():
+            subprocess.check_output("python -m cogapp -o deploy_js/%s.js -D typename=%s deploy.cog" % (name, name), cwd=staging_dir, shell=True)
+        
+
 
     def load_module(self, name, descriptor):
         alias_dir = self.build_dir
