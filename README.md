@@ -1,79 +1,21 @@
-TODO document dependency:  https://github.com/mitsuhiko/click
+`dapple`
+===
+
+`dapple` is a tool for Solidity developers to help build and manage complex contract systems on Ethereum-like blockchains.
+
+Some features:
+
+* Contracts are run through the `cog` preprocessor, which a few use cases:
+    * Code generation (no generics in Solidity)
+    * Singleton contracts (hard-code addresses for a particular chain context)
+* `dapple test`: You write your Solidity tests in Solidity, not Javascript!
+* `dapple do` reproducible deploy steps
+* package system (a `pack` is solidity sources + chain contexts + some metadata)
+
+Future plans:
+
+* Work towards a contract package standard
+* admin GUI based on universal-dapp
 
 
-
-    dapple test
-
-
-    dapple stage
-        writes a contract package to workspace
-
-
-    dapple deploy <typename>
-        deplies a contract type from the staging area
-        if contract is static and none exists for this chain, writes to module .yaml
-
-
-
-    dapple install
-        pulls module, adds to build.yaml
-
-
-
-
-
------------
-
-
-    dapple workspace ("~/.dapple")
-        chains [
-            datadir (possibly symlink)
-            chain_id
-            [ static_contract ]
-       ]
-
-
-
-
-    chain_context:
-        chain_id
-        rpc info
-
-    contract_type:
-        .sol source
-        binary
-        typename
-        abi
-
-    contract_instance:
-        contract_type
-        chain_id
-
-    static_contract:
-        contract_type
-        chain_id -> address
-
-
-    contract package:
-        [ contract_type ]
-        [ static_contract ]
-
-
-
-
-------------------
-
-    load build.yaml
-    assemble modules
-        create module oject:
-            name
-            real source directory
-            alias (how do you import it in solidity?)
-
-    preprocess:
-        cog
-        gcc
-
-    processed_sources
-    binary, abi = compile( processed_sources )
-
+It was developed out of necessity and in a somewhat ad-hoc manner. The current state of the code reflects this, and it is not a fun time for outside devs yet. We'll hire you to fix that, though.
