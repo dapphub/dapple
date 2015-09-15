@@ -6,8 +6,9 @@
 Some features:
 
 * Contracts are run through the `cog` preprocessor, which a few use cases:
-    * Code generation (no generics in Solidity)
+    * "generic" functions
     * Singleton contracts (hard-code addresses for a particular chain context)
+    * easier batch transactions (I still can't figure out how to encode structs and arrays outside of solidity)
 * `dapple test`: You write your Solidity tests in Solidity, not Javascript!
 * `dapple do` reproducible deploy steps
 * package system (a `pack` is solidity sources + chain contexts + some metadata)
