@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-
-#TODO http://click.pocoo.org/5/setuptools/#setuptools-integration
-
 import dapple
 import yaml
 import sys
