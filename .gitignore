@@ -1,3 +1,6 @@
 *.pyc
 *.sw*
 *bower_components*
+build
+dist
+*.egg-info
