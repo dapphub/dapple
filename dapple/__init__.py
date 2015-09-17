@@ -127,6 +127,9 @@ class Dapp():
         abi, binary = None, None
         suite = {}
 
+        def echo(message):
+            print 'LOG: %s' % message
+
         for typename, info in self.built_pack.iteritems():
             binary = ""
             if "binary" in info.keys():
@@ -164,7 +167,9 @@ class Dapp():
             for func in dir(tmp):
                 if func.startswith("test"):
                     print "  " + func
-                    contract = EvmContract(abi, binary, typename, [], gas=10**9, endowment=1000000) 
+                    contract = EvmContract(
+                        abi, binary, typename, [], gas=10**9,
+                        endowment=1000000, log_listener=echo)
                     if hasattr(contract, "setUp"):
                         contract.setUp()
                     getattr(contract, func)()
