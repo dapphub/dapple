@@ -36,6 +36,10 @@ First, it's recommended (though not necessary) to set up a clean environment spe
     pip install virtualenvwrapper
     mkvirtualenv dapple
 
+If the `mkvirtualenv` command doesn't work, you might need to add [virtualenvwrapper](https://bitbucket.org/dhellmann/virtualenvwrapper) to your path. In OS X this can be accomplished with:
+
+    echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.zshrc
+
 This will create a Python virtual environment called `dapple` and drop you into it. To leave the virtual environment, type `deactivate`. To return to it, type `workon dapple`.
 
 The following step is not optional:
@@ -43,3 +47,5 @@ The following step is not optional:
     pip install -r requirements.txt
 
 After this, you should have all of dapple's dependencies installed. The files related to the dapple CLI utility can be found in `/dapple`. To run the dapple CLI utility without having to install it, you can use `python -m dapple`.
+
+
