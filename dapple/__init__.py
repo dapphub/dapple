@@ -127,15 +127,6 @@ class Dapp():
         abi, binary = None, None
         suite = {}
 
-        def _event_logger(event):
-            if event is None:
-                return
-
-            if event['_event_type'] == '_log_gas_use':
-                print '    Used %s gas' % event['gas']
-            else:
-                print '    LOG: %s' % event['val']
-
         for typename, info in self.built_pack.iteritems():
             binary = ""
             if "binary" in info.keys():
@@ -175,13 +166,42 @@ class Dapp():
                     print "  " + func
                     contract = EvmContract(
                         abi, binary, typename, [], gas=10**9,
-                        endowment=1000000, log_listener=_event_logger)
+                        endowment=1000000, log_listener=LogEventLogger())
                     if hasattr(contract, "setUp"):
                         contract.setUp()
                     getattr(contract, func)()
                     if contract.failed():
                         print "    Fail!"
 
+
+class LogEventLogger(object):
+    def __init__(self):
+        self.cached_string = ''
+        self.string_args = []
+
+    def __call__(self, event):
+        if event is None:
+            return
+
+        if event['_event_type'] == '_log_gas_use':
+            print '    Used %s gas' % event['gas']
+            return
+
+        try:
+            if '%s' in event['val']:
+                self.cached_string = event['val']
+                return
+        except TypeError:
+            pass
+        
+        if not self.cached_string:
+            print '    LOG: %s' % event['val']
+
+        self.string_args.append(event['val'])
+
+        if len(self.string_args) == self.cached_string.count('%s'):
+            print '    LOG: ' + (self.cached_string % tuple(self.string_args))
+            self.cached_string = ''
 
 
 def get_source_paths(descriptor_path, srcs=None):
