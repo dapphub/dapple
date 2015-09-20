@@ -132,9 +132,9 @@ class Dapp():
                 return
 
             if event['_event_type'] == '_log_gas_use':
-                print 'Used %s gas' % event['gas']
+                print '    Used %s gas' % event['gas']
             else:
-                print 'LOG: %s' % event['val']
+                print '    LOG: %s' % event['val']
 
         for typename, info in self.built_pack.iteritems():
             binary = ""
