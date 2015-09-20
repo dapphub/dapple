@@ -127,8 +127,10 @@ class Dapp():
         abi, binary = None, None
         suite = {}
 
-        def echo(message):
-            print 'LOG: %s' % message
+        def echo(event):
+            if event is None:
+                return
+            print 'LOG: %s' % event['val']
 
         for typename, info in self.built_pack.iteritems():
             binary = ""
