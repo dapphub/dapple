@@ -127,10 +127,14 @@ class Dapp():
         abi, binary = None, None
         suite = {}
 
-        def echo(event):
+        def _event_logger(event):
             if event is None:
                 return
-            print 'LOG: %s' % event['val']
+
+            if event['_event_type'] == '_log_gas_use':
+                print 'Used %s gas' % event['gas']
+            else:
+                print 'LOG: %s' % event['val']
 
         for typename, info in self.built_pack.iteritems():
             binary = ""
@@ -171,7 +175,7 @@ class Dapp():
                     print "  " + func
                     contract = EvmContract(
                         abi, binary, typename, [], gas=10**9,
-                        endowment=1000000, log_listener=echo)
+                        endowment=1000000, log_listener=_event_logger)
                     if hasattr(contract, "setUp"):
                         contract.setUp()
                     getattr(contract, func)()

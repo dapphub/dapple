@@ -13,4 +13,12 @@ contract Debug {
         cog.outl("event log_named_" + type + "(bytes32 key, " + type + " val);")
     ]]]*/
     //[[[end]]]
+
+    event _log_gas_use(uint gas);
+
+    modifier logs_gas() {
+        uint _start_gas = msg.gas;
+        _
+        _log_gas_use(_start_gas - msg.gas);
+    }
 }
