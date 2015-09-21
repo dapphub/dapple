@@ -48,4 +48,26 @@ The following step is not optional:
 
 After this, you should have all of dapple's dependencies installed. The files related to the dapple CLI utility can be found in `/dapple`. To run the dapple CLI utility without having to install it, you can use `python -m dapple`.
 
+Usage
+=====
 
+TBD
+
+Usage Prototype 
+===============
+
+The below documentation does not describe the way dapple currently works, but is instead documentation describing how dapple may eventually work. As pieces are implemented, the corresponding documentation will be moved to the "Usage" section above.
+
+Dapple packages are defined by the presence of a dapple.yaml file in the root directory. At minimum, the dapple.yaml file must define the following keys:
+
+`name`: The name of the dapple package.
+
+`version`: The version of the dapple package.
+
+The following keys may also be defined:
+
+`dependencies`: A mapping of the names dapple packages this package depends on to either the specific versions of those packages required or to the specific location to load the package from. A value of "latest" signifies that the latest version should be used.
+
+`contracts`: A mapping of regex-able strings to either hexadecimal constants or to contract names. Dapple looks for matches to the keys in this mapping during the preprocessing step. For each unique match, it either swaps in the hexadecimal constant or deploys the contract on the current blockchain and swaps in the resulting contract address if the contract has not already been previously deployed in this environment or if the contract has changed since its last deployment. Makes it easy to set static or dynamic address references as one has need. Dot notation may also be used to override `contracts` entries in required packages. (E.g., the key `"dappsys.SHARED_KERNEL"` would override the value of the `"SHARED_KERNEL"` key in the `contracts` mapping in the "dapple.yaml" file in the `dappsys` package.)
+
+`environments`: A mapping of environment names to mappings of values to override in dapple.yaml when dapple is passed the given environment name. Can also map environment names to alternative YAML files of the same format as "dapple.yaml," with the exception that any `environments` keys in those files will be ignored.
