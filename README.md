@@ -51,7 +51,25 @@ After this, you should have all of dapple's dependencies installed. The files re
 Usage
 =====
 
-TBD
+Dapple packages are defined by the presence of a dapple.yaml file in the root directory. At minimum, the dapple.yaml file must define the following keys:
+
+`name`: The name of the dapple package.
+
+The following keys may also be defined:
+
+`dependencies`: A mapping of the names dapple packages this package depends on to either the specific versions of those packages required or to the specific location to load the package from. A value of "latest" signifies that the latest version should be used.
+
+You may use dot notation to collapse nested mappings. In other words, this:
+
+    environments:
+        prod:
+            contracts:
+                NAME_REG: "0x..."
+
+Can be shortened to this:
+
+    environments.prod.contracts.NAME_REG: "0x..."
+
 
 Usage Prototype 
 ===============
@@ -68,6 +86,10 @@ The following keys may also be defined:
 
 `dependencies`: A mapping of the names dapple packages this package depends on to either the specific versions of those packages required or to the specific location to load the package from. A value of "latest" signifies that the latest version should be used.
 
-`contracts`: A mapping of regex-able strings to either hexadecimal constants or to contract names. Dapple looks for matches to the keys in this mapping during the preprocessing step. For each unique match, it either swaps in the hexadecimal constant or deploys the contract on the current blockchain and swaps in the resulting contract address if the contract has not already been previously deployed in this environment or if the contract has changed since its last deployment. Makes it easy to set static or dynamic address references as one has need. Dot notation may also be used to override `contracts` entries in required packages. (E.g., the key `"dappsys.SHARED_KERNEL"` would override the value of the `"SHARED_KERNEL"` key in the `contracts` mapping in the "dapple.yaml" file in the `dappsys` package.)
+`contracts`: A mapping of regex-able strings to either hexadecimal constants or to contract names. Dapple looks for matches to the keys in this mapping during the preprocessing step. For each unique match, it either swaps in the hexadecimal constant or deploys the contract on the current blockchain and swaps in the resulting contract address if the contract has not already been previously deployed in this environment or if the contract has changed since its last deployment. Makes it easy to set static or dynamic address references as one has need.
+
+`libraries`: If your contract makes use of libraries, you can specify the addresses for those libraries here. Maps library names to addresses, much like the `contracts` mapping. Does not support regex matching. See the [Solidity documentation on libraries](https://github.com/ethereum/wiki/wiki/Solidity-Tutorial#libraries) for more details.
 
 `environments`: A mapping of environment names to mappings of values to override in dapple.yaml when dapple is passed the given environment name. Can also map environment names to alternative YAML files of the same format as "dapple.yaml," with the exception that any `environments` keys in those files will be ignored.
+
+In addition, dot notation may be used to override settings in the packages loaded in `dependencies`. For example, if you load a package called `eth-common` that defines a `NAME_REG` value in its `contracts` mapping, you can override this value by defining a mapping of the key `eth-common.contracts.NAME_REG` to whatever value you prefer. This override will persist for all packages loaded by your package.
