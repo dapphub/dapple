@@ -90,7 +90,7 @@ The following keys may also be defined:
 
 `libraries`: If your contract makes use of libraries, you can specify the addresses for those libraries here. Maps library names to addresses, much like the `contracts` mapping. Does not support regex matching. See the [Solidity documentation on libraries](https://github.com/ethereum/wiki/wiki/Solidity-Tutorial#libraries) for more details.
 
-`environments`: A mapping of environment names to mappings of values to override in dapple.yaml when dapple is passed the given environment name. Can also map environment names to alternative YAML files of the same format as "dapple.yaml," with the exception that any `environments` keys in those files will be ignored.
+`environments`: A mapping of environment names to mappings of values to override in dapple.yaml when dapple is passed the specified environment name. The only setting that cannot be overridden in this way is `environments` itself. You can also map environment names to alternative YAML files of the same format as "dapple.yaml." The contents of said files will be treated as if defined directly in the the `environments` mapping.
 
 In addition, dot notation may be used to override settings in the packages loaded in `dependencies`. For example, if you load a package called `eth-common` that defines a `NAME_REG` value in its `contracts` mapping, you can override this value by defining a mapping of the key `eth-common.contracts.NAME_REG` to whatever value you prefer. This override will persist for all packages loaded by your package.
 
