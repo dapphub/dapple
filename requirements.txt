@@ -12,3 +12,5 @@ repoze.lru==0.6
 rlp==0.3.8
 scrypt==0.7.1
 wheel==0.24.0
+ethereum-serpent==2.0.0
+cogapp==2.4
