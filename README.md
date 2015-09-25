@@ -57,7 +57,9 @@ Dapple packages are defined by the presence of a `.dapple` directory containing 
 
 The following keys may also be defined:
 
-`dependencies`: A mapping of the names dapple packages this package depends on to either the specific versions of those packages required or to the specific location to load the package from. A value of "latest" signifies that the latest version should be used.
+`environments`: A mapping of environment names to mappings of values to override in `dappfile` when dapple is passed the specified environment name. You can also map environment names to alternative YAML files of the same format as `dappfile`. The contents of said files will be treated as if defined directly in the the `environments` mapping.
+
+`dependencies`: A mapping of the names of dapple packages this package depends on to the specific versions of those packages required, or to the specific location to load the package from, or to another mapping. A value of "latest" signifies that the latest version should be used. If a mapping is specified, it must at minimum define a `version` entry whose value consists of either a version number or a location. Overrides for the values specified in each package's dapplefile may also be defined here. For example, if you load a package called `eth-common` that defines a `NAME_REG` value in its `contracts` mapping, you can override this value by defining a mapping of the key `contracts.NAME_REG` under the `dependencies.eth-common` key to whatever value you prefer. Such overrides will only affect the level at which they are defined. If another package, say `foobar`, loads the `eth-common` package, it will see the value defined in `eth-common`'s dapplefile. To override the namereg contract there as well, you would have to override `dependencies.eth-common.contracts.NAME_REG` under the `dependencies.foobar` key.
 
 You may use dot notation to collapse nested mappings. In other words, this:
 
@@ -84,13 +86,9 @@ Dapple packages are defined by the presence of a dapple.yaml file in the root di
 
 The following keys may also be defined:
 
-`dependencies`: A mapping of the names of dapple packages this package depends on to the specific versions of those packages required, or to the specific location to load the package from, or to another mapping. A value of "latest" signifies that the latest version should be used. If a mapping is specified, it must at minimum define a `version` entry whose value consists of either a version number or a location. Overrides for the values specified in each package's dapplefile may also be defined here. For example, if you load a package called `eth-common` that defines a `NAME_REG` value in its `contracts` mapping, you can override this value by defining a mapping of the key `contracts.NAME_REG` under the `dependencies.eth-common` key to whatever value you prefer. Such overrides will only affect the level at which they are defined. If another package, say `foobar`, loads the `eth-common` package, it will see the value defined in `eth-common`'s dapplefile. To override the namereg contract there as well, you would have to override `dependencies.eth-common.contracts.NAME_REG` under the `dependencies.foobar` key.
-
 `contracts`: A mapping of regex-able strings to either hexadecimal constants or to contract names. Dapple looks for matches to the keys in this mapping during the preprocessing step. For each unique match, it either swaps in the hexadecimal constant or deploys the contract on the current blockchain and swaps in the resulting contract address if the contract has not already been previously deployed in this environment or if the contract has changed since its last deployment. Makes it easy to set static or dynamic address references as one has need.
 
 `libraries`: If your contract makes use of libraries, you can specify the addresses for those libraries here. Maps library names to addresses, much like the `contracts` mapping. Does not support regex matching. See the [Solidity documentation on libraries](https://github.com/ethereum/wiki/wiki/Solidity-Tutorial#libraries) for more details.
-
-`environments`: A mapping of environment names to mappings of values to override in dapple.yaml when dapple is passed the specified environment name. The only setting that cannot be overridden in this way is `environments` itself. You can also map environment names to alternative YAML files of the same format as "dapple.yaml." The contents of said files will be treated as if defined directly in the the `environments` mapping.
 
 
 Internally, dapple uses a plugin system for all its functionality. Each plugin may define a set of commands and potentially override default behavior.
