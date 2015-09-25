@@ -51,7 +51,7 @@ After this, you should have all of dapple's dependencies installed. The files re
 Usage
 =====
 
-Dapple packages are defined by the presence of a dapple.yaml file in the root directory. At minimum, the dapple.yaml file must define the following keys:
+Dapple packages are defined by the presence of a `.dapple` directory containing a `dappfile` YAML file. At minimum, `dappfile` must define the following keys:
 
 `name`: The name of the dapple package.
 
