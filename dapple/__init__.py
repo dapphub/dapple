@@ -1,3 +1,5 @@
+__version__ = '0.0.1a'
+
 import yaml
 import re
 import subprocess
@@ -10,7 +12,6 @@ from ethertdd import set_gas_limit, EvmContract
 
 import click
 
-__version__ = '0.0.1a'
 
 def cog(infile, outfile=None, env=None, cwd=".", replace=False):
     cmd = "python -m cogapp"
