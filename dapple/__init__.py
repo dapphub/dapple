@@ -90,6 +90,8 @@ def expand_dot_keys(yaml_dict):
 
     return result
 
+class DappleException(Exception):
+    pass
 
 class Dapp():
     def __init__(self, buildobj):
