@@ -12,6 +12,10 @@ from ethertdd import set_gas_limit, EvmContract
 
 import click
 
+@click.group()
+def cli():
+    pass
+
 
 def cog(infile, outfile=None, env=None, cwd=".", replace=False):
     cmd = "python -m cogapp"

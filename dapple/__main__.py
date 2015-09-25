@@ -3,18 +3,13 @@ import yaml
 import sys
 import subprocess
 import click
+from . import cli
 
 def load_dapp(buildpath="build.yaml"):
     with open(buildpath) as buildfile:
         buildobj = yaml.load(buildfile)
         dapp = dapple.Dapp(buildobj)
         return dapp
-
-
-@click.group()
-def cli():
-    pass
-
 
 @cli.command()
 @click.option('-r', '--regex', default="")
