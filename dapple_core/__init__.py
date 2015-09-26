@@ -1,8 +1,6 @@
 import os, yaml
+import dapple.plugins
 from dapple import cli, click, expand_dot_keys, deep_merge
-from dapple.plugins import PluginRegistry
-
-plugins = PluginRegistry()
 
 def load_dapp(buildpath="dappfile"):
     with open(buildpath) as buildfile:
@@ -23,6 +21,7 @@ def load_module(self, name, descriptor):
     }
 
 
+@dapple.plugins.register('core.environments')
 def apply_environment(dappfile, env=None, package_path=''):
     """
     Loads up the global dappfile for the project, with all
@@ -42,9 +41,8 @@ def apply_environment(dappfile, env=None, package_path=''):
 
     return deep_merge(dappfile, environment)
 
-plugins.register('core.environments')
 
-
+@dapple.plugins.register('core.dappfile')
 def load_dappfile(package_path, env=None, filename='dappfile'):
     """
     Returns the dappfile of the specified package.
@@ -60,10 +58,9 @@ def load_dappfile(package_path, env=None, filename='dappfile'):
                 expand_dot_keys(yaml.load(f)),
                 package_path=package_path, env=env)
 
-plugins.register('core.dappfile', load_dappfile)
 
-
-def load_dependencies(dappfile={}, package_path=''):
+@dapple.plugins.register('core.dependencies')
+def load_dependencies(dappfile={}, package_path='', env=None):
     """
     Loads the dappfiles of all dependencies in
     the `dappfile` dictionary.
@@ -75,7 +72,7 @@ def load_dependencies(dappfile={}, package_path=''):
     # TODO: Respect paths and URLs passed in as version numbers.
 
     load_dappfile = plugins.load('core.dappfile')
-    dappfile = deep_merge(load_dappfile(package_path), dappfile)
+    dappfile = deep_merge(load_dappfile(package_path, env=env), dappfile)
 
     for key, val in dappfile.get('dependencies', {}).iteritems():
         if not isinstance(val, dict):
@@ -88,7 +85,40 @@ def load_dependencies(dappfile={}, package_path=''):
 
     return dappfile
 
-plugins.register('core.dependencies', load_dependencies)
+
+@dapple.plugins.register('core.load_files')
+def load_contract_files(dappfile, path=''):
+    """
+    Pulls contract file contents into a dictionary
+    based on their position within the dappfile.
+    Returns a tuple consisting of the tree of source
+    file contents and a dictionary of contract hashes
+    to their path names.
+
+    """
+    files = {}
+    names = {}
+
+    for key, val in dappfile.get('dependencies', {}).iteritems():
+        _path = path + '.' + key if path else key
+        _files, _names = load_contract_files(val, _path)
+        names.update(_names)
+        files[key] = _files
+
+    
+
+    return (files, names)
+
+
+def compile_sources(env=None):
+    """
+    Gathers together all the contracts and
+    the contracts they depend on, then passes
+    them to solc and returns a dictionary
+    containing the combined build output.
+
+    """
+    print "TBD"
 
 
 @cli.command()

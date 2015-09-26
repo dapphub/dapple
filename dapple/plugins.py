@@ -21,3 +21,16 @@ class PluginRegistry(object):
 
     def register(self, name, plugin_class):
         self.__plugins[name] = plugin_class
+
+def register(name):
+    """
+    A decorator for making plugin registration easier.
+
+    """
+    registry = PluginRegistry()
+
+    def _(plugin):
+        registry.register(name, plugin)
+        return plugin
+
+    return _
