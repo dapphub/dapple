@@ -106,8 +106,10 @@ def load_dappfile(dappfile={}, package_path='', env=None):
 
 
 @dapple.plugins.register('core.preprocess')
-def preprocess(file_contents):
-    return cogapp.Cog().processString(file_contents)
+def preprocess(file_contents, dappfile):
+    cog = cogapp.Cog()
+    cog.options.defines = dappfile.get('preprocessor_vars', {})
+    return cog.processString(file_contents)
 
 
 @dapple.plugins.register('core.build_dir')
@@ -170,7 +172,7 @@ def link_packages(dappfile, path='', tmpdir=None):
             file_paths.append(curpath)
 
             with open(curpath, 'r') as f:
-                files[curpath] = preprocess(f.read())
+                files[curpath] = preprocess(f.read(), dappfile)
 
             for contract_name in re.findall('^\s*contract ([\w]*)\s*{',
                                             files[curpath], flags=re.MULTILINE):
