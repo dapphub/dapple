@@ -145,8 +145,9 @@ def link_packages(dappfile, path='', tmpdir=None):
     source_dir = package_dir(path)
     dest_dir = os.path.join(tmpdir, pkg_hash)
 
+    ignore_globs = ['.dapple'] + dappfile.get('ignore', [])
     shutil.copytree(source_dir, dest_dir,
-                    ignore=shutil.ignore_patterns('.dapple'))
+                    ignore=shutil.ignore_patterns(*ignore_globs))
 
     package_hashes[path.split('.')[-1]] = pkg_hash
 
