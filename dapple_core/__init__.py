@@ -1,5 +1,6 @@
-import os, yaml
+import cogapp, hashlib, json, os, re, shutil, subprocess, tempfile, yaml
 import dapple.plugins
+
 from dapple import cli, click, expand_dot_keys, deep_merge
 
 def load_dapp(buildpath="dappfile"):
@@ -19,6 +20,23 @@ def load_module(self, name, descriptor):
         "alias": descriptor.get("alias", name),
         "sources": []
     }
+
+
+def package_dir(package_path):
+    if package_path == '':
+        return os.getcwd() 
+
+    path = [os.getcwd()]
+    for p in package_path.split('.'):
+        path.extend(['.dapple', 'packages', p])
+
+    return os.path.join(*path)
+
+
+def sha256(data):
+    sha = hashlib.sha256()
+    sha.update(data)
+    return sha.hexdigest()
 
 
 @dapple.plugins.register('core.environments')
@@ -48,10 +66,8 @@ def load_dappfile(package_path, env=None, filename='dappfile'):
     Returns the dappfile of the specified package.
 
     """
-    apply_environment = plugins.load('core.environments')
-    path = os.getcwd() + ('/.dapple'.join([
-        '/packages/%s/.dapple' % p for p in package_path.split('.')
-    ]) + '/' + filename)
+    apply_environment = dapple.plugins.load('core.environments')
+    path = os.path.join(package_dir(package_path), '.dapple', filename)
 
     with open(path, 'r') as f:
         return apply_environment(
