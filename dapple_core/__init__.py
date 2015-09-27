@@ -121,23 +121,79 @@ def link_packages(dappfile, path='', tmpdir=None):
     Pulls contract file contents into a dictionary
     based on their position within the dappfile.
     Returns a tuple consisting of the tree of source
-    file contents and a dictionary of contract hashes
-    to their path names.
+    file contents, a dictionary of package paths
+    to hashes, and a dictionary of contract paths
+    to hashes.
 
     """
+    # TODO: Break this function up into smaller pieces.
     files = {}
-    names = {}
+    package_hashes = {}
+    contracts = {}
+
+    if tmpdir is None:
+        tmpdir = dapple.plugins.load('core.build_dir')()
 
     for key, val in dappfile.get('dependencies', {}).iteritems():
         _path = path + '.' + key if path else key
-        _files, _names = load_contract_files(val, _path)
-        names.update(_names)
-        files[key] = _files
+        _files, _package_hashes, _contracts = link_packages(val, path=_path, tmpdir=tmpdir)
+        package_hashes.update(_package_hashes)
+        contracts.update(_contracts)
+        files.update(_files)
 
+    pkg_hash = sha256(path)
+    source_dir = package_dir(path)
+    dest_dir = os.path.join(tmpdir, pkg_hash)
+
+    shutil.copytree(source_dir, dest_dir,
+                    ignore=shutil.ignore_patterns('.dapple'))
+
+    package_hashes[path.split('.')[-1]] = pkg_hash
+
+    dir_stack = [dest_dir]
+
+    file_paths = []
+
+    preprocess = dapple.plugins.load("core.preprocess")
+
+    while len(dir_stack) > 0:
+        curdir = dir_stack.pop()
+
+        for filename in os.listdir(curdir):
+            curpath = os.path.join(curdir, filename)
+
+            if os.path.isdir(curpath):
+                dir_stack.append(curpath)
+                continue
+
+            file_paths.append(curpath)
+
+            with open(curpath, 'r') as f:
+                files[curpath] = preprocess(f.read())
+
+            for contract_name in re.findall('^\s*contract ([\w]*)\s*{',
+                                            files[curpath], flags=re.MULTILINE):
+                contract_loc = '%s:%s' % (curpath, contract_name)
+                contracts[contract_name] = {
+                    'location': contract_loc,
+                    'hash': 'x' + sha256(contract_loc)
+                }
     
+    for curpath in file_paths:
+        for name, hash in package_hashes.iteritems():
+            files[curpath] = re.sub(
+                '([\s|;]*)(import\s*)(["|\']?)(dapple[/|\\\]%s)([/|\\\])'
+                % name, '\g<1>\g<2>\g<3>%s\g<5>' % hash, files[curpath])
 
-    return (files, names)
+        for name, contract in contracts.iteritems():
+            files[curpath] = re.sub('(\s*)(%s)(\s*)' % name,
+                                    '\g<1>%s\g<3>' % contract['hash'],
+                                    files[curpath])
 
+        with open(curpath, 'w') as f:
+            f.write(files[curpath])
+
+    return (files, package_hashes, contracts)
 
 def compile_sources(env=None):
     """
