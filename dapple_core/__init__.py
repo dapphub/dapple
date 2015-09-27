@@ -47,21 +47,21 @@ def apply_environment(dappfile, env=None, package_path=''):
     defined in the `environments` mapping.
 
     """
-    load_dappfile = plugins.load('core.dappfile')
+    package_dappfile = dapple.plugins.load('core.package_dappfile')
 
     if not env or env not in dappfile.get('environments', {}):
         return dappfile
 
     environment = dappfile['environments'][env]
     if not isinstance(environment, dict):
-        environment = load_dappfile(
+        environment = package_dappfile(
                 package_path, env=env, filename=environment)
 
     return deep_merge(dappfile, environment)
 
 
-@dapple.plugins.register('core.dappfile')
-def load_dappfile(package_path, env=None, filename='dappfile'):
+@dapple.plugins.register('core.package_dappfile')
+def load_package_dappfile(package_path, env=None, filename='dappfile'):
     """
     Returns the dappfile of the specified package.
 
@@ -69,14 +69,17 @@ def load_dappfile(package_path, env=None, filename='dappfile'):
     apply_environment = dapple.plugins.load('core.environments')
     path = os.path.join(package_dir(package_path), '.dapple', filename)
 
+    if not os.path.exists(path):
+        raise DappleException("%s not found!" % path)
+
     with open(path, 'r') as f:
         return apply_environment(
                 expand_dot_keys(yaml.load(f)),
                 package_path=package_path, env=env)
 
 
-@dapple.plugins.register('core.dependencies')
-def load_dependencies(dappfile={}, package_path='', env=None):
+@dapple.plugins.register('core.dappfile')
+def load_dappfile(dappfile={}, package_path='', env=None):
     """
     Loads the dappfiles of all dependencies in
     the `dappfile` dictionary.
@@ -87,8 +90,8 @@ def load_dependencies(dappfile={}, package_path='', env=None):
     # are basically meaningless.
     # TODO: Respect paths and URLs passed in as version numbers.
 
-    load_dappfile = plugins.load('core.dappfile')
-    dappfile = deep_merge(load_dappfile(package_path, env=env), dappfile)
+    package_dappfile = dapple.plugins.load('core.package_dappfile')
+    dappfile = deep_merge(package_dappfile(package_path, env=env), dappfile)
 
     for key, val in dappfile.get('dependencies', {}).iteritems():
         if not isinstance(val, dict):
