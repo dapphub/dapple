@@ -105,8 +105,18 @@ def load_dappfile(dappfile={}, package_path='', env=None):
     return dappfile
 
 
-@dapple.plugins.register('core.load_files')
-def load_contract_files(dappfile, path=''):
+@dapple.plugins.register('core.preprocess')
+def preprocess(file_contents):
+    return cogapp.Cog().processString(file_contents)
+
+
+@dapple.plugins.register('core.build_dir')
+def build_dir():
+    return tempfile.mkdtemp(prefix='dapple-')
+
+
+@dapple.plugins.register('core.link_packages')
+def link_packages(dappfile, path='', tmpdir=None):
     """
     Pulls contract file contents into a dictionary
     based on their position within the dappfile.
