@@ -95,12 +95,12 @@ def load_dappfile(dappfile={}, package_path='', env=None):
 
     for key, val in dappfile.get('dependencies', {}).iteritems():
         if not isinstance(val, dict):
-            val = {}
-            dappfile[key] = val
+            dappfile['dependencies'][key] = {}
 
-        package_path += ('.' + key) if package_path else package_path
-        dappfile[key] = load_dependencies(
-                dappfile=dappfile[key], package_path=package_path)
+        package_path += ('.' + key) if package_path else key
+        dappfile[key] = load_dappfile(
+                dappfile=dappfile['dependencies'][key],
+                package_path=package_path)
 
     return dappfile
 
