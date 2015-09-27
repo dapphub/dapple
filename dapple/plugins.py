@@ -7,28 +7,35 @@ from . import DappleException
 class PluginRegistry(object):
     """
     A singleton-like class for registering and retrieving plugins.
-    Uses the Borg pattern:
-    http://code.activestate.com/recipes/66531-singleton-we-dont-need-no-stinkin-singleton-the-bo/
 
     """
-    __plugins = {}
+    def __init__(self):
+        self.plugins = {}
 
-    def load(self, plugin, settings):
-        if plugin not in self.__plugins:
+    def load(self, plugin):
+        if plugin not in self.plugins:
             raise DappleException("Could not find plugin '%s'!" % plugin)
 
-        return self.__plugins[plugin]
+        return self.plugins[plugin]
 
     def register(self, name, plugin_class):
-        self.__plugins[name] = plugin_class
+        self.plugins[name] = plugin_class
 
-def register(name):
+# Provide a default registry.
+registry = PluginRegistry()
+
+def load(plugin):
+    """
+    A helper function for loading plugins from the default registry.
+
+    """
+    return registry.load(plugin)
+
+def register(name, registry=registry):
     """
     A decorator for making plugin registration easier.
 
     """
-    registry = PluginRegistry()
-
     def _(plugin):
         registry.register(name, plugin)
         return plugin
