@@ -55,6 +55,8 @@ Dapple packages are defined by the presence of a `.dapple` directory containing 
 
 `name`: The name of the dapple package.
 
+`version`: The version of the dapple package.
+
 The following keys may also be defined:
 
 `ignore`: A list of filenames to ignore. [Globbing](https://en.wikipedia.org/wiki/Glob_%28programming%29) is supported.
@@ -85,8 +87,6 @@ The below documentation does not describe the way dapple currently works, but is
 Dapple packages are defined by the presence of a dapple.yaml file in the root directory. At minimum, the dapple.yaml file must define the following keys:
 
 `name`: The name of the dapple package.
-
-`version`: The version of the dapple package.
 
 The following keys may also be defined:
 
