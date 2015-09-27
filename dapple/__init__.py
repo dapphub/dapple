@@ -168,6 +168,7 @@ class Dapp():
         }
 
         module_object = yaml.load(open(full_module["src_dir"]+"/module.yaml"))
+
         def populate_source_paths(source_object, partial_path=""):
             aliased_prefix = alias_dir + "/" + full_module["alias"] + "/"
             real_prefix = real_dir
@@ -280,27 +281,3 @@ def get_source_paths(descriptor_path, srcs=None):
             subpaths = get_paths(descriptor_path + k + "/", v)
             paths.extend(subpaths)
     return paths
-
-# Tries to compile all sources
-# Returns an EVM library ("pack").
-def compile_sources(source_paths, cwd):
-    # copy contracts from true source files to temp directory
-    # with imported contract names
-    try:
-        cmd = ['solc']
-        cmd.extend(['--combined-json', 'json-abi,binary,sol-abi'])
-        cmd.extend(source_paths)
-        p = subprocess.check_output(cmd, cwd=cwd)
-
-    except subprocess.CalledProcessError:
-        cmd = ['solc']
-        cmd.extend(['--combined-json', 'abi,bin,interface'])
-        cmd.extend(source_paths)
-        p = subprocess.check_output(cmd, cwd=cwd)
-
-    #print p
-    pack = json.loads(p)["contracts"]
-    return pack
-
-
-

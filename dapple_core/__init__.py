@@ -195,7 +195,15 @@ def link_packages(dappfile, path='', tmpdir=None):
 
     return (files, package_hashes, contracts)
 
-def compile_sources(env=None):
+
+@cli.command(name="build")
+@click.argument("env", default="dev")
+def cli_build(env):
+    print dapple.plugins.load('core.build')(env)
+
+
+@dapple.plugins.register('core.build')
+def build(env):
     """
     Gathers together all the contracts and
     the contracts they depend on, then passes
@@ -203,12 +211,41 @@ def compile_sources(env=None):
     containing the combined build output.
 
     """
-    print "TBD"
+    tmpdir = dapple.plugins.load('core.build_dir')()
+    files, package_hashes, contracts = link_packages(
+                    load_dappfile(env=env), tmpdir=tmpdir)
 
+    filenames = [f.replace(tmpdir, '', 1)[1:] for f in files.keys() if f[-4:] == '.sol']
 
-@cli.command()
-def new(string=""):
-    print "TBD"
+    try:
+        cmd = ['solc']
+        cmd.extend(['--combined-json', 'json-abi,binary,sol-abi'])
+        cmd.extend(filenames)
+        p = subprocess.check_output(cmd, cwd=tmpdir)
+
+    except subprocess.CalledProcessError:
+        cmd = ['solc']
+        cmd.extend(['--combined-json', 'abi,bin,interface'])
+        cmd.extend(filenames)
+        p = subprocess.check_output(cmd, cwd=tmpdir)
+
+    shutil.rmtree(tmpdir)
+
+    build = {}
+    raw_build = json.loads(p)["contracts"]
+
+    contract_names = dict([(val['hash'], key)
+            for key, val in contracts.iteritems()])
+
+    for key, val in raw_build.iteritems():
+        contract_name = contract_names.get(key, key)
+        if 'interface' in val:
+            val['interface'] = val['interface'].replace(key, contract_name)
+
+        build[contract_name] = val
+
+    return build
+
 
 @cli.command()
 @click.option('-r', '--regex', default="")
