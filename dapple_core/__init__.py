@@ -1,4 +1,5 @@
-import cogapp, hashlib, json, os, re, shutil, subprocess, tempfile, yaml
+from __future__ import print_function
+import cogapp, hashlib, json, os, re, shutil, subprocess, sys, tempfile, yaml
 import dapple.plugins
 
 from dapple import cli, click, expand_dot_keys, deep_merge
@@ -90,13 +91,18 @@ def load_dappfile(dappfile={}, package_path='', env=None):
 def preprocess(file_contents, dappfile):
     cog = cogapp.Cog()
     cog.options.defines = dappfile.get('preprocessor_vars', {})
-    return cog.processString(file_contents)
+
+    try:
+        return cog.processString(file_contents)
+
+    except cogapp.cogapp.CogError:
+        print(file_contents, file=sys.stderr)
+        raise
 
 
 @dapple.plugins.register('core.build_dir')
 def build_dir():
     return tempfile.mkdtemp(prefix='dapple-')
-
 
 @dapple.plugins.register('core.link_packages')
 def link_packages(dappfile, path='', tmpdir=None):
@@ -153,7 +159,11 @@ def link_packages(dappfile, path='', tmpdir=None):
             file_paths.append(curpath)
 
             with open(curpath, 'r') as f:
-                files[curpath] = preprocess(f.read(), dappfile)
+                try:
+                    files[curpath] = preprocess(f.read(), dappfile)
+                except:
+                    print("Error preprocessing %s" % curpath, file=sys.stderr)
+                    raise
 
             for contract_name in re.findall('^\s*contract ([\w]*)\s*{',
                                             files[curpath], flags=re.MULTILINE):
@@ -183,7 +193,7 @@ def link_packages(dappfile, path='', tmpdir=None):
 @cli.command(name="build")
 @click.argument("env", default="dev")
 def cli_build(env):
-    print dapple.plugins.load('core.build')(env)
+    print(dapple.plugins.load('core.build')(env))
 
 
 @dapple.plugins.register('core.build')
