@@ -3,25 +3,6 @@ import dapple.plugins
 
 from dapple import cli, click, expand_dot_keys, deep_merge
 
-def load_dapp(buildpath="dappfile"):
-    with open(buildpath) as buildfile:
-        buildobj = yaml.load(buildfile)
-        dapp = dapple.Dapp(buildobj)
-        return dapp
-
-
-def load_module(self, name, descriptor):
-    alias_dir = self.build_dir
-    real_dir = os.getcwd() + "/" + descriptor["src"] + "/"
-    full_module = {
-        "name": name,
-        "src_dir": real_dir,
-        "alias_dir": alias_dir,
-        "alias": descriptor.get("alias", name),
-        "sources": []
-    }
-
-
 def package_dir(package_path):
     if package_path == '':
         return os.getcwd() 
