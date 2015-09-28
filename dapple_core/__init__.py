@@ -156,6 +156,9 @@ def link_packages(dappfile, path='', tmpdir=None):
                 dir_stack.append(curpath)
                 continue
 
+            if filename[-4:] != '.sol':
+                continue
+
             file_paths.append(curpath)
 
             with open(curpath, 'r') as f:
