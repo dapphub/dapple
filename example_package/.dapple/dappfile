@@ -1,6 +1,7 @@
 name: 'example_package'
 version: '0.0.1a'
 dependencies:
+    core: 'latest'
     subpackage: 'latest'
 ignore:
     - ignored.sol

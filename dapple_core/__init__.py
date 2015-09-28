@@ -2,7 +2,8 @@ from __future__ import print_function
 import cogapp, hashlib, json, os, re, shutil, subprocess, sys, tempfile, yaml
 import dapple.plugins
 
-from dapple import cli, click, expand_dot_keys, deep_merge
+from ethertdd import set_gas_limit, EvmContract
+from dapple import cli, click, DappleException, expand_dot_keys, deep_merge
 
 def package_dir(package_path):
     if package_path == '':
@@ -19,6 +20,36 @@ def sha256(data):
     sha = hashlib.sha256()
     sha.update(data)
     return sha.hexdigest()
+
+
+class LogEventLogger(object):
+    def __init__(self):
+        self.cached_string = ''
+        self.string_args = []
+
+    def __call__(self, event):
+        if event is None:
+            return
+
+        if event['_event_type'] == '_log_gas_use':
+            print('    Used %s gas' % event['gas'])
+            return
+
+        try:
+            if '%s' in event['val']:
+                self.cached_string = event['val']
+                return
+        except TypeError:
+            pass
+
+        if not self.cached_string:
+            print('    LOG: %s' % event['val'])
+
+        self.string_args.append(event['val'])
+
+        if len(self.string_args) == self.cached_string.count('%s'):
+            print('    LOG: ' + (self.cached_string % tuple(self.string_args)))
+            self.cached_string = ''
 
 
 @dapple.plugins.register('core.environments')
@@ -146,6 +177,14 @@ def link_packages(dappfile, path='', tmpdir=None):
 
     preprocess = dapple.plugins.load("core.preprocess")
 
+    def local_path_sub (m):
+        newpath = ''
+
+        if m.group(4):
+            newpath = os.path.join(pkg_hash, m.group(4))
+
+        return ''.join([m.group(i) for i in range(1, 4)]) + newpath
+
     while len(dir_stack) > 0:
         curdir = dir_stack.pop()
 
@@ -177,6 +216,10 @@ def link_packages(dappfile, path='', tmpdir=None):
                 }
     
     for curpath in file_paths:
+        files[curpath] = re.sub(
+            '([\\s|;]*)(import\\s*)(["|\']?)(?!dapple)([^"\';]*)',
+            local_path_sub, files[curpath])
+
         for name, hash in package_hashes.iteritems():
             files[curpath] = re.sub(
                 '([\s|;]*)(import\s*)(["|\']?)(dapple[/|\\\]%s)([/|\\\])'
@@ -245,11 +288,62 @@ def build(env):
 
 
 @cli.command()
+@click.argument('env', default='dev')
 @click.option('-r', '--regex', default="")
-def test(regex):
-    dapp = load_dapp()
-    dapp.build()
-    dapp.test(regex)
+@click.option('-e', '--endowment', type=click.INT, default=1000000)
+def test(env, regex, endowment):
+    build = dapple.plugins.load('core.build')(env)
+
+    abi, binary = None, None
+    suite = {}
+
+    for typename, info in build.iteritems():
+        binary = ""
+        if "binary" in info.keys():
+            binary = info["binary"]
+        else:
+            binary = info["bin"]
+        if regex is not None:
+            if not re.match(".*"+regex+".*", typename, flags=re.IGNORECASE):
+                continue
+        if typename == "Test": # base test matches too often
+            continue
+
+        if binary == "": # Abstract classes
+            continue
+        abi = ""
+        if "json-abi" in info.keys():
+            abi = info["json-abi"]
+        else:
+            abi = info["abi"]
+        jabi = json.loads(abi)
+        is_test = False
+        for item in jabi:
+            if "name" in item.keys() and item["name"] == "IS_TEST":
+                is_test = True
+        if not is_test:
+            continue
+
+        print("Testing", typename)
+        binary = binary.decode('hex')
+        tmp = None
+        try:
+            tmp = EvmContract(abi, binary, typename, [], gas=10**9)
+        except Exception, e:
+            raise e
+
+        for func in dir(tmp):
+            if func.startswith("test"):
+                print("  " + func)
+                contract = EvmContract(
+                    abi, binary, typename, [], gas=10**9,
+                    endowment=endowment, log_listener=LogEventLogger())
+                if hasattr(contract, "setUp"):
+                    contract.setUp()
+                getattr(contract, func)()
+                if contract.failed():
+                    print("    Fail!")
+
 
 @cli.command()
 @click.option('--stagedir', default="dapple/staging")
