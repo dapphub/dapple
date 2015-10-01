@@ -1,4 +1,5 @@
 from __future__ import print_function
+from fnmatch import fnmatch
 import cogapp, hashlib, json, os, re, shutil, subprocess, sys, tempfile, yaml
 import dapple.plugins
 
@@ -135,6 +136,46 @@ def preprocess(file_contents, dappfile):
 def build_dir():
     return tempfile.mkdtemp(prefix='dapple-')
 
+def ignore_globs(globs, pwd=''):
+    def _(path, filenames):
+        return set([f
+            for f in filenames for g in globs
+            if fnmatch(os.path.join(path, f), os.path.join(pwd, g))
+            or fnmatch(os.path.join(path, f), g)
+            or fnmatch(f, g)
+        ])
+    return _
+
+constant_regex = re.compile('CONSTANT:["\']([A-Za-z0-9_]*)["\']')
+
+@dapple.plugins.register('core.undefined_constant_hashes')
+def undefined_constant_hashes(file_contents, constants, prefix=''):
+    constant_hashes = {}
+    matches = constant_regex.findall(file_contents)
+
+    if not matches:
+        return constant_hashes
+
+    for constant_name in matches:
+        if constant_name not in constants:
+            constant_hash = sha256('CONSTANT:%s.%s' % (prefix, constant_name))
+            constant_hashes[constant_name] = '0x' + constant_hash
+
+    return constant_hashes
+
+@dapple.plugins.register('core.insert_constants')
+def insert_constants(file_contents, constants):
+    matches = constant_regex.findall(file_contents)
+
+    if not matches:
+        return constant_hashes
+
+    for constant_name in matches:
+        file_contents = re.sub('CONSTANT:["\']' + constant_name + '["\']',
+            constants[constant_name], file_contents)
+
+    return file_contents
+
 @dapple.plugins.register('core.link_packages')
 def link_packages(dappfile, path='', tmpdir=None):
     """
@@ -150,24 +191,28 @@ def link_packages(dappfile, path='', tmpdir=None):
     files = {}
     package_hashes = {}
     contracts = {}
+    undefined_constants = {}
 
     if tmpdir is None:
         tmpdir = dapple.plugins.load('core.build_dir')()
 
     for key, val in dappfile.get('dependencies', {}).iteritems():
         _path = path + '.' + key if path else key
-        _files, _package_hashes, _contracts = link_packages(val, path=_path, tmpdir=tmpdir)
+        _files, _package_hashes, _contracts, _undefined_constants = \
+                link_packages(val, path=_path, tmpdir=tmpdir)
+        files.update(_files)
         package_hashes.update(_package_hashes)
         contracts.update(_contracts)
-        files.update(_files)
+        undefined_constants.update(_undefined_constants)
 
     pkg_hash = sha256(path)
-    source_dir = package_dir(path)
+    source_dir = os.path.join(package_dir(path), dappfile.get('source_dir', ''))
     dest_dir = os.path.join(tmpdir, pkg_hash)
 
-    ignore_globs = ['.dapple'] + dappfile.get('ignore', [])
-    shutil.copytree(source_dir, dest_dir,
-                    ignore=shutil.ignore_patterns(*ignore_globs))
+    shutil.copytree(
+            source_dir, dest_dir,
+            ignore=ignore_globs(
+                ['.dapple'] + dappfile.get('ignore', []), pwd=source_dir))
 
     package_hashes[path.split('.')[-1]] = pkg_hash
 
@@ -176,6 +221,9 @@ def link_packages(dappfile, path='', tmpdir=None):
     file_paths = []
 
     preprocess = dapple.plugins.load("core.preprocess")
+    undefined_constant_hashes = dapple.plugins.load(
+            "core.undefined_constant_hashes")
+    insert_constants = dapple.plugins.load("core.insert_constants")
 
     def local_path_sub (m):
         newpath = ''
@@ -203,6 +251,16 @@ def link_packages(dappfile, path='', tmpdir=None):
             with open(curpath, 'r') as f:
                 try:
                     files[curpath] = preprocess(f.read(), dappfile)
+                    constants = dappfile.get('constants', {})
+                    _undefined_constants = undefined_constant_hashes(
+                            files[curpath], constants, prefix=path)
+                    constants.update(_undefined_constants)
+                    files[curpath] = insert_constants(
+                            files[curpath], constants)
+                    undefined_constants.update(dict([
+                        ('%s.%s' % (path, k) if path else k, v)
+                        for k, v in _undefined_constants.iteritems()]))
+
                 except:
                     print("Error preprocessing %s" % curpath, file=sys.stderr)
                     raise
@@ -225,7 +283,8 @@ def link_packages(dappfile, path='', tmpdir=None):
                 '([\s|;]*)(import\s*)(["|\']?)(dapple[/|\\\]%s)([/|\\\])'
                 % name, '\g<1>\g<2>\g<3>%s\g<5>' % hash, files[curpath])
 
-        for name, contract in contracts.iteritems():
+        for name, contract in sorted(
+                contracts.items(), key=lambda i: len(i[0])*-1):
             files[curpath] = re.sub('(\s*)(%s)(\s*)' % name,
                                     '\g<1>%s\g<3>' % contract['hash'],
                                     files[curpath])
@@ -233,7 +292,7 @@ def link_packages(dappfile, path='', tmpdir=None):
         with open(curpath, 'w') as f:
             f.write(files[curpath])
 
-    return (files, package_hashes, contracts)
+    return (files, package_hashes, contracts, undefined_constants)
 
 
 @cli.command(name="build")
@@ -252,24 +311,46 @@ def build(env):
 
     """
     tmpdir = dapple.plugins.load('core.build_dir')()
-    files, package_hashes, contracts = link_packages(
-                    load_dappfile(env=env), tmpdir=tmpdir)
-
-    filenames = [f.replace(tmpdir, '', 1)[1:] for f in files.keys() if f[-4:] == '.sol']
-
+    err = None
     try:
-        cmd = ['solc']
-        cmd.extend(['--combined-json', 'json-abi,binary,sol-abi'])
-        cmd.extend(filenames)
-        p = subprocess.check_output(cmd, cwd=tmpdir)
+        files, package_hashes, contracts, undefined_constants = \
+                link_packages(load_dappfile(env=env), tmpdir=tmpdir)
 
-    except subprocess.CalledProcessError:
-        cmd = ['solc']
-        cmd.extend(['--combined-json', 'abi,bin,interface'])
-        cmd.extend(filenames)
-        p = subprocess.check_output(cmd, cwd=tmpdir)
+        filenames = [f.replace(tmpdir, '', 1)[1:]
+                for f in files.keys() if f[-4:] == '.sol']
+
+        try:
+            cmd = ['solc']
+            cmd.extend(['--combined-json', 'json-abi,binary,sol-abi'])
+            cmd.extend(filenames)
+            p = subprocess.check_output(cmd, cwd=tmpdir,
+                    stderr=subprocess.STDOUT)
+
+        except subprocess.CalledProcessError as e:
+            cmd = ['solc']
+            cmd.extend(['--combined-json', 'abi,bin,interface'])
+            cmd.extend(filenames)
+            p = subprocess.check_output(cmd, cwd=tmpdir,
+                    stderr=subprocess.STDOUT)
+
+    except Exception as e:
+        err = e
 
     shutil.rmtree(tmpdir)
+
+    if err is not None:
+        if hasattr(err, 'output'):
+            for name, identifier in package_hashes.iteritems():
+                err.output = err.output.replace(identifier, name)
+            for name, identifier in files.iteritems():
+                err.output = err.output.replace(identifier, name)
+            for name, contract in contracts.iteritems():
+                err.output = err.output.replace(contract['hash'], name)
+            err.output = re.sub('-+\^', '', err.output)
+            print(err.output, file=sys.stderr)
+            exit(1)
+
+        raise err
 
     build = {}
     raw_build = json.loads(p)["contracts"]
@@ -281,6 +362,12 @@ def build(env):
         contract_name = contract_names.get(key, key)
         if 'interface' in val:
             val['interface'] = val['interface'].replace(key, contract_name)
+
+        if 'bin' in val:
+            for const, const_hash in undefined_constants.iteritems():
+                val['bin'] = val['bin'].replace(
+                        re.sub('^0x', '', const_hash),
+                        '__CONSTANT:"%s"__' % const)
 
         build[contract_name] = val
 

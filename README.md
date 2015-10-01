@@ -42,9 +42,10 @@ If the `mkvirtualenv` command doesn't work, you might need to add [virtualenvwra
 
 This will create a Python virtual environment called `dapple` and drop you into it. To leave the virtual environment, type `deactivate`. To return to it, type `workon dapple`.
 
-The following step is not optional:
+The following steps are not optional:
 
     pip install -r requirements.txt
+    python setup.py install
 
 After this, you should have all of dapple's dependencies installed. The files related to the dapple CLI utility can be found in `/dapple`. To run the dapple CLI utility without having to install it, you can use `python -m dapple`.
 
@@ -58,6 +59,8 @@ Dapple packages are defined by the presence of a `.dapple` directory containing 
 `version`: The version of the dapple package.
 
 The following keys may also be defined:
+
+`source_dir`: By default, Dapple will process all source files in the project's root directory and its descendants. It will also interpret imports relative to the project's root directory during the build process. This setting overrides this behavior and allows you to specify a subfolder of the project to use instead.
 
 `ignore`: A list of filenames to ignore. [Globbing](https://en.wikipedia.org/wiki/Glob_%28programming%29) is supported.
 
