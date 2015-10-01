@@ -289,6 +289,8 @@ def build(env):
                 err.output = err.output.replace(contract['hash'], name)
             err.output = re.sub('-+\^', '', err.output)
             print(err.output, file=sys.stderr)
+            exit(1)
+
         raise err
 
     build = {}
