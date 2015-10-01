@@ -158,17 +158,19 @@ def undefined_constant_hashes(file_contents, constants, prefix=''):
 
     for constant_name in matches:
         if constant_name not in constants:
-            constant_hash = sha256('CONSTANT:%s.%s' % (prefix, constant_name))
+            constant_hash = sha256('CONSTANT:%s.%s'
+                    % (prefix, constant_name))[:20] # addresses are 20 bytes
             constant_hashes[constant_name] = '0x' + constant_hash
 
     return constant_hashes
 
 @dapple.plugins.register('core.insert_constants')
 def insert_constants(file_contents, constants):
+    constant_hashes = {}
     matches = constant_regex.findall(file_contents)
 
     if not matches:
-        return constant_hashes
+        return file_contents
 
     for constant_name in matches:
         file_contents = re.sub('CONSTANT:["\']' + constant_name + '["\']',
