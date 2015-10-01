@@ -293,8 +293,6 @@ def build(env):
 
         build[contract_name] = val
 
-    shutil.rmtree(tmpdir)
-
     return build
 
 
