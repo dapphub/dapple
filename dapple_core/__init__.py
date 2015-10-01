@@ -146,6 +146,36 @@ def ignore_globs(globs, pwd=''):
         ])
     return _
 
+constant_regex = re.compile('CONSTANT:["\']([A-Za-z0-9_]*)["\']')
+
+@dapple.plugins.register('core.undefined_constant_hashes')
+def undefined_constant_hashes(file_contents, constants, prefix=''):
+    constant_hashes = {}
+    matches = constant_regex.findall(file_contents)
+
+    if not matches:
+        return constant_hashes
+
+    for constant_name in matches:
+        if constant_name not in constants:
+            constant_hash = sha256('CONSTANT:%s.%s' % (prefix, constant_name))
+            constant_hashes[constant_name] = '0x' + constant_hash
+
+    return constant_hashes
+
+@dapple.plugins.register('core.insert_constants')
+def insert_constants(file_contents, constants):
+    matches = constant_regex.findall(file_contents)
+
+    if not matches:
+        return constant_hashes
+
+    for constant_name in matches:
+        file_contents = re.sub('CONSTANT:["\']' + constant_name + '["\']',
+            constants[constant_name], file_contents)
+
+    return file_contents
+
 @dapple.plugins.register('core.link_packages')
 def link_packages(dappfile, path='', tmpdir=None):
     """
@@ -161,16 +191,19 @@ def link_packages(dappfile, path='', tmpdir=None):
     files = {}
     package_hashes = {}
     contracts = {}
+    undefined_constants = {}
 
     if tmpdir is None:
         tmpdir = dapple.plugins.load('core.build_dir')()
 
     for key, val in dappfile.get('dependencies', {}).iteritems():
         _path = path + '.' + key if path else key
-        _files, _package_hashes, _contracts = link_packages(val, path=_path, tmpdir=tmpdir)
+        _files, _package_hashes, _contracts, _undefined_constants = \
+                link_packages(val, path=_path, tmpdir=tmpdir)
+        files.update(_files)
         package_hashes.update(_package_hashes)
         contracts.update(_contracts)
-        files.update(_files)
+        undefined_constants.update(_undefined_constants)
 
     pkg_hash = sha256(path)
     source_dir = os.path.join(package_dir(path), dappfile.get('source_dir', ''))
@@ -188,6 +221,9 @@ def link_packages(dappfile, path='', tmpdir=None):
     file_paths = []
 
     preprocess = dapple.plugins.load("core.preprocess")
+    undefined_constant_hashes = dapple.plugins.load(
+            "core.undefined_constant_hashes")
+    insert_constants = dapple.plugins.load("core.insert_constants")
 
     def local_path_sub (m):
         newpath = ''
@@ -215,6 +251,16 @@ def link_packages(dappfile, path='', tmpdir=None):
             with open(curpath, 'r') as f:
                 try:
                     files[curpath] = preprocess(f.read(), dappfile)
+                    constants = dappfile.get('constants', {})
+                    _undefined_constants = undefined_constant_hashes(
+                            files[curpath], constants, prefix=path)
+                    constants.update(_undefined_constants)
+                    files[curpath] = insert_constants(
+                            files[curpath], constants)
+                    undefined_constants.update(dict([
+                        ('%s.%s' % (path, k) if path else k, v)
+                        for k, v in _undefined_constants.iteritems()]))
+
                 except:
                     print("Error preprocessing %s" % curpath, file=sys.stderr)
                     raise
@@ -246,7 +292,7 @@ def link_packages(dappfile, path='', tmpdir=None):
         with open(curpath, 'w') as f:
             f.write(files[curpath])
 
-    return (files, package_hashes, contracts)
+    return (files, package_hashes, contracts, undefined_constants)
 
 
 @cli.command(name="build")
@@ -267,10 +313,11 @@ def build(env):
     tmpdir = dapple.plugins.load('core.build_dir')()
     err = None
     try:
-        files, package_hashes, contracts = link_packages(
-                        load_dappfile(env=env), tmpdir=tmpdir)
+        files, package_hashes, contracts, undefined_constants = \
+                link_packages(load_dappfile(env=env), tmpdir=tmpdir)
 
-        filenames = [f.replace(tmpdir, '', 1)[1:] for f in files.keys() if f[-4:] == '.sol']
+        filenames = [f.replace(tmpdir, '', 1)[1:]
+                for f in files.keys() if f[-4:] == '.sol']
 
         try:
             cmd = ['solc']
@@ -315,6 +362,12 @@ def build(env):
         contract_name = contract_names.get(key, key)
         if 'interface' in val:
             val['interface'] = val['interface'].replace(key, contract_name)
+
+        if 'bin' in val:
+            for const, const_hash in undefined_constants.iteritems():
+                val['bin'] = val['bin'].replace(
+                        re.sub('^0x', '', const_hash),
+                        '__CONSTANT:"%s"__' % const)
 
         build[contract_name] = val
 
