@@ -329,7 +329,7 @@ def build(env):
                 stderr=subprocess.STDOUT)
 
     except subprocess.CalledProcessError as e:
-        err = e
+        solc_err = e
 
     shutil.rmtree(tmpdir)
 
