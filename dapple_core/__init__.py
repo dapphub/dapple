@@ -4,7 +4,8 @@ import cogapp, hashlib, json, os, re, shutil, subprocess, sys, tempfile, yaml
 import dapple.plugins
 
 from ethertdd import set_gas_limit, EvmContract
-from dapple import cli, click, DappleException, expand_dot_keys, deep_merge
+from dapple import DappleException, expand_dot_keys, deep_merge
+from dapple.cli import cli, click
 
 def package_dir(package_path):
     if package_path == '':
@@ -313,46 +314,35 @@ def build(env):
 
     """
     tmpdir = dapple.plugins.load('core.build_dir')()
-    err = None
+    solc_err = None
+    files, package_hashes, contracts, undefined_constants = \
+            link_packages(load_dappfile(env=env), tmpdir=tmpdir)
+
+    filenames = [f.replace(tmpdir, '', 1)[1:]
+            for f in files.keys() if f[-4:] == '.sol']
+
     try:
-        files, package_hashes, contracts, undefined_constants = \
-                link_packages(load_dappfile(env=env), tmpdir=tmpdir)
+        cmd = ['solc']
+        cmd.extend(['--combined-json', 'abi,bin,interface'])
+        cmd.extend(filenames)
+        p = subprocess.check_output(cmd, cwd=tmpdir,
+                stderr=subprocess.STDOUT)
 
-        filenames = [f.replace(tmpdir, '', 1)[1:]
-                for f in files.keys() if f[-4:] == '.sol']
-
-        try:
-            cmd = ['solc']
-            cmd.extend(['--combined-json', 'json-abi,binary,sol-abi'])
-            cmd.extend(filenames)
-            p = subprocess.check_output(cmd, cwd=tmpdir,
-                    stderr=subprocess.STDOUT)
-
-        except subprocess.CalledProcessError as e:
-            cmd = ['solc']
-            cmd.extend(['--combined-json', 'abi,bin,interface'])
-            cmd.extend(filenames)
-            p = subprocess.check_output(cmd, cwd=tmpdir,
-                    stderr=subprocess.STDOUT)
-
-    except Exception as e:
+    except subprocess.CalledProcessError as e:
         err = e
 
     shutil.rmtree(tmpdir)
 
-    if err is not None:
-        if hasattr(err, 'output'):
-            for name, identifier in package_hashes.iteritems():
-                err.output = err.output.replace(identifier, name)
-            for name, identifier in files.iteritems():
-                err.output = err.output.replace(identifier, name)
-            for name, contract in contracts.iteritems():
-                err.output = err.output.replace(contract['hash'], name)
-            err.output = re.sub('-+\^', '', err.output)
-            print(err.output, file=sys.stderr)
-            exit(1)
-
-        raise err
+    if solc_err is not None:
+        for name, identifier in package_hashes.iteritems():
+            solc_err.output = solc_err.output.replace(identifier, name)
+        for name, identifier in files.iteritems():
+            solc_err.output = solc_err.output.replace(identifier, name)
+        for name, contract in contracts.iteritems():
+            solc_err.output = solc_err.output.replace(contract['hash'], name)
+        solc_err.output = re.sub('-+\^', '', solc_err.output)
+        print(solc_err.output, file=sys.stderr)
+        exit(1)
 
     build = {}
     raw_build = json.loads(p)["contracts"]

@@ -34,10 +34,22 @@ setup(
     keywords='ethereum blockchain development',
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
     install_requires=[
+        'bitcoin',
         'click',
+        'cogapp',
         'ethereum',
-        'ethertdd',
-        'pyaml'
+        'ethereum-serpent',
+        'EtherTDD',
+        'pbkdf2',
+        'pyaml',
+        'pycrypto',
+        'pyethash',
+        'pysha3',
+        'PyYAML',
+        'repoze.lru',
+        'rlp',
+        'scrypt',
+        'wheel'
     ],
     entry_points={
         'console_scripts': [
