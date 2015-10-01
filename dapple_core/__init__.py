@@ -158,7 +158,8 @@ def undefined_constant_hashes(file_contents, constants, prefix=''):
 
     for constant_name in matches:
         if constant_name not in constants:
-            constant_hash = sha256('CONSTANT:%s.%s' % (prefix, constant_name))
+            constant_hash = sha256('CONSTANT:%s.%s'
+                    % (prefix, constant_name))[:20] # addresses are 20 bytes
             constant_hashes[constant_name] = '0x' + constant_hash
 
     return constant_hashes
