@@ -225,7 +225,8 @@ def link_packages(dappfile, path='', tmpdir=None):
                 '([\s|;]*)(import\s*)(["|\']?)(dapple[/|\\\]%s)([/|\\\])'
                 % name, '\g<1>\g<2>\g<3>%s\g<5>' % hash, files[curpath])
 
-        for name, contract in contracts.iteritems():
+        for name, contract in sorted(
+                contracts.items(), key=lambda i: len(i[0])*-1):
             files[curpath] = re.sub('(\s*)(%s)(\s*)' % name,
                                     '\g<1>%s\g<3>' % contract['hash'],
                                     files[curpath])
