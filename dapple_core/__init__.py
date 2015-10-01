@@ -162,7 +162,7 @@ def link_packages(dappfile, path='', tmpdir=None):
         files.update(_files)
 
     pkg_hash = sha256(path)
-    source_dir = package_dir(path)
+    source_dir = os.path.join(package_dir(path), dappfile.get('source_dir', ''))
     dest_dir = os.path.join(tmpdir, pkg_hash)
 
     ignore_globs = ['.dapple'] + dappfile.get('ignore', [])

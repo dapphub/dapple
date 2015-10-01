@@ -60,6 +60,8 @@ Dapple packages are defined by the presence of a `.dapple` directory containing 
 
 The following keys may also be defined:
 
+`source_dir`: By default, Dapple will process all source files in the project's root directory and its descendants. It will also interpret imports relative to the project's root directory during the build process. This setting overrides this behavior and allows you to specify a subfolder of the project to use instead.
+
 `ignore`: A list of filenames to ignore. [Globbing](https://en.wikipedia.org/wiki/Glob_%28programming%29) is supported.
 
 `preprocessor_vars`: Variables to pass in for your preprocessor or templating engine to use in its rendering context. Dapple uses [cogapp](http://pypi.python.org/pypi/cogapp) by default.
