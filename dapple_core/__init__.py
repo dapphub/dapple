@@ -170,7 +170,7 @@ def insert_constants(file_contents, constants):
     matches = constant_regex.findall(file_contents)
 
     if not matches:
-        return constant_hashes
+        return file_contents
 
     for constant_name in matches:
         file_contents = re.sub('CONSTANT:["\']' + constant_name + '["\']',
