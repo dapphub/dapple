@@ -253,24 +253,32 @@ def build(env):
 
     """
     tmpdir = dapple.plugins.load('core.build_dir')()
-    files, package_hashes, contracts = link_packages(
-                    load_dappfile(env=env), tmpdir=tmpdir)
-
-    filenames = [f.replace(tmpdir, '', 1)[1:] for f in files.keys() if f[-4:] == '.sol']
-
+    err = None
     try:
-        cmd = ['solc']
-        cmd.extend(['--combined-json', 'json-abi,binary,sol-abi'])
-        cmd.extend(filenames)
-        p = subprocess.check_output(cmd, cwd=tmpdir)
+        files, package_hashes, contracts = link_packages(
+                        load_dappfile(env=env), tmpdir=tmpdir)
 
-    except subprocess.CalledProcessError:
-        cmd = ['solc']
-        cmd.extend(['--combined-json', 'abi,bin,interface'])
-        cmd.extend(filenames)
-        p = subprocess.check_output(cmd, cwd=tmpdir)
+        filenames = [f.replace(tmpdir, '', 1)[1:] for f in files.keys() if f[-4:] == '.sol']
+
+        try:
+            cmd = ['solc']
+            cmd.extend(['--combined-json', 'json-abi,binary,sol-abi'])
+            cmd.extend(filenames)
+            p = subprocess.check_output(cmd, cwd=tmpdir)
+
+        except subprocess.CalledProcessError as e:
+            cmd = ['solc']
+            cmd.extend(['--combined-json', 'abi,bin,interface'])
+            cmd.extend(filenames)
+            p = subprocess.check_output(cmd, cwd=tmpdir)
+
+    except Exception as e:
+        err = e
 
     shutil.rmtree(tmpdir)
+
+    if err is not None:
+        raise err
 
     build = {}
     raw_build = json.loads(p)["contracts"]
@@ -284,6 +292,8 @@ def build(env):
             val['interface'] = val['interface'].replace(key, contract_name)
 
         build[contract_name] = val
+
+    shutil.rmtree(tmpdir)
 
     return build
 
