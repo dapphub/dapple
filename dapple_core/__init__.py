@@ -264,13 +264,15 @@ def build(env):
             cmd = ['solc']
             cmd.extend(['--combined-json', 'json-abi,binary,sol-abi'])
             cmd.extend(filenames)
-            p = subprocess.check_output(cmd, cwd=tmpdir)
+            p = subprocess.check_output(cmd, cwd=tmpdir,
+                    stderr=subprocess.STDOUT)
 
         except subprocess.CalledProcessError as e:
             cmd = ['solc']
             cmd.extend(['--combined-json', 'abi,bin,interface'])
             cmd.extend(filenames)
-            p = subprocess.check_output(cmd, cwd=tmpdir)
+            p = subprocess.check_output(cmd, cwd=tmpdir,
+                    stderr=subprocess.STDOUT)
 
     except Exception as e:
         err = e
@@ -278,6 +280,15 @@ def build(env):
     shutil.rmtree(tmpdir)
 
     if err is not None:
+        if hasattr(err, 'output'):
+            for name, identifier in package_hashes.iteritems():
+                err.output = err.output.replace(identifier, name)
+            for name, identifier in files.iteritems():
+                err.output = err.output.replace(identifier, name)
+            for name, contract in contracts.iteritems():
+                err.output = err.output.replace(contract['hash'], name)
+            err.output = re.sub('-+\^', '', err.output)
+            print(err.output, file=sys.stderr)
         raise err
 
     build = {}
