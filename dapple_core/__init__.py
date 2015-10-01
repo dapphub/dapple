@@ -1,4 +1,5 @@
 from __future__ import print_function
+from fnmatch import fnmatch
 import cogapp, hashlib, json, os, re, shutil, subprocess, sys, tempfile, yaml
 import dapple.plugins
 
@@ -135,6 +136,16 @@ def preprocess(file_contents, dappfile):
 def build_dir():
     return tempfile.mkdtemp(prefix='dapple-')
 
+def ignore_globs(globs, pwd=''):
+    def _(path, filenames):
+        return set([f
+            for f in filenames for g in globs
+            if fnmatch(os.path.join(path, f), os.path.join(pwd, g))
+            or fnmatch(os.path.join(path, f), g)
+            or fnmatch(f, g)
+        ])
+    return _
+
 @dapple.plugins.register('core.link_packages')
 def link_packages(dappfile, path='', tmpdir=None):
     """
@@ -165,9 +176,10 @@ def link_packages(dappfile, path='', tmpdir=None):
     source_dir = os.path.join(package_dir(path), dappfile.get('source_dir', ''))
     dest_dir = os.path.join(tmpdir, pkg_hash)
 
-    ignore_globs = ['.dapple'] + dappfile.get('ignore', [])
-    shutil.copytree(source_dir, dest_dir,
-                    ignore=shutil.ignore_patterns(*ignore_globs))
+    shutil.copytree(
+            source_dir, dest_dir,
+            ignore=ignore_globs(
+                ['.dapple'] + dappfile.get('ignore', []), pwd=source_dir))
 
     package_hashes[path.split('.')[-1]] = pkg_hash
 
