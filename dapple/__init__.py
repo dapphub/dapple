@@ -2,23 +2,6 @@ from __future__ import print_function
 
 __version__ = '0.0.1a'
 
-import yaml
-import re
-import subprocess
-import json
-import os
-import shutil
-import time
-import string
-from ethertdd import set_gas_limit, EvmContract
-
-import click
-
-@click.group()
-def cli():
-    pass
-
-
 def deep_merge(d1, d2):
     """Merge two dictionaries such that any nested
     directories are also merged together. Example:

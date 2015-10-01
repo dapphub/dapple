@@ -6,7 +6,7 @@ import yaml
 import sys
 import subprocess
 import click
-from . import cli
+from .cli import cli
 
 def init(string=""):
     plugins = ['dapple_core']
