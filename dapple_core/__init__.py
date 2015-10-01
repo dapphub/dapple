@@ -166,6 +166,7 @@ def undefined_constant_hashes(file_contents, constants, prefix=''):
 
 @dapple.plugins.register('core.insert_constants')
 def insert_constants(file_contents, constants):
+    constant_hashes = {}
     matches = constant_regex.findall(file_contents)
 
     if not matches:
