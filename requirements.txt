@@ -4,6 +4,7 @@ cogapp==2.4
 ethereum==1.0.2
 ethereum-serpent==2.0.1
 EtherTDD==0.1.5
+ipfs-api==0.1.12
 pbkdf2==1.3
 pyaml==15.8.2
 pycrypto==2.6.1
