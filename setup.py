@@ -37,7 +37,6 @@ setup(
         'bitcoin',
         'click',
         'cogapp',
-        'ethereum',
         'ethereum-serpent',
         'EtherTDD',
         'pbkdf2',
@@ -48,6 +47,7 @@ setup(
         'PyYAML',
         'repoze.lru',
         'rlp',
+        'ethereum',
         'scrypt',
         'wheel'
     ],
