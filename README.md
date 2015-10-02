@@ -42,9 +42,8 @@ If the `mkvirtualenv` command doesn't work, you might need to add [virtualenvwra
 
 This will create a Python virtual environment called `dapple` and drop you into it. To leave the virtual environment, type `deactivate`. To return to it, type `workon dapple`.
 
-The following steps are not optional:
+And then install in the usual way:
 
-    pip install -r requirements.txt
     python setup.py install
 
 After this, you should have all of dapple's dependencies installed. The files related to the dapple CLI utility can be found in `/dapple`. To run the dapple CLI utility without having to install it, you can use `python -m dapple`.
