@@ -18,6 +18,9 @@ def init(string=""):
     with open('.dapple/dappfile', 'w') as f:
         f.write("name: 'my_dapple_package'\nversion: '0.0.1a'")
 
+    with open('.dapple/.gitignore', 'w') as f:
+        f.write("packages")
+
     print("Init'ed Dapple package. You might want to edit .dapple/dappfile now.")
 
 if "__main__" in __name__:
