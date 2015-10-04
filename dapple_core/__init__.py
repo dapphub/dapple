@@ -350,9 +350,8 @@ def build(env):
 
     if solc_err is not None:
         for name, identifier in package_hashes.iteritems():
-            solc_err.output = solc_err.output.replace(identifier, name)
-        for name, identifier in files.iteritems():
-            solc_err.output = solc_err.output.replace(identifier, name)
+            solc_err.output = re.sub(
+                    identifier + '[/|\\\]?', name, solc_err.output)
         for name, contract in contracts.iteritems():
             solc_err.output = solc_err.output.replace(contract['hash'], name)
         solc_err.output = re.sub('-+\^', '', solc_err.output)
