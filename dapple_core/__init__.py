@@ -137,7 +137,7 @@ def preprocess(file_contents, dappfile):
     cog.options.defines = dappfile.get('preprocessor_vars', {})
 
     try:
-        return cog.processString(file_contents)
+        return re.sub('/\*(.|\s)+?\*/', '', cog.processString(file_contents))
 
     except cogapp.cogapp.CogError:
         print(file_contents, file=sys.stderr)
