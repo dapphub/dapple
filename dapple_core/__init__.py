@@ -54,43 +54,61 @@ class LogEventLogger(object):
             self.cached_string = ''
 
 
-@dapple.plugins.register('core.environments')
-def apply_environment(dappfile, env=None, package_path=''):
+@dapple.plugins.register('core.contexts')
+def apply_context(dappfile, context=None, package_path=''):
     """
     Loads up the global dappfile for the project, with all
     dependency dappfiles filled in, and applies the overrides
-    defined in the `environments` mapping.
+    defined in the `contexts` mapping.
 
     """
     package_dappfile = dapple.plugins.load('core.package_dappfile')
 
-    if not env or env not in dappfile.get('environments', {}):
+    if not context or context not in dappfile.get('contexts', {}):
         return dappfile
 
-    environment = dappfile['environments'][env]
-    if not isinstance(environment, dict):
-        environment = package_dappfile(
-                package_path, env=env, filename=environment)
+    stack = [(dappfile, dappfile['contexts'][context], [])]
 
-    return deep_merge(dappfile, environment)
+    while len(stack) > 0:
+        _dappfile, _context, _path = stack.pop()
+
+        for key, val in _context.iteritems():
+            if type(val) == dict:
+                _path.append(key)
+
+                if key not in _dappfile.get('dependencies', {}):
+                    raise DappleException("Invalid context path: '%s'"
+                            % '.'.join(_path.join))
+
+                stack.append((_dappfile['dependencies'][key], val, _path))
+
+                continue
+
+            try:
+                if 'constants' not in _dappfile:
+                    _dappfile['constants'] = {}
+            except Exception as e:
+                import pdb; pdb.set_trace()
+
+            _dappfile['constants'][key] = val
+
+    return dappfile
 
 
 @dapple.plugins.register('core.package_dappfile')
-def load_package_dappfile(package_path, env=None, filename='dappfile'):
+def load_package_dappfile(package_path, env=None):
     """
     Returns the dappfile of the specified package.
 
     """
-    apply_environment = dapple.plugins.load('core.environments')
-    path = os.path.join(package_dir(package_path), '.dapple', filename)
+    apply_context = dapple.plugins.load('core.contexts')
+    path = os.path.join(package_dir(package_path), '.dapple', 'dappfile')
 
     if not os.path.exists(path):
         raise DappleException("%s not found!" % path)
 
     with open(path, 'r') as f:
-        return apply_environment(
-                expand_dot_keys(yaml.load(f)),
-                package_path=package_path, env=env)
+        return expand_dot_keys(yaml.load(f))
 
 
 @dapple.plugins.register('core.dappfile')
@@ -109,15 +127,11 @@ def load_dappfile(dappfile={}, package_path='', env=None):
     dappfile = deep_merge(package_dappfile(package_path, env=env), dappfile)
 
     for key, val in dappfile.get('dependencies', {}).iteritems():
-        if not isinstance(val, dict):
-            dappfile['dependencies'][key] = {}
-
         _package_path = (package_path + '.' + key) if package_path else key
-        dappfile[key] = load_dappfile(
-                dappfile=dappfile['dependencies'][key],
-                package_path=_package_path)
-
-    return dappfile
+        dappfile['dependencies'][key] = load_dappfile(
+            dappfile={}, package_path=_package_path)
+    
+    return apply_context(dappfile, package_path=package_path, context=env)
 
 
 @dapple.plugins.register('core.preprocess')
@@ -175,7 +189,7 @@ def insert_constants(file_contents, constants):
 
     for constant_name in matches:
         file_contents = re.sub('CONSTANT:["\']' + constant_name + '["\']',
-            constants[constant_name], file_contents)
+            str(constants[constant_name]), file_contents)
 
     return file_contents
 
@@ -254,19 +268,20 @@ def link_packages(dappfile, path='', tmpdir=None):
             with open(curpath, 'r') as f:
                 try:
                     files[curpath] = preprocess(f.read(), dappfile)
-                    constants = dappfile.get('constants', {})
-                    _undefined_constants = undefined_constant_hashes(
-                            files[curpath], constants, prefix=path)
-                    constants.update(_undefined_constants)
-                    files[curpath] = insert_constants(
-                            files[curpath], constants)
-                    undefined_constants.update(dict([
-                        ('%s.%s' % (path, k) if path else k, v)
-                        for k, v in _undefined_constants.iteritems()]))
-
                 except:
                     print("Error preprocessing %s" % curpath, file=sys.stderr)
                     raise
+
+            constants = dappfile.get('constants', {})
+            print(dappfile)
+            _undefined_constants = undefined_constant_hashes(
+                    files[curpath], constants, prefix=path)
+            constants.update(_undefined_constants)
+            files[curpath] = insert_constants(
+                    files[curpath], constants)
+            undefined_constants.update(dict([
+                ('%s.%s' % (path, k) if path else k, v)
+                for k, v in _undefined_constants.iteritems()]))
 
             for contract_name in re.findall('^\s*contract ([\w]*)\s*{',
                                             files[curpath], flags=re.MULTILINE):
