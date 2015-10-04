@@ -73,14 +73,13 @@ The following keys may also be defined:
 
 You may use dot notation to collapse nested mappings. In other words, this:
 
-    environments:
+    contexts:
         prod:
-            contracts:
-                NAME_REG: "0x..."
+            NAME_REG: "0x..."
 
 Can be shortened to this:
 
-    environments.prod.contracts.NAME_REG: "0x..."
+    contexts.prod.NAME_REG: "0x..."
 
 
 Usage Prototype 
