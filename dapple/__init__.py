@@ -1,4 +1,5 @@
 from __future__ import print_function
+from .cli import cli, click
 
 __version__ = '0.0.1a'
 
