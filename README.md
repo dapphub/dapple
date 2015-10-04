@@ -69,7 +69,7 @@ The following keys may also be defined:
 
 `contexts`: A mapping of environment names to constants and their values. Constants may be inserted into smart contract source code at any point via `CONSTANT:"some_constant"`.
 
-`dependencies`: A mapping of the names of dapple packages this package depends on to the specific versions of those packages required, or to the specific location to load the package from, or to another mapping. A value of "latest" signifies that the latest version should be used. If a mapping is specified, it must at minimum define a `version` entry whose value consists of either a version number or a location. Overrides for the values specified in each package's dapplefile may also be defined here. For example, if you load a package called `eth-common` that defines a `NAME_REG` value in its `contracts` mapping, you can override this value by defining a mapping of the key `contracts.NAME_REG` under the `dependencies.eth-common` key to whatever value you prefer. Such overrides will only affect the level at which they are defined. If another package, say `foobar`, loads the `eth-common` package, it will see the value defined in `eth-common`'s dapplefile. To override the namereg contract there as well, you would have to override `dependencies.eth-common.contracts.NAME_REG` under the `dependencies.foobar` key.
+`dependencies`: A mapping of the names of dapple packages this package depends on to the specific versions of those packages required, or to the specific location to load the package from. A value of "latest" signifies that the latest version should be used.
 
 You may use dot notation to collapse nested mappings. In other words, this:
 

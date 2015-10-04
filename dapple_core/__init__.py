@@ -98,7 +98,6 @@ def load_package_dappfile(package_path, env=None):
     Returns the dappfile of the specified package.
 
     """
-    apply_context = dapple.plugins.load('core.contexts')
     path = os.path.join(package_dir(package_path), '.dapple', 'dappfile')
 
     if not os.path.exists(path):
@@ -109,7 +108,7 @@ def load_package_dappfile(package_path, env=None):
 
 
 @dapple.plugins.register('core.dappfile')
-def load_dappfile(dappfile={}, package_path='', env=None):
+def load_dappfile(package_path='', env=None):
     """
     Loads the dappfiles of all dependencies in
     the `dappfile` dictionary.
@@ -120,13 +119,14 @@ def load_dappfile(dappfile={}, package_path='', env=None):
     # are basically meaningless.
     # TODO: Respect paths and URLs passed in as version numbers.
 
+    _load_dappfile = dapple.plugins.load('core.dappfile')
     package_dappfile = dapple.plugins.load('core.package_dappfile')
-    dappfile = deep_merge(package_dappfile(package_path, env=env), dappfile)
+    dappfile = package_dappfile(package_path, env=env)
 
     for key, val in dappfile.get('dependencies', {}).iteritems():
         _package_path = (package_path + '.' + key) if package_path else key
-        dappfile['dependencies'][key] = load_dappfile(
-            dappfile={}, package_path=_package_path)
+        dappfile['dependencies'][key] = _load_dappfile(
+                package_path=_package_path)
     
     return apply_context(dappfile, package_path=package_path, context=env)
 
