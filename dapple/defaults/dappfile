@@ -22,6 +22,15 @@ dependencies:
 # ignore:
 #     - ignored_file.sol
 
+# A map of preprocessor variable names to values to
+# pass on to your preprocessor. For example, the
+# default preprocessor is cogapp: this mapping gets
+# passed to `cog.options.defines`. Other preprocessor
+# plugins should treat this map in a similar manner.
+# 
+# preprocessor_vars:
+#     my_template_var: 'my value'
+
 # A list of addresses to swap in during preprocessing.
 # To reference a Dapple constant, put something like
 # this in your source code: CONSTANT:"my_constant"
