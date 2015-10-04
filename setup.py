@@ -50,6 +50,7 @@ setup(
         'rlp',
         'ethereum',
         'scrypt',
+        'ipfs-api',
         'wheel'
     ],
     entry_points={
