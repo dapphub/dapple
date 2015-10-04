@@ -84,11 +84,8 @@ def apply_context(dappfile, context=None, package_path=''):
 
                 continue
 
-            try:
-                if 'constants' not in _dappfile:
-                    _dappfile['constants'] = {}
-            except Exception as e:
-                import pdb; pdb.set_trace()
+            if 'constants' not in _dappfile:
+                _dappfile['constants'] = {}
 
             _dappfile['constants'][key] = val
 
@@ -273,7 +270,6 @@ def link_packages(dappfile, path='', tmpdir=None):
                     raise
 
             constants = dappfile.get('constants', {})
-            print(dappfile)
             _undefined_constants = undefined_constant_hashes(
                     files[curpath], constants, prefix=path)
             constants.update(_undefined_constants)
