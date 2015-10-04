@@ -357,7 +357,6 @@ class DeployScript(object):
                 and
                 self.client.get_block_number() - self.block_margin
                 > int(r['blockNumber']))
-        import pdb; pdb.set_trace()
         receipt = contract.send(
                 _from=from_address, gas_price=gas_price,
                 gas=gas, data=data, wait_until=deploy_wait_until)

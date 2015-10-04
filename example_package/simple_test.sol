@@ -1,4 +1,4 @@
-import "dapple/core/test.sol";
+import "core/test.sol";
 
 contract ExampleTest is Test {
     function testBasicThing() 

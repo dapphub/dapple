@@ -51,6 +51,8 @@ After this, you should have all of dapple's dependencies installed. The files re
 Usage
 =====
 
+You may import files from Dapple packages by simply importing from them as if they were directories. For example, to import `test.sol` from a package called `core`, you would write `import "core/test.sol";`. If you happened to also have a local directory named "core" you wanted to import another contract from, you would write `import "./core/foobar.sol"`. All local imports are interpreted relative to the project's root directory.
+
 Dapple packages are defined by the presence of a `.dapple` directory containing a `dappfile` YAML file. At minimum, `dappfile` must define the following keys:
 
 `name`: The name of the dapple package.

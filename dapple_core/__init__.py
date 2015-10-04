@@ -239,14 +239,6 @@ def link_packages(dappfile, path='', tmpdir=None):
             "core.undefined_constant_hashes")
     insert_constants = dapple.plugins.load("core.insert_constants")
 
-    def local_path_sub (m):
-        newpath = ''
-
-        if m.group(4):
-            newpath = os.path.join(pkg_hash, m.group(4))
-
-        return ''.join([m.group(i) for i in range(1, 4)]) + newpath
-
     while len(dir_stack) > 0:
         curdir = dir_stack.pop()
 
@@ -286,16 +278,31 @@ def link_packages(dappfile, path='', tmpdir=None):
                     'location': contract_loc,
                     'hash': 'x' + sha256(contract_loc)
                 }
+
+    def _path_sub (m):
+        old_path = m.group(4)
+
+        if not old_path:
+            return old_path
+
+        path_parts = re.split('[/|\\\]', old_path)
+
+        if path_parts[0] == '.' and len(path_parts) > 1:
+            new_path = os.path.join(pkg_hash, *path_parts[1:])
+
+        elif path_parts[0] in package_hashes.keys():
+            new_path = os.path.join(
+                    package_hashes[path_parts[0]], *path_parts[1:])
+
+        else:
+            new_path = os.path.join(pkg_hash, *path_parts)
+
+        return m.group(1) + m.group(2) + m.group(3) + new_path
     
     for curpath in file_paths:
         files[curpath] = re.sub(
-            '([\\s|;]*)(import\\s*)(["|\']?)(?!dapple)([^"\';]*)',
-            local_path_sub, files[curpath])
-
-        for name, hash in package_hashes.iteritems():
-            files[curpath] = re.sub(
-                '([\s|;]*)(import\s*)(["|\']?)(dapple[/|\\\]%s)([/|\\\])'
-                % name, '\g<1>\g<2>\g<3>%s\g<5>' % hash, files[curpath])
+                '([\\s|;]*)(import\\s*)(["|\']?)([^"\';]*)',
+                _path_sub, files[curpath])
 
         for name, contract in sorted(
                 contracts.items(), key=lambda i: len(i[0])*-1):

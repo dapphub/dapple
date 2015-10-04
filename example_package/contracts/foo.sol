@@ -1,3 +1,3 @@
-import "dapple/subpackage/bar.sol";
+import "subpackage/bar.sol";
 
 contract Foo is Bar {}
