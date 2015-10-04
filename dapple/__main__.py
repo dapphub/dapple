@@ -1,4 +1,6 @@
 from __future__ import print_function
+from pkg_resources import resource_listdir, resource_string
+
 import os
 import importlib
 import dapple
@@ -9,14 +11,11 @@ import click
 from .cli import cli
 
 def init(string=""):
-    plugins = ['dapple_core']
     os.makedirs('.dapple')
 
-    with open('.dapple/plugins', 'w') as f:
-        f.write('dapple_core')
-
-    with open('.dapple/dappfile', 'w') as f:
-        f.write("name: 'my_dapple_package'\nversion: '0.0.1a'")
+    for fname in resource_listdir(__name__, 'defaults'):
+        with open('.dapple/' + fname, 'w') as f:
+            f.write(resource_string(__name__, 'defaults/' + fname))
 
     print("Init'ed Dapple package. You might want to edit .dapple/dappfile now.")
 
