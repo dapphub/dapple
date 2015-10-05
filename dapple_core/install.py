@@ -8,11 +8,16 @@ import shutil
 import sys
 
 import dapple.plugins
-from dapple.cli import cli, click
+from dapple.cli import cli, click, load_prefs
 
 @dapple.plugins.register('ipfs.init_client')
 def get_ipfs_client(options=None):
-    return ipfsApi.Client("127.0.0.1", 5001)
+    if options is None:
+        options = load_prefs().get('ipfs', {})
+
+    return ipfsApi.Client(
+            options.get('host', '127.0.0.1'),
+            options.get('port', 5001))
 
 
 @dapple.plugins.register('ipfs.get_dir')

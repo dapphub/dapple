@@ -85,7 +85,7 @@ Can be shortened to this:
 IPFS
 ====
 
-Package publishing and installation is done via IPFS. For now, this means you must have a local IPFS daemon running in order to publish or install Dapple packages.
+Package publishing and installation is done via IPFS. By default, Dapple uses a gateway. To change the IPFS gateway it uses, edit your ~/.dapplerc file.
 
 
 Publishing Packages
