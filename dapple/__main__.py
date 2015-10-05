@@ -1,13 +1,8 @@
-import importlib
-from .cli import cli, InitialCLI
+from .cli import cli, InitialCLI, load_plugins
 
 if "__main__" in __name__:
     try:
-        with open('.dapple/plugins', 'r') as f:
-            plugins = f.readlines()
-
-        for plugin in plugins:
-            importlib.import_module(plugin)
+        load_plugins()
 
     except IOError as e:
         plugins = []
