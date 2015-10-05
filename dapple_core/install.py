@@ -35,6 +35,7 @@ def ipfs_get_dir(ipfs, nodehash, cwd):
 @click.argument("name")
 @click.option("--ipfs")
 @click.option("--save", is_flag=True, default=False)
+@dapple.plugins.register('ipfs.install_package')
 def cli_install_package(name, ipfs=None, save=None):
     ipfs_client = dapple.plugins.load('ipfs.init_client')()
     get_dir = dapple.plugins.load('ipfs.get_dir')
@@ -59,18 +60,17 @@ def cli_install_package(name, ipfs=None, save=None):
         get_dir(ipfs_client, ipfs, package_dir)
         print("Successfully installed package `%s`" % name)
 
-        exit(0)
-
     except ConnectionError:
         print("Could not connect to IPFS! Are you sure it's running?",
                 file=sys.stderr)
+        exit(1)
 
     except OSError:
         print("Error trying to write to `%s`! "
                 "Package may not have installed correctly." % package_dir,
                 file=sys.stderr)
+        exit(1)
     
-    exit(1)
 
 
 @cli.command(name="publish")
