@@ -85,7 +85,7 @@ Can be shortened to this:
 IPFS
 ====
 
-Package publishing and installation is done via IPFS. By default, Dapple uses a gateway. To change the IPFS gateway it uses, edit your ~/.dapplerc file.
+Package publishing and installation is done via IPFS. By default, Dapple tries to connect to a local IPFS instance. To change its IPFS connection settings, edit your ~/.dapplerc file.
 
 
 Publishing Packages
