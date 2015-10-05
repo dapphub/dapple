@@ -48,8 +48,8 @@ And then install in the usual way:
 
 After this, you should have all of dapple's dependencies installed. The files related to the dapple CLI utility can be found in `/dapple`. To run the dapple CLI utility without having to install it, you can use `python -m dapple`.
 
-Usage
-=====
+Basic Usage
+===========
 
 You may import files from Dapple packages by simply importing from them as if they were directories. For example, to import `test.sol` from a package called `core`, you would write `import "core/test.sol";`. If you happened to also have a local directory named "core" you wanted to import another contract from, you would write `import "./core/foobar.sol"`. All local imports are interpreted relative to the project's root directory.
 
@@ -82,7 +82,33 @@ Can be shortened to this:
     contexts.prod.NAME_REG: "0x..."
 
 
-Usage Prototype 
+IPFS
+====
+
+Package publishing and installation is done via IPFS. For now, this means you must have a local IPFS daemon running in order to publish or install Dapple packages.
+
+
+Publishing Packages
+===================
+
+Run the following in your package's root directory:
+
+    dapple publish
+
+Remember the IPFS hash it gives you! At present, anyone who wants to install your package will need it.
+
+
+Installing Packages
+===================
+
+Right now you must specify the IPFS hash of the package you want to install, as well as the name you want to install it under. Once we have a proper package name service running, this requirement will change. For now, you can install packages like so:
+
+    dapple install core --ipfs QmabKxK119XaoLw21wkyxcRkcuxNevZc9nFcUppdoG1AoH
+
+You will also have to manually include the package's name in your `dappfile`'s dependencies map. Eventually this will be automated for you via the `--save` parameter.
+
+
+Basic Usage Prototype 
 ===============
 
 The below documentation does not describe the way dapple currently works, but is instead documentation describing how dapple may eventually work. As pieces are implemented, the corresponding documentation will be moved to the "Usage" section above.
