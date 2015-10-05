@@ -4,7 +4,7 @@ import tarfile
 import os
 
 import dapple.plugins
-from dapple import cli, click
+from dapple.cli import cli, click
 
 ipfs = None
 

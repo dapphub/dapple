@@ -9,7 +9,7 @@ if "__main__" in __name__:
         for plugin in plugins:
             importlib.import_module(plugin)
 
-    except:
+    except IOError as e:
         plugins = []
         cli = InitialCLI()
 

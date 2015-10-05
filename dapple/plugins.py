@@ -2,7 +2,7 @@
 Dapple's plugin system.
 
 """
-from . import DappleException
+from .utils import DappleException
 
 class PluginRegistry(object):
     """

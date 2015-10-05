@@ -4,8 +4,8 @@ import cogapp, hashlib, json, os, re, shutil, subprocess, sys, tempfile, yaml
 import dapple.plugins
 
 from ethertdd import set_gas_limit, EvmContract
-from dapple import DappleException, expand_dot_keys, deep_merge
 from dapple.cli import cli, click
+from dapple.utils import DappleException, expand_dot_keys, deep_merge
 
 def package_dir(package_path):
     if package_path == '':
