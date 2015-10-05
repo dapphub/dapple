@@ -1,11 +1,26 @@
 from __future__ import print_function
-from pkg_resources import resource_listdir, resource_string
+from pkg_resources import cleanup_resources, resource_filename, resource_string
 
 import click
 import dapple.plugins
 import importlib
 import os
+import shutil
 import sys
+import yaml
+
+
+def load_prefs():
+    prefs_file = os.path.join(os.path.expanduser('~'), '.dapplerc')
+
+    if not os.path.exists(prefs_file):
+        shutil.copy(resource_filename(__name__, 'defaults/_dapplerc'),
+                prefs_file)
+
+        cleanup_resources()
+
+    with open(prefs_file, 'r') as f:
+        return yaml.load(f)
 
 
 def load_plugins():
@@ -18,16 +33,16 @@ def load_plugins():
 
 @click.command()
 def init():
-    os.makedirs('.dapple')
+    shutil.copytree(resource_filename(__name__, 'defaults/_dapple'), '.dapple')
 
-    for fname in resource_listdir(__name__, 'defaults'):
-        with open('.dapple/' + fname, 'w') as f:
-            f.write(resource_string(__name__, 'defaults/' + fname))
+    # resource_filename leaves behind temp files.
+    # cleanup_resources deletes them.
+    cleanup_resources()
 
     try:
         load_plugins()
         (dapple.plugins.load('ipfs.install_package'))(
-                'core', ipfs='QmabKxK119XaoLw21wkyxcRkcuxNevZc9nFcUppdoG1AoH') 
+                'core', ipfs='QmdVwtRTUinSU5EHPS84iYz5cLHA1BbZM6Gw6RvhnCHnRP') 
 
     except:
         print("ERROR: Could not pull `core` package from IPFS! "

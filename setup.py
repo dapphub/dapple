@@ -33,7 +33,7 @@ setup(
     ],
     keywords='ethereum blockchain development',
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
-    package_data={'dapple': ['defaults/*']},
+    package_data={'dapple': ['defaults/_dapplerc', 'defaults/_dapple/*']},
     install_requires=[
         'bitcoin',
         'click',
