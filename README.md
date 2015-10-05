@@ -8,7 +8,6 @@ Some features:
 * Contracts are run through the `cog` preprocessor, which a few use cases:
     * "generic" functions
     * Singleton contracts (hard-code addresses for a particular chain context)
-    * easier batch transactions (I still can't figure out how to encode structs and arrays outside of solidity)
 * `dapple test`: You write your Solidity tests in Solidity, not Javascript!
 * `dapple do` reproducible deploy steps
 * package system (a `pack` is solidity sources + chain contexts + some metadata)
@@ -113,13 +112,14 @@ Basic Usage Prototype
 
 The below documentation does not describe the way dapple currently works, but is instead documentation describing how dapple may eventually work. As pieces are implemented, the corresponding documentation will be moved to the "Usage" section above.
 
-Dapple packages are defined by the presence of a dapple.yaml file in the root directory. At minimum, the dapple.yaml file must define the following keys:
+The following keys may also be defined in your dappfile:
 
-`name`: The name of the dapple package.
-
-The following keys may also be defined:
-
-`libraries`: If your contract makes use of libraries, you can specify the addresses for those libraries here. Maps library names to addresses, much like the `contracts` mapping. Does not support regex matching. See the [Solidity documentation on libraries](https://github.com/ethereum/wiki/wiki/Solidity-Tutorial#libraries) for more details.
+`libraries`: If your contract makes use of libraries, you can specify the addresses for those libraries here. Maps library names to addresses, much like the `contracts` mapping. See the [Solidity documentation on libraries](https://github.com/ethereum/wiki/wiki/Solidity-Tutorial#libraries) for more details.
 
 
-Internally, dapple uses a plugin system for all its functionality. Each plugin may define a set of commands and potentially override default behavior.
+Plugins
+=======
+
+Internally, Dapple uses a plugin system for all its functionality. Each plugin may define a set of commands and potentially override default behavior. Dapple plugins are technically just Python modules that know how to register themselves with Dapple. The core Dapple functions are themselves defined via the `dapple_core` plugin. Look at `/dapple_core` in this repo for an example of how to write plugins and register new Dapple commands.
+
+At present there is no special infrastructure for Dapple plugins. You must use the usual Python package repositories and publishing tools to distribute your plugins. [PyPI](http://pypi.python.org/) and [pip](https://pip.pypa.io/en/stable/) are recommended.
