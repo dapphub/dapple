@@ -137,7 +137,7 @@ def preprocess(file_contents, dappfile):
     cog.options.defines = dappfile.get('preprocessor_vars', {})
 
     try:
-        return re.sub('/\*(.|\s)+?\*/', '', cog.processString(file_contents))
+        return cog.processString(file_contents)
 
     except cogapp.cogapp.CogError:
         print(file_contents, file=sys.stderr)
@@ -301,7 +301,7 @@ def link_packages(dappfile, path='', tmpdir=None):
     
     for curpath in file_paths:
         files[curpath] = re.sub(
-                '([\\s|;]*)(import\\s*)(["|\']?)([^"\';]*)',
+                '([\\s|;]*)(import\\s*)(["|\'])([^"\']*)',
                 _path_sub, files[curpath])
 
         for name, contract in sorted(
