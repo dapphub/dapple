@@ -2,6 +2,7 @@ from __future__ import print_function
 from fnmatch import fnmatch
 import cogapp, hashlib, json, os, re, shutil, subprocess, sys, tempfile, yaml
 import dapple.plugins
+from . import install
 
 from ethertdd import set_gas_limit, EvmContract
 from dapple.cli import cli, click
