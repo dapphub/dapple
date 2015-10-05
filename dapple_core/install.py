@@ -66,7 +66,7 @@ def cli_install_package(name, ipfs=None, save=None):
         print("Successfully installed package `%s`" % name)
 
     except ConnectionError:
-        print("Could not connect to IPFS! Are you sure it's running?",
+        print("Could not connect to IPFS! Check your .dapplerc settings.",
                 file=sys.stderr)
         exit(1)
 
@@ -87,7 +87,8 @@ def cli_publish_package():
         print("Package published on IPFS at %s" % package['Hash'])
 
     except ConnectionError:
-        print("Could not connect to IPFS! Are you sure it's running?",
+        print("Could not upload to IPFS! "
+                "The node in your .dapplerc may be down or read-only.",
                 file=sys.stderr)
         exit(1)
 
