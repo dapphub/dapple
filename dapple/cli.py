@@ -42,7 +42,7 @@ def init():
     try:
         load_plugins()
         (dapple.plugins.load('ipfs.install_package'))(
-                'core', ipfs='QmdVwtRTUinSU5EHPS84iYz5cLHA1BbZM6Gw6RvhnCHnRP') 
+                'core', ipfs='QmP3sVwo7nRxekM37pyLL4AS7E1rX5qnAnFNGLpgwgZsHj')
 
     except:
         print("ERROR: Could not pull `core` package from IPFS! "
