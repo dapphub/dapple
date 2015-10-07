@@ -2,4 +2,9 @@ site_name: Dapple Docs
 pages:
 - Home: index.md
 - Quickstart: quickstart.md
+- Constants: constants.md
+- dappfile: dappfile.md
+- .dapplerc: dapplerc.md
+- Plugins: plugins.md
+- Glossary: glossary.md
 theme: readthedocs
