@@ -176,14 +176,14 @@ def get_constant_value(constant_name, dappfile):
     name_list = constant_name.split('.')
 
     for i in range(0, len(name_list)-1):
-        _constant_name = '.'.join(name_list[i+1:])
+        constant_name = '.'.join(name_list[i+1:])
         dappfile = dappfile.get('dependencies', {}).get(name_list[i], {})
-        constant_val = dappfile.get('constants', {}).get(_constant_name)
+        constant_val = dappfile.get('constants', {}).get(constant_name)
 
         if constant_val is not None:
             return constant_val
 
-    return None
+    return dappfile.get('constants', {}).get(constant_name)
 
 
 @dapple.plugins.register('core.undefined_constant_hashes')
