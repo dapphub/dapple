@@ -159,7 +159,7 @@ def ignore_globs(globs, pwd=''):
         ])
     return _
 
-constant_regex = re.compile('CONSTANT:["\']([^"\']*)["\']')
+constant_regex = re.compile('CONSTANT\s*\(\s*["\']?([^\)"\']*)["\']?\s*\)')
 
 
 @dapple.plugins.register('core.constant_value')
@@ -197,7 +197,7 @@ def undefined_constant_hashes(file_contents, dappfile, prefix=''):
 
     for constant_name in matches:
         if constant_value(constant_name, dappfile) is None:
-            constant_hash = sha256('CONSTANT:%s.%s'
+            constant_hash = sha256('CONSTANT(%s.%s)'
                     % (prefix, constant_name))[:20] # addresses are 20 bytes
             constant_hashes[constant_name] = '0x' + constant_hash
 
@@ -216,7 +216,7 @@ def insert_constants(file_contents, placeholders, dappfile):
         constant_value = dapple.plugins.load('core.constant_value')
         const_val = constant_value(constant_name, dappfile) \
                 or placeholders.get(constant_name) 
-        file_contents = re.sub('CONSTANT:["\']' + constant_name + '["\']',
+        file_contents = re.sub('CONSTANT\s*\(\s*["\']?' + constant_name + '["\']?\s*\)',
             str(const_val), file_contents)
 
     return file_contents
@@ -419,7 +419,7 @@ def build(env):
             for const, const_hash in undefined_constants.iteritems():
                 val['bin'] = val['bin'].replace(
                         re.sub('^0x', '', const_hash),
-                        '__CONSTANT:"%s"__' % const)
+                        '__CONSTANT(%s)__' % const)
 
         build[contract_name] = val
 
