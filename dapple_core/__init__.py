@@ -323,6 +323,14 @@ def cli_build(env):
     print(dapple.plugins.load('core.build')(env))
 
 
+@dapple.plugins.register('core.err_hint')
+def err_hint(err_msg):
+    if 'Parser error: Source not found.' in err_msg:
+        return ('Make sure your `dependencies` and `source_dir` '
+                'settings in `.dapple/dappfile` are correct.')
+    return ''
+
+
 @dapple.plugins.register('core.build')
 def build(env):
     """
@@ -353,6 +361,7 @@ def build(env):
     shutil.rmtree(tmpdir)
 
     if solc_err is not None:
+        err_hint = dapple.plugins.load('core.err_hint')
         for name, identifier in package_hashes.iteritems():
             solc_err.output = re.sub(
                     identifier + '[/|\\\]?', name, solc_err.output)
@@ -360,6 +369,11 @@ def build(env):
             solc_err.output = solc_err.output.replace(contract['hash'], name)
         solc_err.output = re.sub('-+\^', '', solc_err.output)
         print(solc_err.output, file=sys.stderr)
+
+        hint = err_hint(solc_err.output)
+        if hint:
+            print('Hint: ' + hint, file=sys.stderr)
+
         exit(1)
 
     build = {}
