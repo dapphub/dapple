@@ -1,0 +1,5 @@
+site_name: Dapple Docs
+pages:
+- Home: index.md
+- Quickstart: quickstart.md
+theme: readthedocs

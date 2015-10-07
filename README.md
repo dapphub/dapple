@@ -123,3 +123,13 @@ Plugins
 Internally, Dapple uses a plugin system for all its functionality. Each plugin may define a set of commands and potentially override default behavior. Dapple plugins are technically just Python modules that know how to register themselves with Dapple. The core Dapple functions are themselves defined via the `dapple_core` plugin. Look at `/dapple_core` in this repo for an example of how to write plugins and register new Dapple commands.
 
 At present there is no special infrastructure for Dapple plugins. You must use the usual Python package repositories and publishing tools to distribute your plugins. [PyPI](http://pypi.python.org/) and [pip](https://pip.pypa.io/en/stable/) are recommended.
+
+
+Building documentation
+======================
+
+If you're using the latest Docker image, you should already have [Mkdocs](http://www.mkdocs.org/) installed. If not, install it via:
+
+    pip install mkdocs
+
+From the root project directory, run `mkdocs build`. To run a local server for previewing the documentation, run `mkdocs serve`.
