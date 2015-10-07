@@ -347,7 +347,7 @@ def link_packages(dappfile, path='', tmpdir=None):
 
 
 @cli.command(name="build")
-@click.argument("env", default="dev")
+@click.argument("env", default="default")
 def cli_build(env):
     print(dapple.plugins.load('core.build')(env))
 
@@ -427,7 +427,7 @@ def build(env):
 
 
 @cli.command()
-@click.argument('env', default='dev')
+@click.argument('env', default='default')
 @click.option('-r', '--regex', default="")
 @click.option('-e', '--endowment', type=click.INT, default=1000000)
 def test(env, regex, endowment):
