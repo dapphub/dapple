@@ -66,7 +66,7 @@ The following keys may also be defined:
 
 `preprocessor_vars`: Variables to pass in for your preprocessor or templating engine to use in its rendering context. Dapple uses [cogapp](http://pypi.python.org/pypi/cogapp) by default.
 
-`contexts`: A mapping of environment names to constants and their values. Constants may be inserted into smart contract source code at any point via `CONSTANT:"some_constant"`.
+`contexts`: A mapping of environment names to constants and their values. Constants may be inserted into smart contract source code at any point via `CONSTANT(some_constant)`. The `CONSTANT` directive and all constant names are case sensitive.
 
 `dependencies`: A mapping of the names of dapple packages this package depends on to the specific versions of those packages required, or to the specific location to load the package from. A value of "latest" signifies that the latest version should be used.
 
@@ -123,3 +123,13 @@ Plugins
 Internally, Dapple uses a plugin system for all its functionality. Each plugin may define a set of commands and potentially override default behavior. Dapple plugins are technically just Python modules that know how to register themselves with Dapple. The core Dapple functions are themselves defined via the `dapple_core` plugin. Look at `/dapple_core` in this repo for an example of how to write plugins and register new Dapple commands.
 
 At present there is no special infrastructure for Dapple plugins. You must use the usual Python package repositories and publishing tools to distribute your plugins. [PyPI](http://pypi.python.org/) and [pip](https://pip.pypa.io/en/stable/) are recommended.
+
+
+Building documentation
+======================
+
+If you're using the latest Docker image, you should already have [Mkdocs](http://www.mkdocs.org/) installed. If not, install it via:
+
+    pip install mkdocs
+
+From the root project directory, run `mkdocs build`. To run a local server for previewing the documentation, run `mkdocs serve`.
