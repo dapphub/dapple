@@ -159,26 +159,53 @@ def ignore_globs(globs, pwd=''):
         ])
     return _
 
-constant_regex = re.compile('CONSTANT:["\']([A-Za-z0-9_]*)["\']')
+constant_regex = re.compile('CONSTANT:["\']([^"\']*)["\']')
+
+
+@dapple.plugins.register('core.constant_value')
+def get_constant_value(constant_name, dappfile):
+    """
+    Returns a constant's value given a constant's "path"
+    and a fully-expanded dappfile dictionary.
+
+    >>> dappfile = {'dependencies': {'core': {'const': '0x0'}}}
+    >>> get_constant_value('core.const', dappfile)
+    '0x0'
+
+    """
+    name_list = constant_name.split('.')
+
+    for i in range(0, len(name_list)-1):
+        _constant_name = '.'.join(name_list[i+1:])
+        dappfile = dappfile.get('dependencies', {}).get(name_list[i], {})
+        constant_val = dappfile.get('constants', {}).get(_constant_name)
+
+        if constant_val is not None:
+            return constant_val
+
+    return None
+
 
 @dapple.plugins.register('core.undefined_constant_hashes')
-def undefined_constant_hashes(file_contents, constants, prefix=''):
+def undefined_constant_hashes(file_contents, dappfile, prefix=''):
     constant_hashes = {}
     matches = constant_regex.findall(file_contents)
+    constant_value = dapple.plugins.load('core.constant_value')
 
     if not matches:
         return constant_hashes
 
     for constant_name in matches:
-        if constant_name not in constants:
+        if constant_value(constant_name, dappfile) is None:
             constant_hash = sha256('CONSTANT:%s.%s'
                     % (prefix, constant_name))[:20] # addresses are 20 bytes
             constant_hashes[constant_name] = '0x' + constant_hash
 
     return constant_hashes
 
+
 @dapple.plugins.register('core.insert_constants')
-def insert_constants(file_contents, constants):
+def insert_constants(file_contents, placeholders, dappfile):
     constant_hashes = {}
     matches = constant_regex.findall(file_contents)
 
@@ -186,10 +213,14 @@ def insert_constants(file_contents, constants):
         return file_contents
 
     for constant_name in matches:
+        constant_value = dapple.plugins.load('core.constant_value')
+        const_val = constant_value(constant_name, dappfile) \
+                or placeholders.get(constant_name) 
         file_contents = re.sub('CONSTANT:["\']' + constant_name + '["\']',
-            str(constants[constant_name]), file_contents)
+            str(const_val), file_contents)
 
     return file_contents
+
 
 @dapple.plugins.register('core.link_packages')
 def link_packages(dappfile, path='', tmpdir=None):
@@ -262,12 +293,10 @@ def link_packages(dappfile, path='', tmpdir=None):
                     print("Error preprocessing %s" % curpath, file=sys.stderr)
                     raise
 
-            constants = dappfile.get('constants', {})
             _undefined_constants = undefined_constant_hashes(
-                    files[curpath], constants, prefix=path)
-            constants.update(_undefined_constants)
+                    files[curpath], dappfile, prefix=path)
             files[curpath] = insert_constants(
-                    files[curpath], constants)
+                    files[curpath], _undefined_constants, dappfile)
             undefined_constants.update(dict([
                 ('%s.%s' % (path, k) if path else k, v)
                 for k, v in _undefined_constants.iteritems()]))
