@@ -1,5 +1,5 @@
 from __future__ import print_function
-from requests.exceptions import ConnectionError
+from requests.exceptions import ConnectionError, HTTPError
 
 import ipfsApi
 import tarfile
@@ -9,6 +9,7 @@ import sys
 
 import dapple.plugins
 from dapple.cli import cli, click, load_prefs
+
 
 @dapple.plugins.register('ipfs.init_client')
 def get_ipfs_client(options=None):
@@ -67,6 +68,11 @@ def cli_install_package(name, ipfs=None, save=None):
 
     except ConnectionError:
         print("Could not connect to IPFS! Check your .dapplerc settings.",
+                file=sys.stderr)
+        exit(1)
+
+    except HTTPError:
+        print("Error connecting to IPFS host! Check your .dapplerc settings.",
                 file=sys.stderr)
         exit(1)
 
