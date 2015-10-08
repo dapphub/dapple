@@ -1,6 +1,7 @@
 from __future__ import print_function
 from fnmatch import fnmatch
-import cogapp, hashlib, json, os, re, shutil, subprocess, sys, tempfile, yaml
+import cogapp, hashlib, json, os, re, shutil, subprocess, sys, tempfile
+import ruamel.yaml as yaml
 import dapple.plugins
 from . import install
 
@@ -63,8 +64,6 @@ def apply_context(dappfile, context=None, package_path=''):
     defined in the `contexts` mapping.
 
     """
-    package_dappfile = dapple.plugins.load('core.package_dappfile')
-
     if not context or context not in dappfile.get('contexts', {}):
         return dappfile
 
@@ -94,7 +93,7 @@ def apply_context(dappfile, context=None, package_path=''):
 
 
 @dapple.plugins.register('core.package_dappfile')
-def load_package_dappfile(package_path, env=None):
+def load_package_dappfile(package_path):
     """
     Returns the dappfile of the specified package.
 
@@ -105,11 +104,11 @@ def load_package_dappfile(package_path, env=None):
         raise DappleException("%s not found!" % path)
 
     with open(path, 'r') as f:
-        return expand_dot_keys(yaml.load(f))
+        return yaml.load(f.read(), Loader=yaml.RoundTripLoader)
 
 
 @dapple.plugins.register('core.dappfile')
-def load_dappfile(package_path='', env=None):
+def load_dappfile(package_path='', env='default'):
     """
     Loads the dappfiles of all dependencies in
     the `dappfile` dictionary.
@@ -122,13 +121,16 @@ def load_dappfile(package_path='', env=None):
 
     _load_dappfile = dapple.plugins.load('core.dappfile')
     package_dappfile = dapple.plugins.load('core.package_dappfile')
-    dappfile = package_dappfile(package_path, env=env)
+    dappfile = expand_dot_keys(package_dappfile(package_path))
 
     for key, val in dappfile.get('dependencies', {}).iteritems():
         _package_path = (package_path + '.' + key) if package_path else key
         dappfile['dependencies'][key] = _load_dappfile(
                 package_path=_package_path)
     
+    if env is None:
+        return dappfile
+
     return apply_context(dappfile, package_path=package_path, context=env)
 
 
@@ -198,7 +200,7 @@ def undefined_constant_hashes(file_contents, dappfile, prefix=''):
     for constant_name in matches:
         if constant_value(constant_name, dappfile) is None:
             constant_hash = sha256('CONSTANT(%s.%s)'
-                    % (prefix, constant_name))[:20] # addresses are 20 bytes
+                    % (prefix, constant_name))[:40] # addresses are 20 bytes
             constant_hashes[constant_name] = '0x' + constant_hash
 
     return constant_hashes
