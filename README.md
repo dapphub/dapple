@@ -8,14 +8,15 @@ Some features:
 * Contracts are run through the `cog` preprocessor, which a few use cases:
     * "generic" functions
     * Singleton contracts (hard-code addresses for a particular chain context)
-* `dapple test`: You write your Solidity tests in Solidity, not Javascript!
+* `dapple test`: You write your Solidity tests in Solidity, not the harness language
 * `dapple do` reproducible deploy steps
 * package system (a `pack` is solidity sources + chain contexts + some metadata)
 
 Future plans:
 
-* Work towards a contract package standard
-* admin GUI based on universal-dapp
+* test against specific chain state (like mainnet latest)
+* extend contract package standard
+* lay foundation for alternative dapp browser if mist falls through
 
 
 It was developed out of necessity and in a somewhat ad-hoc manner. The current state of the code reflects this, and it is not a fun time for outside devs yet. We'll hire you to fix that, though.
