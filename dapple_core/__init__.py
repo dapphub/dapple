@@ -198,7 +198,7 @@ def undefined_constant_hashes(file_contents, dappfile, prefix=''):
     for constant_name in matches:
         if constant_value(constant_name, dappfile) is None:
             constant_hash = sha256('CONSTANT(%s.%s)'
-                    % (prefix, constant_name))[:20] # addresses are 20 bytes
+                    % (prefix, constant_name))[:40] # addresses are 20 bytes
             constant_hashes[constant_name] = '0x' + constant_hash
 
     return constant_hashes
