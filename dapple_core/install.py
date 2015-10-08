@@ -6,6 +6,7 @@ import tarfile
 import os
 import shutil
 import sys
+import ruamel.yaml as yaml
 
 import dapple.plugins
 from dapple.cli import cli, click, load_prefs
@@ -41,18 +42,16 @@ def ipfs_get_dir(ipfs, nodehash, cwd):
 @click.argument("name")
 @click.option("--ipfs")
 @click.option("--save", is_flag=True, default=False)
-@dapple.plugins.register('ipfs.install_package')
+@dapple.plugins.register('core.install_package')
 def cli_install_package(name, ipfs=None, save=None):
     ipfs_client = dapple.plugins.load('ipfs.init_client')()
     get_dir = dapple.plugins.load('ipfs.get_dir')
-
-    if save:
-        print("WARNING: --save not yet implemented!", file=sys.stderr)
 
     if not ipfs:
         print("ERROR: --ipfs option is required for now.", file=sys.stderr)
         exit(1)
 
+    version = ipfs
     packages_dir = os.path.join(os.getcwd(), '.dapple', 'packages') 
 
     if not os.path.isdir(packages_dir):
@@ -81,7 +80,52 @@ def cli_install_package(name, ipfs=None, save=None):
                 "Package may not have installed correctly." % package_dir,
                 file=sys.stderr)
         exit(1)
+
+    if not save:
+        return
+
+    # Save to dappfile.
+    dappfile = dapple.plugins.load('core.package_dappfile')('')
+
+    if not 'dependencies' in dappfile:
+        dappfile['dependencies'] = {}
+
+    dappfile['dependencies'][name] = version
+
+    with open(os.path.join(os.getcwd(), '.dapple', 'dappfile'), 'w') as f:
+        f.write(yaml.dump(dappfile, Dumper=yaml.RoundTripDumper))
+
+
+@cli.command(name="uninstall")
+@click.argument("name")
+@click.option("--save", is_flag=True, default=False)
+@dapple.plugins.register('core.uninstall_package')
+def cli_uninstall_package(name, ipfs=None, save=None):
+    package_dir = os.path.join(os.getcwd(), '.dapple', 'packages', name)
+
+    if os.path.isdir(package_dir):
+        shutil.rmtree(package_dir)
+
+    if not save:
+        return
     
+    # Save to dappfile.
+    dappfile = dapple.plugins.load('core.package_dappfile')('')
+    modified = False
+
+    if name in dappfile.get('dependencies'):
+        del dappfile['dependencies'][name]
+        modified = True
+
+    if 'dependencies.%s' % name in dappfile:
+        del dappfile['dependencies.%s' % name]
+        modified = True
+
+    if not modified:
+        return
+
+    with open(os.path.join(os.getcwd(), '.dapple', 'dappfile'), 'w') as f:
+        f.write(yaml.dump(dappfile, Dumper=yaml.RoundTripDumper))
 
 
 @cli.command(name="publish")

@@ -41,7 +41,7 @@ def init():
 
     try:
         load_plugins()
-        (dapple.plugins.load('ipfs.install_package'))(
+        (dapple.plugins.load('core.install_package'))(
                 'core', ipfs='QmP3sVwo7nRxekM37pyLL4AS7E1rX5qnAnFNGLpgwgZsHj')
 
     except:
