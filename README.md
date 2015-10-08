@@ -1,5 +1,6 @@
-`dapple`
-===
+<p align="center">
+  <img src="http://ipfs.pics/ipfs/QmUsyK1FMZLs8vWdgmHTQap2qghmJ2KBg714xvZ5727x82"/>
+</p>
 
 `dapple` is a tool for Solidity developers to help build and manage complex contract systems on Ethereum-like blockchains.
 
