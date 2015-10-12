@@ -84,6 +84,14 @@ Can be shortened to this:
     contexts.prod.NAME_REG: "0x..."
 
 
+Writing Tests
+===
+
+VM tests can be written in solidity by inheriting from the `Test` contract in `core/test.sol'`.
+`dapple` will build an instance of the contract for each function that starts with `test`. It will call `setUp` and then the `test*` function. Failures are detected by emitting the `fail` event (or use the `assert*` helpers).
+
+You can look at a complete example in `contracts/example/simple_test.sol`.
+
 IPFS
 ====
 
