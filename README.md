@@ -6,12 +6,14 @@
 
 Some features:
 
+
 * Contracts are run through the `cog` preprocessor, which a few use cases:
     * "generic" functions
     * Singleton contracts (hard-code addresses for a particular chain context)
 * `dapple test`: You write your Solidity tests in Solidity, not the harness language
 * `dapple do` reproducible deploy steps
-* package system (a `pack` is solidity sources + chain contexts + some metadata)
+* chain contexts: handling equivalent address references on different chains (e.g., libraries and registries on testnet vs mainnet)
+* package system based on ipfs
 
 Future plans:
 
