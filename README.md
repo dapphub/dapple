@@ -6,12 +6,13 @@
 
 Some features:
 
-* Contracts are run through the `cog` preprocessor, which a few use cases:
-    * "generic" functions
-    * Singleton contracts (hard-code addresses for a particular chain context)
+
+
 * `dapple test`: You write your Solidity tests in Solidity, not the harness language
 * `dapple do` reproducible deploy steps
-* package system (a `pack` is solidity sources + chain contexts + some metadata)
+* chain contexts: handling equivalent address references on different chains (e.g., libraries and registries on testnet vs mainnet)
+* package system based on ipfs
+* contracts are run through the `cog` preprocessor, which is useful because solidity has no macros or generics
 
 Future plans:
 
@@ -82,6 +83,14 @@ Can be shortened to this:
 
     contexts.prod.NAME_REG: "0x..."
 
+
+Writing Tests
+===
+
+VM tests can be written in solidity by inheriting from the `Test` contract in `core/test.sol'`.
+`dapple` will build an instance of the contract for each function that starts with `test`. It will call `setUp` and then the `test*` function. Failures are detected by emitting the `fail` event (or use the `assert*` helpers).
+
+You can look at a complete example in `contracts/example/simple_test.sol`.
 
 IPFS
 ====
