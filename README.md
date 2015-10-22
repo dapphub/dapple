@@ -26,6 +26,8 @@ It was developed out of necessity and in a somewhat ad-hoc manner. The current s
 Basic installation
 ==================
 
+[![Join the chat at https://gitter.im/NexusDevelopment/dapple](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/NexusDevelopment/dapple?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
     python setup.py install
 
 Will eventually be available on PyPi as well.
