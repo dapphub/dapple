@@ -9,6 +9,11 @@ from ethertdd import set_gas_limit, EvmContract
 from dapple.cli import cli, click
 from dapple.utils import DappleException, expand_dot_keys, deep_merge
 
+from ethereum import slogging
+from logging import StreamHandler
+dapple_log = slogging.get_logger('dapple')
+slogging.get_logger().addHandler(StreamHandler())
+
 def package_dir(package_path):
     if package_path == '':
         return os.getcwd() 
@@ -47,7 +52,7 @@ class LogEventLogger(object):
             pass
 
         if not self.cached_string:
-            print('    LOG: %s' % event['val'])
+            dapple_log.info('    LOG: %s' % event['val'])
 
         self.string_args.append(event['val'])
 
@@ -432,7 +437,13 @@ def build(env):
 @click.argument('env', default='default')
 @click.option('-r', '--regex', default="")
 @click.option('-e', '--endowment', type=click.INT, default=1000000)
-def test(env, regex, endowment):
+@click.option('-l', '--log_config', multiple=False, type=str, default=":info",
+              help='log_config string: e.g. ":info,eth:debug', show_default=True)
+@click.option('--log-json/--log-no-json', default=False,
+              help='log as structured json output')
+def test(env, regex, endowment, log_config, log_json):
+    slogging.configure(log_config, log_json=log_json)
+
     build = dapple.plugins.load('core.build')(env)
 
     abi, binary = None, None
