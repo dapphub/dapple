@@ -24,7 +24,7 @@ def load_prefs():
 
 
 def load_plugins():
-    with open('.dapple/plugins', 'r') as f:
+    with open('dapple/plugins', 'r') as f:
         plugins = f.readlines()
 
     for plugin in plugins:
@@ -33,7 +33,7 @@ def load_plugins():
 
 @click.command()
 def init():
-    shutil.copytree(resource_filename(__name__, 'defaults/_dapple'), '.dapple')
+    shutil.copytree(resource_filename(__name__, 'defaults/_dapple'), 'dapple')
 
     # resource_filename leaves behind temp files.
     # cleanup_resources deletes them.
@@ -42,14 +42,14 @@ def init():
     try:
         load_plugins()
         (dapple.plugins.load('core.install_package'))(
-                'core', ipfs='QmP3sVwo7nRxekM37pyLL4AS7E1rX5qnAnFNGLpgwgZsHj')
+                'dapple', ipfs='QmaRGc3nrUKSRxUXkYwxwTJYPM1dDqRGgfnUSoHFErfqFq')
 
     except:
-        print("ERROR: Could not pull `core` package from IPFS! "
+        print("ERROR: Could not pull `dapple` package from IPFS! "
                 "You might try installing it manually.", file=sys.stderr)
 
 
-    print("Init'ed Dapple package. You might want to edit .dapple/dappfile now.")
+    print("Init'ed Dapple package. You might want to edit dapple/dappfile now.")
 
 
 class InitialCLI(click.MultiCommand):

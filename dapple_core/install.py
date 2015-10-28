@@ -49,7 +49,7 @@ def cli_install_package(name, ipfs=None, save=None):
         exit(1)
 
     version = ipfs
-    packages_dir = os.path.join(os.getcwd(), '.dapple', 'packages') 
+    packages_dir = os.path.join(os.getcwd(), 'dapple', 'packages') 
 
     if not os.path.isdir(packages_dir):
         os.mkdir(packages_dir)
@@ -81,7 +81,7 @@ def cli_install_package(name, ipfs=None, save=None):
 
     dappfile['dependencies'][name] = version
 
-    with open(os.path.join(os.getcwd(), '.dapple', 'dappfile'), 'w') as f:
+    with open(os.path.join(os.getcwd(), 'dapple', 'dappfile'), 'w') as f:
         f.write(yaml.dump(dappfile, Dumper=yaml.RoundTripDumper))
 
 
@@ -90,7 +90,7 @@ def cli_install_package(name, ipfs=None, save=None):
 @click.option("--save", is_flag=True, default=False)
 @dapple.plugins.register('core.uninstall_package')
 def cli_uninstall_package(name, ipfs=None, save=None):
-    package_dir = os.path.join(os.getcwd(), '.dapple', 'packages', name)
+    package_dir = os.path.join(os.getcwd(), 'dapple', 'packages', name)
 
     if os.path.isdir(package_dir):
         shutil.rmtree(package_dir)
@@ -113,7 +113,7 @@ def cli_uninstall_package(name, ipfs=None, save=None):
     if not modified:
         return
 
-    with open(os.path.join(os.getcwd(), '.dapple', 'dappfile'), 'w') as f:
+    with open(os.path.join(os.getcwd(), 'dapple', 'dappfile'), 'w') as f:
         f.write(yaml.dump(dappfile, Dumper=yaml.RoundTripDumper))
 
 
