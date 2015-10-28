@@ -24,18 +24,7 @@ def get_ipfs_client(options=None):
 
 @dapple.plugins.register('ipfs.get_dir')
 def ipfs_get_dir(ipfs, nodehash, cwd):
-    obj = ipfs.ls(nodehash)["Objects"][0]
-
-    for item in obj["Links"]:
-        if item["Type"] == 1:
-            subdir = os.path.join(cwd, item["Name"])
-            os.mkdir(subdir)
-            ipfs_get_dir(ipfs, item["Hash"], subdir)
-
-        elif item["Type"] == 2:
-            filename = os.path.join(cwd, item["Name"])
-            with open(filename, "w") as f:
-                f.write(ipfs.cat(item["Hash"]))
+    ipfs.get(nodehash, filepath=cwd)
 
 
 @cli.command(name="install")
@@ -65,13 +54,8 @@ def cli_install_package(name, ipfs=None, save=None):
         get_dir(ipfs_client, ipfs, package_dir)
         print("Successfully installed package `%s`" % name)
 
-    except ConnectionError:
+    except (HTTPError, ConnectionError):
         print("Could not connect to IPFS! Check your .dapplerc settings.",
-                file=sys.stderr)
-        exit(1)
-
-    except HTTPError:
-        print("Error connecting to IPFS host! Check your .dapplerc settings.",
                 file=sys.stderr)
         exit(1)
 
@@ -136,9 +120,9 @@ def cli_publish_package():
         package = ipfs.add(os.getcwd(), recursive=True)[-1]
         print("Package published on IPFS at %s" % package['Hash'])
 
-    except ConnectionError:
+    except (HTTPError, ConnectionError):
         print("Could not upload to IPFS! "
-                "The node in your .dapplerc may be down or read-only.",
+                "The node in your .dapplerc file may be down or read-only.",
                 file=sys.stderr)
         exit(1)
 
