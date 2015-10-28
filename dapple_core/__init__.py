@@ -384,6 +384,9 @@ def build(env):
     filenames = [f.replace(tmpdir, '', 1)[1:]
             for f in files.keys() if f[-4:] == '.sol']
 
+    if not filenames:
+        return {}
+
     try:
         cmd = ['solc']
         cmd.extend(['--combined-json', 'abi,bin,interface'])
