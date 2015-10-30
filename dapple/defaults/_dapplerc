@@ -1,3 +1,3 @@
 ipfs:
-    host: ipfs.io
-    port: 80
+    host: localhost 
+    port: 5001
