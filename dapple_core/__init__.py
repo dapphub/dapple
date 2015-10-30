@@ -20,7 +20,7 @@ def package_dir(package_path):
 
     path = [os.getcwd()]
     for p in package_path.split('.'):
-        path.extend(['.dapple', 'packages', p])
+        path.extend(['dapple', 'packages', p])
 
     return os.path.join(*path)
 
@@ -103,7 +103,7 @@ def load_package_dappfile(package_path):
     Returns the dappfile of the specified package.
 
     """
-    path = os.path.join(package_dir(package_path), '.dapple', 'dappfile')
+    path = os.path.join(package_dir(package_path), 'dapple', 'dappfile')
 
     if not os.path.exists(path):
         raise DappleException("%s not found!" % path)
@@ -265,7 +265,7 @@ def link_packages(dappfile, path='', tmpdir=None):
     shutil.copytree(
             source_dir, dest_dir,
             ignore=ignore_globs(
-                ['.dapple'] + dappfile.get('ignore', []), pwd=source_dir))
+                ['dapple'] + dappfile.get('ignore', []), pwd=source_dir))
 
     package_hashes[path.split('.')[-1]] = pkg_hash
 
@@ -363,7 +363,7 @@ def cli_build(env):
 def err_hint(err_msg):
     if 'Parser error: Source not found.' in err_msg:
         return ('Make sure your `dependencies` and `source_dir` '
-                'settings in `.dapple/dappfile` are correct.')
+                'settings in `dapple/dappfile` are correct.')
     return None
 
 
@@ -383,6 +383,9 @@ def build(env):
 
     filenames = [f.replace(tmpdir, '', 1)[1:]
             for f in files.keys() if f[-4:] == '.sol']
+
+    if not filenames:
+        return {}
 
     try:
         cmd = ['solc']

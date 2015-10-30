@@ -5,6 +5,7 @@ import ipfsApi
 import tarfile
 import os
 import shutil
+import stat
 import sys
 import ruamel.yaml as yaml
 
@@ -23,19 +24,15 @@ def get_ipfs_client(options=None):
 
 
 @dapple.plugins.register('ipfs.get_dir')
-def ipfs_get_dir(ipfs, nodehash, cwd):
-    obj = ipfs.ls(nodehash)["Objects"][0]
+def ipfs_get_dir(ipfs, nodehash, name, cwd='.'):
+    ipfs.get(nodehash, filepath=cwd)
+    dest = os.path.join(cwd, name)
+    os.rename(os.path.join(cwd, nodehash), dest)
 
-    for item in obj["Links"]:
-        if item["Type"] == 1:
-            subdir = os.path.join(cwd, item["Name"])
-            os.mkdir(subdir)
-            ipfs_get_dir(ipfs, item["Hash"], subdir)
-
-        elif item["Type"] == 2:
-            filename = os.path.join(cwd, item["Name"])
-            with open(filename, "w") as f:
-                f.write(ipfs.cat(item["Hash"]))
+    os.chmod(dest, 0o755)
+    for root, dirs, _ in os.walk(dest):
+        for d in dirs:
+            os.chmod(os.path.join(root, d), 0o755)
 
 
 @cli.command(name="install")
@@ -52,17 +49,13 @@ def cli_install_package(name, ipfs=None, save=None):
         exit(1)
 
     version = ipfs
-    packages_dir = os.path.join(os.getcwd(), '.dapple', 'packages') 
+    packages_dir = os.path.join(os.getcwd(), 'dapple', 'packages') 
 
     if not os.path.isdir(packages_dir):
         os.mkdir(packages_dir)
 
-    package_dir = os.path.join(packages_dir, name)
     try:
-        if not os.path.isdir(package_dir):
-            os.mkdir(package_dir)
-
-        get_dir(ipfs_client, ipfs, package_dir)
+        get_dir(ipfs_client, ipfs, name, cwd=packages_dir)
         print("Successfully installed package `%s`" % name)
 
     except (HTTPError, ConnectionError):
@@ -72,7 +65,8 @@ def cli_install_package(name, ipfs=None, save=None):
 
     except OSError:
         print("Error trying to write to `%s`! "
-                "Package may not have installed correctly." % package_dir,
+                "Package may not have installed correctly."
+                % os.path.join(packages_dir, name),
                 file=sys.stderr)
         exit(1)
 
@@ -87,7 +81,7 @@ def cli_install_package(name, ipfs=None, save=None):
 
     dappfile['dependencies'][name] = version
 
-    with open(os.path.join(os.getcwd(), '.dapple', 'dappfile'), 'w') as f:
+    with open(os.path.join(os.getcwd(), 'dapple', 'dappfile'), 'w') as f:
         f.write(yaml.dump(dappfile, Dumper=yaml.RoundTripDumper))
 
 
@@ -96,7 +90,7 @@ def cli_install_package(name, ipfs=None, save=None):
 @click.option("--save", is_flag=True, default=False)
 @dapple.plugins.register('core.uninstall_package')
 def cli_uninstall_package(name, ipfs=None, save=None):
-    package_dir = os.path.join(os.getcwd(), '.dapple', 'packages', name)
+    package_dir = os.path.join(os.getcwd(), 'dapple', 'packages', name)
 
     if os.path.isdir(package_dir):
         shutil.rmtree(package_dir)
@@ -119,7 +113,7 @@ def cli_uninstall_package(name, ipfs=None, save=None):
     if not modified:
         return
 
-    with open(os.path.join(os.getcwd(), '.dapple', 'dappfile'), 'w') as f:
+    with open(os.path.join(os.getcwd(), 'dapple', 'dappfile'), 'w') as f:
         f.write(yaml.dump(dappfile, Dumper=yaml.RoundTripDumper))
 
 
@@ -158,7 +152,7 @@ if __name__ == '__main__':
 
     os.mkdir(output_dir)
     get_dir = dapple.plugins.load('ipfs.get_dir')
-    get_dir(ipfs, package_hash, os.path.join(os.getcwd(), output_dir))
+    get_dir(ipfs, package_hash, output_dir, cwd=os.getcwd())
 
     if filecmp.dircmp(package_dir, output_dir).diff_files:
         print("IPFS does not appear to have properly copied %s" % package_dir,
