@@ -389,7 +389,7 @@ def build(env):
 
     try:
         cmd = ['solc']
-        cmd.extend(['--combined-json', 'abi,bin,interface'])
+        cmd.extend(['--combined-json', 'abi,bin,interface', '--optimize'])
         cmd.extend(filenames)
         p = subprocess.check_output(cmd, cwd=tmpdir,
                 stderr=subprocess.STDOUT)
