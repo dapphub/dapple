@@ -356,7 +356,7 @@ def link_packages(dappfile, path='', tmpdir=None):
 @cli.command(name="build")
 @click.argument("env", default="default")
 def cli_build(env):
-    print(dapple.plugins.load('core.build')(env))
+    print(json.dumps(dapple.plugins.load('core.build')(env)))
 
 
 @dapple.plugins.register('core.err_hint')
