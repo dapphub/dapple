@@ -356,7 +356,7 @@ def link_packages(dappfile, path='', tmpdir=None):
 @cli.command(name="build")
 @click.argument("env", default="default")
 def cli_build(env):
-    print(dapple.plugins.load('core.build')(env))
+    print(json.dumps(dapple.plugins.load('core.build')(env)))
 
 
 @dapple.plugins.register('core.err_hint')
@@ -389,7 +389,7 @@ def build(env):
 
     try:
         cmd = ['solc']
-        cmd.extend(['--combined-json', 'abi,bin,interface'])
+        cmd.extend(['--combined-json', 'abi,bin,interface', '--optimize'])
         cmd.extend(filenames)
         p = subprocess.check_output(cmd, cwd=tmpdir,
                 stderr=subprocess.STDOUT)

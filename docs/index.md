@@ -20,4 +20,4 @@ Future plans:
 * Work towards a contract package standard
 * admin GUI based on universal-dapp
 
-Source code can be found up on [Github](https://github.com/MakerDAO/dapple).
+Source code can be found up on [Github](https://github.com/NexusDevelopment/dapple).
