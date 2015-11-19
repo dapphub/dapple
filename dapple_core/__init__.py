@@ -308,8 +308,12 @@ def link_packages(dappfile, path='', tmpdir=None):
                 ('%s.%s' % (path, k) if path else k, v)
                 for k, v in _undefined_constants.iteritems()]))
 
-            for contract_name in re.findall('^\s*contract ([\w]*)\s*{',
-                                            files[curpath], flags=re.MULTILINE):
+            contract_names = sorted(
+                    re.findall('^\s*contract\s+([\w]*)[^{]*{',
+                    files[curpath], flags=re.MULTILINE),
+                lambda a, b: len(b) - len(a))
+
+            for contract_name in contract_names:
                 contract_loc = '%s:%s' % (curpath, contract_name)
                 contracts[contract_name] = {
                     'location': contract_loc,
@@ -343,7 +347,7 @@ def link_packages(dappfile, path='', tmpdir=None):
 
         for name, contract in sorted(
                 contracts.items(), key=lambda i: len(i[0])*-1):
-            files[curpath] = re.sub('(\s*)(%s)(\s*)' % name,
+            files[curpath] = re.sub('([^a-zA-Z0-9]+)(%s)(\s*)' % name,
                                     '\g<1>%s\g<3>' % contract['hash'],
                                     files[curpath])
 
@@ -419,7 +423,6 @@ def build(env):
 
     contract_names = dict([(val['hash'], key)
             for key, val in contracts.iteritems()])
-
     for key, val in raw_build.iteritems():
         contract_name = contract_names.get(key, key)
         if 'interface' in val:
