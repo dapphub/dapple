@@ -31,7 +31,12 @@ dapple takes a disciplined approach to deploying systems of contracts.
 
 **deploy sequence**: A sequence of deploy steps associated with a particular package. 
 
+**complete package**: A package that can be bound with the result of the deploy sequences of a collection of some dependent package
+
+**system type**: A complete package
+**system instance**: The set of objects named by the chain context of a deployed system type.
 
 
 A package will typically ship a dev deploy sequence which will create a chain context which mocks the
 one deployed on Ethereum.
+
