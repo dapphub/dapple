@@ -2,17 +2,18 @@
   "name": "dapple",
   "version": "0.0.0",
   "description": "porting dapple to javascript",
-  "main": "main.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha test/*"
   },
   "bin": {
-    "d2": "main.js"
+    "d2": "./cmd/main.js"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "docopt": "^0.6.2",
     "mocha": "^2.3.4",
+    "read-yaml": "^1.0.0",
     "solc": "^0.1.6",
     "web3": "^0.15.1"
   }

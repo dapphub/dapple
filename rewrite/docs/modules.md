@@ -32,6 +32,7 @@ DSL
 ---
 Deploy sequence language
 
-dapple-env
+workspace
 ---
-Code for dealing with dapple workspace and config
+Code for dealing with dapple workspace and config.
+All interactions with filesystem should be contained to this module.
