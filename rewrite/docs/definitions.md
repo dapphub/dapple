@@ -2,14 +2,19 @@
 ### Definitions:
 
 "Contract" is ambiguous - these terms are preferred:
-**type**: A Solidity "contract" (potentially any named bit of code that can be deployed) - a type name used during compilation
-**object**: A specific contract instance that has been deployed and has an address
+
+**class**: A Solidity "contract" (potentially any named bit of code that can be deployed) - a type name used during compilation
+
+**object**: A specific class instance that has been deployed and has an address
 
 **chain context**: A set of named addresses (possibly null/undefined) for a given blockchain
+
 **contract sources**: A set of Solidity source files
 
 **package**: collection of contract sources with a chain context
+
 **bound package**: A package with all named addresses defined
+
 **unbound package**: A package with at least one undefined named address
 
 **staged package**: A package whose chain context can be modified
@@ -24,6 +29,7 @@
 **complete package**: A package that can be bound with the result of the deploy sequences of a collection of some dependent package
 
 **system type**: A complete package
+
 **system instance**: The set of objects named by the chain context of a deployed system type.
 
 
