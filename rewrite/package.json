@@ -4,11 +4,13 @@
   "description": "porting dapple to javascript",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha"
+    "test": "./node_modules/mocha/bin/mocha test/*"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "mocha": "^2.3.4"
+    "mocha": "^2.3.4",
+    "solc": "^0.1.6",
+    "web3": "^0.15.1"
   }
 }
