@@ -1,0 +1,10 @@
+env:
+    blah: "dep.blah.blah"
+    defined_internal: ""
+    exported: ""
+steps: """
+    x = deploy blah
+"""
+log:
+    step0: ""
+    step1: ""
