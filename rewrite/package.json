@@ -2,9 +2,12 @@
   "name": "dapple",
   "version": "0.0.0",
   "description": "porting dapple to javascript",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha test/*"
+  },
+  "bin": {
+    "d2": "main.js"
   },
   "author": "",
   "license": "MIT",
