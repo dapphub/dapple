@@ -2,13 +2,20 @@
   "name": "dapple",
   "version": "0.0.0",
   "description": "dapp development tool",
-  "keywords": ["dapp", "ethereum", "solidity", "EVM"],
+  "keywords": [
+    "dapp",
+    "ethereum",
+    "solidity",
+    "EVM"
+  ],
   "license": "MIT",
   "author": "Nikolai Mushegian <nikolai@nexusdev.us>",
-  "contributors": [{
-    "name": "Ryan Casey",
-    "email": "ryan@nexusdev.us"
-  }],
+  "contributors": [
+    {
+      "name": "Ryan Casey",
+      "email": "ryan@nexusdev.us"
+    }
+  ],
   "homepage": "dapple.info",
   "bugs": {
     "url": "https://github.com/NexusDevelopment/dapple/issues"
@@ -23,10 +30,12 @@
   "directories": {
     "lib": "lib",
     "bin": "cmd",
-    "doc": "docs"
+    "doc": "docs",
+    "defaults": "defaults"
   },
   "dependencies": {
     "docopt": "^0.6.2",
+    "ethereumjs-lib": "^1.0.1",
     "fs-readdir-recursive": "^1.0.0",
     "mocha": "^2.3.4",
     "read-yaml": "^1.0.0",
@@ -36,5 +45,4 @@
   "engines": {
     "node": ">=5.0.0"
   }
-
 }

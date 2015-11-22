@@ -14,23 +14,27 @@ It will look for the `dappfile` in all parents in order (like `git` command and 
 var yaml = require("read-yaml");
 var fs = require("./file");
 var readdir = require("fs-readdir-recursive");
-var defaults = require("./defaults");
+var constants = require("./constants");
+var path = require("path");
 
 module.exports = class Workspace {
     constructor(path) {
         if( path === undefined ) {
             path = process.cwd();
         }
-        // TODO traverse upwards until you hit dappfile
-        this.package_root = path;
+        this.package_root = this.findPackageRoot(path);
         this.loadDappfile();
     }
     getBuildDir() {
         return this.package_root +"/"+ this.dappfile["build_dir"];
     }
+    findPackageRoot(command_dir) {
+        // TODO traverse upwards until you hit dappfile
+        return command_dir;
+    }
     loadDappfile(path) {
         if( path === undefined ) {
-            path = this.package_root +"/"+ defaults.DAPPFILE_FILENAME;
+            path = this.package_root +"/"+ constants.DAPPFILE_FILENAME;
         }
         this.dappfile = yaml.sync(path);
     }

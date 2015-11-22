@@ -1,3 +1,14 @@
-porting dapple to javascript
+## porting dapple to javascript status
 
-Currently the scope of the rewrite is everything after `solc` is called - e.g. not `build`.
+### single package
+
+#### done
+build
+
+#### in progress
+vmtest
+ipfs
+
+#### to do
+step/run
+install/publish

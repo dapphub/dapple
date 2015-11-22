@@ -1,14 +1,14 @@
 "use strict";
 var fs = require("./file");
 var solc = require("solc");
-var defaults = require("./defaults");
+var constants = require("./constants");
 
 module.exports = class Builder {
     constructor(workspace) {
         this.workspace = workspace;
     }
     addDappleVirtualPackage(sources) {
-        var dapple = defaults.DAPPLE_PACKAGE_SOURCES;
+        var dapple = constants.DAPPLE_PACKAGE_SOURCES;
         for( let path in dapple ) {
             sources[path] = dapple[path];
         }
