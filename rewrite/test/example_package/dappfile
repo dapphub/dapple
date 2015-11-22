@@ -1,1 +1,2 @@
 sol_sources: "src/sol"
+build_dir: "build"
