@@ -3,6 +3,9 @@
 // dapplerc, dappfile, subpackages, etc
 "use strict";
 var yaml = require("read-yaml");
+var fs = require("fs");
+var readdir = require("fs-readdir-recursive");
+
 let DAPPFILE_FILENAME = "dappfile";
 let dapple_class_sources = {
     'dapple/test.sol': __dirname+"/../defaults/dapple_virtual_package/test.sol",
@@ -10,10 +13,13 @@ let dapple_class_sources = {
 }
 
 class Dappfile {
-    constructor(dappfile_path) {
-        this.obj = yaml.sync(dappfile_path);
-        console.log("Dappfile constructor with path:", dappfile_path);
-        console.log("as object", this.obj);
+    constructor(package_root) {
+        this.package_root = package_root;
+        this.obj = yaml.sync(package_root +"/"+ DAPPFILE_FILENAME);
+    }
+    SolSourceDir() {
+        var source_dir = this.package_root +"/"+ this.obj.sol_sources;
+        return source_dir;
     }
 }
 
@@ -24,9 +30,21 @@ module.exports = class Workspace {
         }
         // TODO traverse upwards until you hit root or dapplerc
         this.dappfile_dir = path;
-        this.dappfile = new Dappfile(this.dappfile_dir +"/"+ DAPPFILE_FILENAME);
+        this.dappfile = new Dappfile(this.dappfile_dir);
         this.dapple_class_sources = dapple_class_sources;
     }
-    getSolSources() {
+    // get solidity source files for just this package - no sub-packages
+    loadWorkspaceSources() {
+        var dir = this.dappfile.SolSourceDir();
+        var files = readdir(dir);
+        files = files.filter(function(file) {
+            return file.endsWith(".sol");
+        });
+        var sources = {};
+        files.forEach(function(file) {
+            var origin = dir +"/"+ file;
+            sources[file] = fs.readFileSync(origin).toString();
+        });
+        return sources;
     }
 }

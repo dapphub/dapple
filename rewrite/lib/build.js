@@ -14,13 +14,6 @@ module.exports = class Builder {
             this.sources[path] = this.workspace.dapple_class_sources[path];
         }
     }
-    readSourceFiles(path_list) {
-        var out = {};
-        for( var path of path_lis ) {
-            out[path] = fs.readFileSync(path).toString();
-        }
-        return out;
-    }
     buildWithDapplePackage(sources) {
         var solc = require("solc");
         var out = solc.compile({sources:sources}, 1);
