@@ -3,7 +3,7 @@ dappfile vs dapp header
 
 ### Definitions:
 
-**class**: A Solidity "contract" definition (potentially any named bit of code that can be deployed)
+**class**: A Solidity "contract" definition (potentially any bit of code that can be deployed)
 
 **classname** - a class (type) name used during compilation. 
 
@@ -15,9 +15,9 @@ dappfile vs dapp header
 
 **object header** - object + class header
 
+**chain config** - A chain connection descriptor  (rpc config, datadir)
 
-
-
+**chain** - Enough metadata to unambigously specify a blockchain database. Two default chains are named `ethereum` and `localtestnet`. Chains are stored with a single chain config, but a chain might have multiple valid chain config options (connect to the same network/blockchain through different connections).
 
 **deploy step**: An instruction that makes a change to a (staged package?) AND/OR the global network state
 

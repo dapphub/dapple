@@ -2,7 +2,7 @@ This document describes the `dapple` developer workflow and the intermediate
 data structures it generates. Chain management and testing is mostly left out
 because it is the focus of Ryan's proposal.
 
-It should be read alongside `docs/definitions.md`.
+This proposal should be read alongside `docs/definitions.md`.
 
  pre-`init` (on `npm install -g` or first `dapple init` run)
 
@@ -31,7 +31,7 @@ makes a **source pack**
 
 write to an environment by interacting with its chain
 
-`dapple commit`
+`dapple bundle`
 
 collect the source pack and context into a dapp header
 
