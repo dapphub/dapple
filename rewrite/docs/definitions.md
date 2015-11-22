@@ -1,11 +1,32 @@
+dappfile vs dapp header
+
+
 ### Definitions:
 
-"Contract" is ambiguous - these terms are preferred:
+**class**: A Solidity "contract" definition (potentially any named bit of code that can be deployed)
 
-**class**: A Solidity "contract" definition (potentially any named bit of code that can be deployed) - a name used during compilation
+**classname** - a class (type) name used during compilation. 
 
-**object**: A specific contract instance that has been deployed and has an address.
+**class header** - classname + the sol/js ABI for a class
 
+**objectname** - a compile-time name of a fixed address
+
+**object**: objectname + address
+
+**object header** - object + class header
+
+
+
+
+
+**deploy step**: An instruction that makes a change to a (staged package?) AND/OR the global network state
+
+    * pending: dapple sent a transaction, but has not confirmed the action
+    * complete: dapple has confirmed that the transaction had the intended effect and is permanent
+
+**deploy script**: A sequence of deploy steps associated with a particular (workspace/environment?). 
+
+#### not finalized
 **chain context**: A set of named addresses (possibly null/undefined) for a given blockchain.
 
 **contract sources**: A set of Solidity source files.
@@ -17,13 +38,6 @@
 **unbound package**: A package with at least one undefined named address.
 
 **staged package**: A package whose chain context can be modified.
-
-**deploy step**: An instruction that makes a change to a staged package AND/OR the global network state
-
-    * pending: dapple sent a transaction, but has not confirmed the action
-    * complete: dapple has confirmed that the transaction had the intended effect and is permanent
-
-**deploy script**: A sequence of deploy steps associated with a particular package. 
 
 **complete package**: A package that can be bound with the result of the deploy script of a collection of some dependent package
 

@@ -1,6 +1,6 @@
 "use strict"
-/* TODO ethereumjs-lib module is broken
-var EVM = require('ethereumjs-vm');
+/*
+var EVM = require('ethereumjs-lib').VM;
 
 modules.exports = class VMTestRunner {
     constructor(tests) {
