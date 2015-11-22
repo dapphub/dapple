@@ -3,7 +3,7 @@ var Workspace = require("../lib/workspace");
 var testenv = require("./testenv");
 var fs = require("fs");
 
-describe('testing Builder class on Example package', function() {
+describe('testing Builder class on Example package:  ', function() {
     var workspace = new Workspace(testenv.example_package_dir);
     var Builder = require('../lib/build');
     b = new Builder(workspace);

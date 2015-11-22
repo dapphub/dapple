@@ -11,8 +11,9 @@ module.exports = class Builder {
         this.sources = {};
     }
     _addDappleVirtualPackage() {
-        for( let path in this.workspace.dapple_class_sources ) {
-            this.sources[path] = fs.readFileStringSync(this.workspace.dapple_class_sources[path]);
+        var sources = this.workspace.dapple_class_sources();
+        for( let path in sources ) {
+            this.sources[path] = sources[path];
         }
     }
     build() {

@@ -7,7 +7,7 @@ var fs = require("./file");
 var readdir = require("fs-readdir-recursive");
 
 let DAPPFILE_FILENAME = "dappfile";
-let dapple_class_sources = {
+let DAPPLE_CLASS_SOURCES = {
     'dapple/test.sol': __dirname+"/../defaults/dapple_virtual_package/test.sol",
     'dapple/debug.sol': __dirname+"/../defaults/dapple_virtual_package/debug.sol"
 }
@@ -31,7 +31,14 @@ module.exports = class Workspace {
         // TODO traverse upwards until you hit root or dapplerc
         this.dappfile_dir = path;
         this.dappfile = new Dappfile(this.dappfile_dir);
-        this.dapple_class_sources = dapple_class_sources;
+        this._dapple_class_sources = DAPPLE_CLASS_SOURCES;
+    }
+    dapple_class_sources() {
+        var out = {};
+        for( let path in this._dapple_class_sources ) {
+            out[path] = fs.readFileStringSync(this._dapple_class_sources[path]);
+        }
+        return out;
     }
     // get solidity source files for just this package - no sub-packages
     loadWorkspaceSources() {
