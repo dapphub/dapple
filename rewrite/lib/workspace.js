@@ -25,6 +25,9 @@ module.exports = class Workspace {
         this.package_root = path;
         this.loadDappfile();
     }
+    getBuildDir() {
+        return this.package_root +"/"+ this.dappfile["build_dir"];
+    }
     loadDappfile(path) {
         if( path === undefined ) {
             path = this.package_root +"/"+ defaults.DAPPFILE_FILENAME;

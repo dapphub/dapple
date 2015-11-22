@@ -15,12 +15,13 @@ module.exports = class Builder {
         return sources;
     }
     build(build_dir) {
+        if( build_dir === undefined ) {
+            build_dir = this.workspace.getBuildDir();
+        }
         var sources = this.workspace.loadWorkspaceSources();
         sources = this.addDappleVirtualPackage(sources);
         var classes = this.buildSources(sources);
-        if( build_dir ) {
-            fs.writeJsonSync(build_dir + "/classes.json", classes);
-        }
+        fs.writeJsonSync(build_dir + "/classes.json", classes);
         return classes;
     }
     buildSources(sources) {
