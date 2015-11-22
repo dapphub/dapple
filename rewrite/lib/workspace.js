@@ -3,7 +3,7 @@
 // dapplerc, dappfile, subpackages, etc
 "use strict";
 var yaml = require("read-yaml");
-var fs = require("fs");
+var fs = require("./file");
 var readdir = require("fs-readdir-recursive");
 
 let DAPPFILE_FILENAME = "dappfile";
@@ -43,7 +43,7 @@ module.exports = class Workspace {
         var sources = {};
         files.forEach(function(file) {
             var origin = dir +"/"+ file;
-            sources[file] = fs.readFileSync(origin).toString();
+            sources[file] = fs.readFileStringSync(origin);
         });
         return sources;
     }
