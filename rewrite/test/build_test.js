@@ -8,18 +8,19 @@ describe('testing Builder class on Example package:  ', function() {
     var Builder = require('../lib/build');
     b = new Builder(workspace);
 
-    it("build recreates example solc_output (returns and writes)", function() {
+    it("build recreates example solc_output (returns and writes)", function(done) {
         console.log("Slow test: Verifying solc output");
         this.timeout(10000);
 
         var tmpdir = fs.tmpdir();
         var returned = b.build(tmpdir);
-        var written = fs.readJsonSync(tmpdir+"/classes.json");
-
         // Uncomment to make new golden record
-        //fs.writeFileSync(testenv.TEST_SOLC_OUT, JSON.stringify(classes));
+        // fs.writeJsonSync(testenv.TEST_SOLC_OUT_PATH, returned);
+        var written = fs.readJsonSync(tmpdir+"/classes.json");
         var golden = testenv.example_solc_output();
+
         assert.deepEqual( returned, golden );
         assert.deepEqual( written, golden );
+        done();
     });
 });

@@ -5,4 +5,10 @@ contract ExampleTest is Test {
     function setUp() {
         e = new Example(10);
     }
+    function testLogs() {
+        logs("testing");
+    }
+    function testFailure() {
+        assertTrue( false );
+    }
 }
