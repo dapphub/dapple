@@ -14,23 +14,7 @@ It will look for the `dappfile` in all parents in order (like `git` command and 
 var yaml = require("read-yaml");
 var fs = require("./file");
 var readdir = require("fs-readdir-recursive");
-
-let DAPPFILE_FILENAME = "dappfile";
-let DAPPLE_CLASS_SOURCES = {
-    'dapple/test.sol': __dirname+"/../defaults/dapple_virtual_package/test.sol",
-    'dapple/debug.sol': __dirname+"/../defaults/dapple_virtual_package/debug.sol"
-}
-
-class DappfileManager {
-    constructor(package_root) {
-        this.package_root = package_root;
-        this.obj = yaml.sync(package_root +"/"+ DAPPFILE_FILENAME);
-    }
-    SolSourceDir() {
-        var source_dir = this.package_root +"/"+ this.obj.sol_sources;
-        return source_dir;
-    }
-}
+var defaults = require("./defaults");
 
 module.exports = class Workspace {
     constructor(path) {
@@ -38,20 +22,18 @@ module.exports = class Workspace {
             path = process.cwd();
         }
         // TODO traverse upwards until you hit root or dapplerc
-        this.dappfile_dir = path;
-        this.dappfile = new DappfileManager(this.dappfile_dir);
-        this._dapple_class_sources = DAPPLE_CLASS_SOURCES;
+        this.package_root = path;
+        this.loadDappfile();
     }
-    dapple_class_sources() {
-        var out = {};
-        for( let path in this._dapple_class_sources ) {
-            out[path] = fs.readFileStringSync(this._dapple_class_sources[path]);
+    loadDappfile(path) {
+        if( path === undefined ) {
+            path = this.package_root +"/"+ defaults.DAPPFILE_FILENAME;
         }
-        return out;
+        this.dappfile = yaml.sync(path);
     }
     // get solidity source files for just this package - no sub-packages
     loadWorkspaceSources() {
-        var dir = this.dappfile.SolSourceDir();
+        var dir = this.package_root +"/" + this.dappfile["sol_sources"];
         var files = readdir(dir);
         files = files.filter(function(file) {
             return file.endsWith(".sol");

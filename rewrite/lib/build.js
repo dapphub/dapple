@@ -1,17 +1,14 @@
 "use strict";
 var fs = require("./file");
 var solc = require("solc");
+var defaults = require("./defaults");
 
 module.exports = class Builder {
     constructor(workspace) {
-        // Sources files.
-        // Keys are aliased path (the path as it appears in solidity file).
-        // Values are source file in string form.
         this.workspace = workspace;
-        this.sources = {};
     }
     _addDappleVirtualPackage(sources) {
-        var dapple = this.workspace.dapple_class_sources();
+        var dapple = defaults.DAPPLE_PACKAGE_SOURCES;
         for( let path in dapple ) {
             sources[path] = dapple[path];
         }
