@@ -22,15 +22,25 @@ module.exports = class Workspace {
         if( path === undefined ) {
             path = process.cwd();
         }
-        this.package_root = this.findPackageRoot(path);
+        this.package_root = this.findWorkspaceRoot(path);
+        if( this.package_root === undefined ) {
+            throw "Couldn't find workspace. Use `dapple init`"
+        }
         this.loadDappfile();
     }
     getBuildDir() {
         return this.package_root +"/"+ this.dappfile["build_dir"];
     }
-    findPackageRoot(command_dir) {
-        // TODO traverse upwards until you hit dappfile
-        return command_dir;
+    findWorkspaceRoot(command_dir) {
+        var location = command_dir;
+        do {
+            var dappfile_path = path.join(location, constants.DAPPFILE_FILENAME );
+            if( fs.existsSync(dappfile_path) ) {
+                return location;
+            }
+            location = path.join(location, "..");
+        } while( location != "/" );
+        return undefined;
     }
     loadDappfile(path) {
         if( path === undefined ) {

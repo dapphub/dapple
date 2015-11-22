@@ -4,6 +4,7 @@ var Workspace = require("../lib/workspace");
 var constants = require("../lib/constants");
 var testenv = require("./testenv");
 var workspace = new Workspace(testenv.example_package_dir);
+var path = require("path");
 
 
 describe("Workspace module tests for example package", function() {
@@ -13,7 +14,17 @@ describe("Workspace module tests for example package", function() {
         done();
     });
     it("finds dappfile in subdirectory", function(done) {
+        assert( workspace.findWorkspaceRoot(path.join(testenv.example_package_dir, "subdirectory")) );
+        done();
     });
-    it("fails gracefully when dappfile not found", function(done) {
+    it("findWorkspaceRoot returns undefined if it hits root", function(done) {
+        assert( undefined === workspace.findWorkspaceRoot(fs.tmpdir()));
+        done();
     });
+    it.skip("findWorkspaceRoot returns undefined if it hits dappleRC", function(done) {
+        var dir = "TODO";
+        assert( undefined === workspace.findWorkspaceRoot(dir) );
+        done();
+    });
+
 });
