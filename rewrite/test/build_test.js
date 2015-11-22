@@ -8,8 +8,7 @@ describe('testing Builder class on Example package:  ', function() {
     var Builder = require('../lib/build');
     b = new Builder(workspace);
 
-    it("build recreates example solc_output (returns and writes)", function(done) {
-        console.log("Slow test: Verifying solc output");
+    it.skip("[SLOW] build recreates example solc_output (returns and writes)", function(done) {
         this.timeout(10000);
 
         var tmpdir = fs.tmpdir();

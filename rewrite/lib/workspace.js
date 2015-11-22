@@ -2,6 +2,14 @@
 // all interactions with the filestystem should be contained to this module
 // dapplerc, dappfile, subpackages, etc
 
+/*
+A workspace will be initialized when you run any `dapple` command. It is dapple's
+internal configuration object and single point of interaction with the filesystem.
+
+It will look for the `.dapplerc` file in `DAPPLERC` env var or `~/.dapplerc`
+It will look for the `dappfile` in all parents in order (like `git` command and `.git` folder)
+*/
+
 "use strict";
 var yaml = require("read-yaml");
 var fs = require("./file");
