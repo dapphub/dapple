@@ -1,15 +1,30 @@
 {
   "name": "dapple",
   "version": "0.0.0",
-  "description": "porting dapple to javascript",
+  "description": "dapp development tool",
+  "keywords": ["dapp", "ethereum", "solidity", "EVM"],
+  "license": "MIT",
+  "author": "Nikolai Mushegian <nikolai@nexusdev.us>",
+  "contributors": [{
+    "name": "Ryan Casey",
+    "email": "ryan@nexusdev.us"
+  }],
+  "homepage": "dapple.info",
+  "bugs": {
+    "url": "https://github.com/NexusDevelopment/dapple/issues"
+  },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha test/*"
   },
+  "main": "cmd/main.js",
   "bin": {
-    "d2": "./cmd/main.js"
+    "dapple": "./cmd/main.js"
   },
-  "author": "",
-  "license": "MIT",
+  "directories": {
+    "lib": "lib",
+    "bin": "cmd",
+    "doc": "docs"
+  },
   "dependencies": {
     "docopt": "^0.6.2",
     "fs-readdir-recursive": "^1.0.0",
@@ -17,5 +32,9 @@
     "read-yaml": "^1.0.0",
     "solc": "^0.1.6",
     "web3": "^0.15.1"
+  },
+  "engines": {
+    "node": ">=5.0.0"
   }
+
 }
