@@ -20,8 +20,8 @@
 
 **deploy step**: An instruction that makes a change to a staged package AND/OR the global network state
 
-	* pending: dapple sent a transaction, but has not confirmed the action
-	* complete: dapple has confirmed that the transaction had the intended effect and is permanent
+    * pending: dapple sent a transaction, but has not confirmed the action
+    * complete: dapple has confirmed that the transaction had the intended effect and is permanent
 
 **deploy script**: A sequence of deploy steps associated with a particular package. 
 
@@ -32,4 +32,3 @@
 
 A package will typically ship a dev deploy sequence which will create a chain context which mocks the
 one deployed on Ethereum.
-
