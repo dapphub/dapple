@@ -7,7 +7,7 @@ module.exports = class Builder {
     constructor(workspace) {
         this.workspace = workspace;
     }
-    _addDappleVirtualPackage(sources) {
+    addDappleVirtualPackage(sources) {
         var dapple = defaults.DAPPLE_PACKAGE_SOURCES;
         for( let path in dapple ) {
             sources[path] = dapple[path];
@@ -16,7 +16,7 @@ module.exports = class Builder {
     }
     build(build_dir) {
         var sources = this.workspace.loadWorkspaceSources();
-        sources = this._addDappleVirtualPackage(sources);
+        sources = this.addDappleVirtualPackage(sources);
         var classes = this.buildSources(sources);
         if( build_dir ) {
             fs.writeJsonSync(build_dir + "/classes.json", classes);

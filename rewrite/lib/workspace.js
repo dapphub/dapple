@@ -21,7 +21,7 @@ module.exports = class Workspace {
         if( path === undefined ) {
             path = process.cwd();
         }
-        // TODO traverse upwards until you hit root or dapplerc
+        // TODO traverse upwards until you hit dappfile
         this.package_root = path;
         this.loadDappfile();
     }
