@@ -11,7 +11,7 @@ It will look for the `dappfile` in all parents in order (like `git` command and 
 */
 
 "use strict";
-var yaml = require("read-yaml");
+var readyaml = require("read-yaml");
 var os = require("os");
 var fs = require("./file");
 var readdir = require("fs-readdir-recursive");
@@ -23,21 +23,20 @@ module.exports = class Workspace {
         if( path === undefined ) {
             path = process.cwd();
         }
-        this.package_root = this.findWorkspaceRoot(path);
+        this.package_root = Workspace.findWorkspaceRoot(path);
         if( this.package_root === undefined ) {
             throw "Couldn't find workspace. Use `dapple init`"
         }
-        this.loadDappfile();
+        this.dappfile = this.loadDappfile();
     }
     static initialize(dir) {
         fs.writeFileSync(path.join(dir, constants.DAPPFILE_FILENAME), constants.DEFAULT_DAPPFILE_CONTENTS);
-        // write dappfile
-        // write dir structure from dappfile
+        // write dir structure from dapplerc
     }
     getBuildDir() {
-        return path.join(this.package_root, this.dappfile["build_dir"]);
+        return path.join(this.package_root, this.dappfile.layout.build);
     }
-    findWorkspaceRoot(command_dir) {
+    static findWorkspaceRoot(command_dir) {
         var location = command_dir;
         do {
             var dappfile_path = path.join(location, constants.DAPPFILE_FILENAME );
@@ -52,11 +51,11 @@ module.exports = class Workspace {
         if( path === undefined ) {
             path = this.package_root +"/"+ constants.DAPPFILE_FILENAME;
         }
-        this.dappfile = yaml.sync(path);
+        return readyaml.sync(path);
     }
     // get solidity source files for just this package - no sub-packages
     loadWorkspaceSources() {
-        var dir = this.package_root +"/" + this.dappfile["sol_sources"];
+        var dir = this.package_root +"/" + this.dappfile.layout.sol_sources;
         var files = readdir(dir);
         files = files.filter(function(file) {
             return file.endsWith(".sol");

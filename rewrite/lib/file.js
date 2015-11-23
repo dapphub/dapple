@@ -1,5 +1,6 @@
 var fs = require("fs");
 var os = require("os");
+var tmp = require("tmp");
 fs.readFileStringSync = function(path) {
     return fs.readFileSync(path).toString();
 }
@@ -20,5 +21,7 @@ fs.existsSync = function(path) {
         throw e;
     }
 }
-fs.tmpdir = os.tmpdir;
+fs.tmpdir = function() {
+    return tmp.dirSync().name;
+}
 module.exports = fs;
