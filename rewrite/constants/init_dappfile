@@ -1,0 +1,2 @@
+sol_sources: "src/bin"
+build_dir: "build"

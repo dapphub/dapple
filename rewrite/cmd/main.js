@@ -13,5 +13,7 @@ if( cli.build ) {
     var Builder = require("../lib/build");
     var builder = new Builder(workspace);
     builder.build();
-
+} else if (cli.init) {
+    console.log(process.cwd());
+    Workspace.initialize(process.cwd());
 }

@@ -21,10 +21,13 @@ describe("Workspace module tests for example package", function() {
         assert( undefined === workspace.findWorkspaceRoot(fs.tmpdir()));
         done();
     });
-    it.skip("findWorkspaceRoot returns undefined if it hits dappleRC", function(done) {
+    it.skip("findWorkspaceRoot returns undefined if it hits .dapplerc", function(done) {
         var dir = "TODO";
         assert( undefined === workspace.findWorkspaceRoot(dir) );
         done();
     });
-
+    it("initializes blank workspace to spec", function() {
+        var dir = fs.tmpdir();
+        Workspace.initialize(dir)
+    });
 });
