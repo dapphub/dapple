@@ -4,17 +4,37 @@ because it is the focus of Ryan's proposal.
 
 This proposal should be read alongside `docs/definitions.md`.
 
- pre-`init` (on `npm install -g` or first `dapple init` run)
+configuration
+---
+
+pre-`init` (on `npm install -g` or first `dapple init` run)
+
+checks ipfs/geth 
 
 installs .dapplrc
+
+---
 
 `dapple init`
 
 Converts the current directory into a **workspace** with a `dappfile` and misc boilerplate
 
+write the code
+---
+
 `dapple install`
 
 pull a **package** or **dapp** into dependencies
+
+---
+
+`dapple new`
+
+utilities for being fast
+
+
+interact with contract systems
+---
 
 `dapple env new`
 `dapple env ls`
@@ -23,16 +43,10 @@ pull a **package** or **dapp** into dependencies
 
 create / view environments. reproduce environment for a chain.
 
-`dapple build`
-
-makes a **source pack**
+---
 
 `dapple step` / `dapple run`
 
 write to an environment by interacting with its chain
-
-`dapple bundle`
-
-collect the source pack and context into a dapp header
 
 

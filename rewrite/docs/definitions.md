@@ -1,23 +1,47 @@
-dappfile vs dapp header
+## Definitions
 
+#### basics
 
-### Definitions:
+The term "contract" introduces ambiguity. We use the familiar terms "class" and "object" instead.
 
-**class**: A Solidity "contract" definition (potentially any bit of code that can be deployed)
+**class definition**: A Solidity "contract" definition (potentially any bit of code that can be deployed)
 
-**classname** - a class (type) name used during compilation. 
+**classname** - a class (type) name used during compilation
 
 **class header** - classname + the sol/js ABI for a class
 
-**objectname** - a compile-time name of a fixed address
+**objectname** - the name of an address in an abstract contract system, like `my_root_registry`.
 
-**object**: objectname + address
+**object reference** - objectname + address.
 
-**object header** - object + class header
+**object header** - objectname + class header.
 
-**chain config** - A chain connection descriptor  (rpc config, datadir)
+**object**: object reference and header.
 
-**chain** - Enough metadata to unambigously specify a blockchain database. Two default chains are named `ethereum` and `localtestnet`. Chains are stored with a single chain config, but a chain might have multiple valid chain config options (connect to the same network/blockchain through different connections).
+#### system
+
+**universe**: A set of objectnames.
+
+**environment:**: A set of object references.
+
+**LINK(objectname) macro**: a preprocessor macro used in Solidity code.
+It is populated with a unique dummy address by the dapple preprocessor.
+You can think of using LINK as adding a special type of argument to
+the constructor which can only be called at deploy time (by a key
+and not an address).
+
+**class template definition**: Any class definition that has a LINK macro.
+
+**class template header**: A class header + metadata about LINKs (set of objectnames)
+
+
+#### dev cycle
+
+**build step**
+
+
+
+#### deploy
 
 **deploy step**: An instruction that makes a change to a (staged package?) AND/OR the global network state
 
@@ -26,7 +50,21 @@ dappfile vs dapp header
 
 **deploy script**: A sequence of deploy steps associated with a particular (workspace/environment?). 
 
+
+#### chain management
+
+**chain config** - A chain connection descriptor  (rpc config, datadir)
+
+**chain** - Enough metadata to unambigously specify a blockchain database.
+Two default chains are named `ethereum` and `localtestnet`.
+Chains have a default chain config, but a chain might have multiple valid
+chain config options (connect to the same network/blockchain through different connections).
+
 #### not finalized
+
+packfile vs dappfile (vs libfile?)
+
+
 **chain context**: A set of named addresses (possibly null/undefined) for a given blockchain.
 
 **contract sources**: A set of Solidity source files.
