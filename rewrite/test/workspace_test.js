@@ -8,14 +8,18 @@ var path = require("path");
 
 
 describe("class Workspace", function() {
-    var workspace = new Workspace(testenv.example_package_dir);
-    it("loads local .sol source tree", function(done) {
-        var sources = workspace.loadWorkspaceSources();
-        assert.deepEqual( Object.keys(sources), [ 'example.sol','example_test.sol','subdirectory/example2.sol'] );
+    it("finds dappfile in subdirectory", function(done) {
+        assert( Workspace.findWorkspaceRoot(path.join(testenv.golden_package_dir, "subdirectory")) );
         done();
     });
-    it("finds dappfile in subdirectory", function(done) {
-        assert( Workspace.findWorkspaceRoot(path.join(testenv.example_package_dir, "subdirectory")) );
+    it("initializes successfully in golden package", function(done) {
+        var workspace = new Workspace(testenv.golden_package_dir);
+        done();
+    });
+    it("loads local .sol source tree", function(done) {
+        var workspace = new Workspace(testenv.golden_package_dir);
+        var sources = workspace.loadWorkspaceSources();
+        assert.deepEqual( Object.keys(sources), [ 'example.sol','example_test.sol','subdirectory/example2.sol'] );
         done();
     });
     it("findWorkspaceRoot returns undefined if it hits root", function(done) {
@@ -25,6 +29,7 @@ describe("class Workspace", function() {
     });
     it.skip("findWorkspaceRoot returns undefined if it hits .dapplerc", function(done) {
         var dir = "TODO";
+        var workspace = new Workspace(testenv.golden_package_dir);
         assert.equal( undefined, workspace.findWorkspaceRoot(dir) );
         done();
     });

@@ -25,7 +25,7 @@ module.exports = class Workspace {
         }
         this.package_root = Workspace.findWorkspaceRoot(path);
         if( this.package_root === undefined ) {
-            throw "Couldn't find workspace. Use `dapple init`"
+            throw new Error("Couldn't find workspace. Use `dapple init`");
         }
         this.dappfile = this.loadDappfile();
     }

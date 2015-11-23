@@ -1,8 +1,9 @@
 var fs = require("../lib/file");
+var path = require("path");
 module.exports = {
-    example_package_dir: __dirname+"/testenv/example_package",
-    TEST_SOLC_OUT_PATH: __dirname+"/golden/example_solc_classes_out.json",
-    example_solc_output: function() {
-        return fs.readJsonSync(this.TEST_SOLC_OUT_PATH);
+    golden_package_dir: __dirname+"/testenv/golden_package",
+    GOLDEN_SOLC_OUT_PATH: path.join(__dirname,"/golden/golden_solc_classes_out.json"),
+    golden_solc_output: function() {
+        return fs.readJsonSync(this.GOLDEN_SOLC_OUT_PATH);
     }
 }
