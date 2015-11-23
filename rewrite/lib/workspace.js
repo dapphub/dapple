@@ -31,6 +31,11 @@ module.exports = class Workspace {
     }
     static initialize(dir) {
         fs.writeFileSync(path.join(dir, constants.DAPPFILE_FILENAME), constants.DEFAULT_DAPPFILE_CONTENTS);
+        var dappfile = constants.DEFAULT_DAPPFILE_OBJECT;
+        var mkdirp = require("mkdirp");
+        for( let subdir in dappfile.layout ) {
+            mkdirp.sync(path.join(dir, subdir));
+        }
         // write dir structure from dapplerc
     }
     getBuildDir() {

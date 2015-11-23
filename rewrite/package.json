@@ -38,6 +38,7 @@
     "docopt": "^0.6.2",
     "ethereumjs-lib": "^1.0.1",
     "fs-readdir-recursive": "^1.0.0",
+    "mkdirp": "^0.5.1",
     "mocha": "^2.3.4",
     "read-yaml": "^1.0.0",
     "solc": "^0.1.6",

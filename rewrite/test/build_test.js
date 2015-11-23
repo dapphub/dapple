@@ -9,7 +9,7 @@ describe('class Builder', function() {
     var Builder = require('../lib/build');
     b = new Builder(workspace);
 
-    it("[SLOW] .build recreates example solc_output (returns and writes)", function(done) {
+    it.skip("[SLOW] .build recreates example solc_output (returns and writes)", function(done) {
         this.timeout(10000);
 
         var tmpdir = fs.tmpdir();
