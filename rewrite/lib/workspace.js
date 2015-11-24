@@ -29,14 +29,15 @@ module.exports = class Workspace {
         }
         this.dappfile = this.loadDappfile();
     }
-    static initialize(dir) {
-        fs.writeFileSync(path.join(dir, constants.DAPPFILE_FILENAME), constants.DEFAULT_DAPPFILE_CONTENTS);
-        var dappfile = constants.DEFAULT_DAPPFILE_OBJECT;
+    static initialize(root_dir) {
         var mkdirp = require("mkdirp");
-        for( let subdir in dappfile.layout ) {
-            mkdirp.sync(path.join(dir, subdir));
+        fs.writeFileSync(path.join(root_dir, constants.DAPPFILE_FILENAME), constants.DEFAULT_DAPPFILE_CONTENTS);
+        var dappfile = constants.DEFAULT_DAPPFILE_OBJECT;
+        console.log("dappfile:", dappfile);
+        for( let dir in dappfile.layout ) {
+            console.log(dir);
+            mkdirp.sync(path.join(root_dir, dir));
         }
-        // write dir structure from dapplerc
     }
     getBuildDir() {
         return path.join(this.package_root, this.dappfile.layout.build);
