@@ -36,11 +36,11 @@ module.exports = class Workspace {
         console.log("dappfile:", dappfile);
         for( let dir in dappfile.layout ) {
             console.log(dir);
-            mkdirp.sync(path.join(root_dir, dir));
+            mkdirp.sync(path.join(root_dir, dappfile.layout[dir]));
         }
     }
     getBuildDir() {
-        return path.join(this.package_root, this.dappfile.layout.build);
+        return path.join(this.package_root, this.dappfile.layout.build_dir);
     }
     static findWorkspaceRoot(command_dir) {
         var location = command_dir;
