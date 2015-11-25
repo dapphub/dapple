@@ -1,6 +1,7 @@
 var fs = require("fs-extra");
 var os = require("os");
 var tmp = require("tmp");
+
 fs.readFileStringSync = function(path) {
     return fs.readFileSync(path).toString();
 }
@@ -20,20 +21,6 @@ fs.existsSync = function(path) {
         }
         throw e;
     }
-}
-fs.copyRecursiveSync = function(src, dest) {
-var exists = fs.existsSync(src);
-var stats = exists && fs.statSync(src);
-var isDirectory = exists && stats.isDirectory();
-if (exists && isDirectory) {
-  fs.mkdirSync(dest);
-  fs.readdirSync(src).forEach(function(childItemName) {
-    copyRecursiveSync(path.join(src, childItemName),
-                      path.join(dest, childItemName));
-  });
-} else {
-  fs.linkSync(src, dest);
-}
 }
 fs.tmpdir = function() {
     return tmp.dirSync().name;
