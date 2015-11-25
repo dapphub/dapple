@@ -16,10 +16,8 @@ describe('class Builder', function() {
         var returned = b.build(tmpdir);
         // Uncomment to make new golden record
         //fs.writeJsonSync(testenv.GOLDEN_SOLC_OUT_PATH, returned);
-        console.log(tmpdir);
-        console.log(path.join(tmpdir, "classes.json"));
         var written = fs.readJsonSync(path.join(tmpdir, "classes.json"));
-        var golden = testenv.golden_solc_output();
+        var golden = testenv.golden.SOLC_OUT();
 
         assert.deepEqual( returned, golden );
         assert.deepEqual( written, golden );

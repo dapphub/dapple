@@ -1,13 +1,21 @@
 var assert = require("assert");
-var fs = require("fs");
+var fs = require("../lib/file");
 var tmp = require("tmp");
 var Workspace = require("../lib/workspace");
 var constants = require("../lib/constants");
 var testenv = require("./testenv");
 var path = require("path");
+var dircompare = require("dir-compare");
 
 
 describe("class Workspace", function() {
+    it(" .initialize(emptydir) matches golden version", function() {
+        var dir = fs.tmpdir();
+        Workspace.initialize(dir)
+        // fs.copySync(dir, testenv.golden.INIT_EMPTY_DIR); //  Create a new golden record
+        var diff = dircompare.compareSync(dir, testenv.golden.INIT_EMPTY_DIR);
+        assert( diff.same );
+    });
     it("finds dappfile in subdirectory", function(done) {
         assert( Workspace.findWorkspaceRoot(path.join(testenv.golden_package_dir, "subdirectory")) );
         done();
@@ -32,9 +40,5 @@ describe("class Workspace", function() {
         var workspace = new Workspace(testenv.golden_package_dir);
         assert.equal( undefined, workspace.findWorkspaceRoot(dir) );
         done();
-    });
-    it("initializes blank workspace to spec", function() {
-        var dir = fs.tmpdir();
-        Workspace.initialize(dir)
     });
 });

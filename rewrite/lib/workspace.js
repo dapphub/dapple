@@ -35,7 +35,6 @@ module.exports = class Workspace {
         var dappfile = constants.DEFAULT_DAPPFILE_OBJECT;
         console.log("dappfile:", dappfile);
         for( let dir in dappfile.layout ) {
-            console.log(dir);
             mkdirp.sync(path.join(root_dir, dappfile.layout[dir]));
         }
     }
