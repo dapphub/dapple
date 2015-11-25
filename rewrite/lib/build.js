@@ -21,11 +21,11 @@ module.exports = class Builder {
         }
         var sources = this.workspace.loadWorkspaceSources();
         sources = this.addDappleVirtualPackage(sources);
-        var classes = this.buildSources(sources);
+        var classes = Builder.buildSources(sources);
         fs.writeJsonSync(build_dir + "/classes.json", classes);
         return classes;
     }
-    buildSources(sources) {
+    static buildSources(sources) {
         var solc_out = solc.compile({sources:sources});
         if( solc_out.errors ) {
             throw solc_out.errors;
