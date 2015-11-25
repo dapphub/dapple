@@ -1,4 +1,5 @@
-var assert = require('assert');
+'use strict';
+var assert = require('chai').assert;
 var Workspace = require("../lib/workspace");
 var testenv = require("./testenv");
 var fs = require("../lib/file");
@@ -7,7 +8,7 @@ var path = require("path");
 describe('class Builder', function() {
     var workspace = new Workspace(testenv.golden_package_dir);
     var Builder = require('../lib/build');
-    b = new Builder(workspace);
+    var b = new Builder(workspace);
 
     it.skip("[SLOW] .build recreates example solc_output (returns and writes)", function(done) {
         this.timeout(10000);
