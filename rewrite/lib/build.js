@@ -2,6 +2,7 @@
 var fs = require("./file");
 var solc = require("solc");
 var constants = require("./constants");
+var _ = require("underscore")._;
 
 module.exports = class Builder {
     constructor(workspace) {
@@ -31,5 +32,13 @@ module.exports = class Builder {
         }
         var classes = solc_out.contracts;
         return classes;
+    }
+    // Filters out useless solc output
+    static filterSolcOut(sources) {
+        var bad_keys =  ["assembly", "opcodes"];
+        return _.mapObject(sources, function(_class, classname) {
+            var omitted = _.omit(_class, bad_keys);
+            return omitted;
+        });
     }
 }
