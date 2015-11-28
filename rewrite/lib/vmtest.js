@@ -1,15 +1,13 @@
 "use strict"
-/*
 var EVM = require('ethereumjs-lib').VM;
+var deasync = require("deasync");
 
-modules.exports = class VMTestRunner {
-    constructor(tests) {
-    }
-    run(typeInfo) {
+module.exports = class VMTest {
+    static run(class_definition) {
         var evm = new EVM();
-        var code = typeInfo.bin;
-        code = new Buffer(typeInfo.bin, 'hex');
-        evm.runCode({
+        var code = class_definition.bytecode;
+        code = new Buffer(code, 'hex');
+        var results = deasync(evm.runCode)({
             code: code,
             gasLimit: new Buffer('ffffffff', 'hex')
         }, function(err, results) {
@@ -18,4 +16,3 @@ modules.exports = class VMTestRunner {
         });
     }
 }
-*/

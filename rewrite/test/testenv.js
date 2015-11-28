@@ -4,8 +4,6 @@ var fs = require("../lib/file");
 var path = require("path");
 
 module.exports = {
-    T: function() {
-    },
     golden_package_dir: path.join(__dirname, "/testenv/golden_package"),
     GOLDEN_SOLC_OUT_PATH: path.join(__dirname,"/golden/solc_out.json"),
     golden_solc_output: function() {
