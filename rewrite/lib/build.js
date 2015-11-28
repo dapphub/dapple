@@ -15,15 +15,38 @@ module.exports = class Builder {
         }
         return sources;
     }
-    build(build_dir) {
+    build(build_dir, opts) {
+        if( opts === undefined ) {
+            opts= {
+                export_dapple_headers: false
+            };
+        }
         if( build_dir === undefined ) {
             build_dir = this.workspace.getBuildDir();
         }
         var sources = this.workspace.loadWorkspaceSources();
         sources = this.addDappleVirtualPackage(sources);
-        var classes = Builder.buildSources(sources);
+        var unfiltered_classes = Builder.buildSources(sources);
+        var classes = Builder.filterSolcOut(unfiltered_classes);
         fs.writeJsonSync(build_dir + "/classes.json", classes);
+        var headers = Builder.assembleDappHeader({testobj:"0x0"}, classes);
+        if( ! opts.export_dapple_headers ) {
+            headers.class_headers = _.omit(headers.class_headers, ["Test", "Debug", "Tester"]);
+        }
+        fs.writeJsonSync(build_dir+"/header.json", headers);
         return classes;
+    }
+    static assembleDappHeader(objects, classes) {
+        var headers = Builder.extractClassHeaders(classes);
+        return {
+            objects: objects,
+            class_headers: Builder.extractClassHeaders(classes)
+        }
+    }
+    static extractClassHeaders(classes) {
+        return _.mapObject(classes, function(_class, classname) {
+            return _.pick(_class, ["interface", "solidity_interface"]);
+        });
     }
     static buildSources(sources) {
         var solc_out = solc.compile({sources:sources});
