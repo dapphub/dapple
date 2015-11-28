@@ -1,6 +1,7 @@
 var fs = require("fs-extra");
 var os = require("os");
 var tmp = require("tmp");
+var readyaml = require("read-yaml");
 
 fs.readFileStringSync = function(path) {
     return fs.readFileSync(path).toString();
@@ -21,6 +22,9 @@ fs.existsSync = function(path) {
         }
         throw e;
     }
+}
+fs.readYamlSync = function(path) {
+    return readyaml.sync(path);
 }
 fs.tmpdir = function() {
     return tmp.dirSync().name;

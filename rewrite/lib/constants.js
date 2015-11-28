@@ -2,7 +2,6 @@
 "use strict";
 var fs = require("./file");
 var path = require("path");
-var readyaml = require("read-yaml");
 
 module.exports = new (class Const {
     constructor() {
@@ -22,7 +21,7 @@ module.exports = new (class Const {
         return fs.readFileStringSync(path.join(this.CONSTANTS_DIRECTORY, "init_dappfile"));
     }
     get DEFAULT_DAPPFILE_OBJECT() {
-        return readyaml.sync(path.join(this.CONSTANTS_DIRECTORY, "init_dappfile"));
+        return fs.readYamlSync(path.join(this.CONSTANTS_DIRECTORY, "init_dappfile"));
     }
     get DAPPLE_PACKAGE_SOURCES() {
         var out = {};
