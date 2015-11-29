@@ -447,10 +447,25 @@ def build(env):
               help='log_config string: e.g. ":info,eth:debug', show_default=True)
 @click.option('--log-json/--log-no-json', default=False,
               help='log as structured json output')
-def test(env, regex, endowment, log_config, log_json):
+@click.option('--build-file', default="")
+def test(env, regex, endowment, log_config, log_json, build_file):
     slogging.configure(log_config, log_json=log_json)
 
-    build = dapple.plugins.load('core.build')(env)
+    if build_file == "":
+        build = dapple.plugins.load('core.build')(env)
+
+    elif not os.path.exists(build_file):
+        print('Could not find file: %s' % build_file)
+        exit(1)
+
+    else:
+        try:
+            with open(build_file, 'r') as f:
+                build = json.loads(f.read())
+
+        except:
+            print('Could not parse JSON!', file=sys.stderr)
+            exit(1)
 
     abi, binary = None, None
     suite = {}
