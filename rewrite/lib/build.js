@@ -32,9 +32,11 @@ module.exports = class Builder {
         if( ignore === undefined ) {
             ignore = [];
         }
-        sources = _.filter(sources, function(src, path) {
-            return _.all(ignore, function(regex) {
-                return (new RegExp(regex)).test(path);
+        sources = _.omit(sources, function(src, path) {
+            return _.any(ignore, function(regex) {
+                var re = new RegExp(regex);
+                var match = re.test(path);
+                return match;
             });
         });
         sources = Builder.addDappleVirtualPackage(sources);
