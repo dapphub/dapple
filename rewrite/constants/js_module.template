@@ -1,0 +1,8 @@
+// var MyDapp = require("./mydapp-header.js");
+// var mydapp = MyDapp(environment);
+
+module.exports = new (function() {
+    var header = <%= header %>;
+    return header;
+})();
+    

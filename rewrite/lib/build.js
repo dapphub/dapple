@@ -3,18 +3,20 @@ var fs = require("./file");
 var solc = require("solc");
 var constants = require("./constants");
 var _ = require("underscore")._;
+var path = require("path");
 
 module.exports = class Builder {
     constructor(workspace) {
         this.workspace = workspace;
     }
-    addDappleVirtualPackage(sources) {
+    static addDappleVirtualPackage(sources) {
         var dapple = constants.DAPPLE_PACKAGE_SOURCES;
         for( let path in dapple ) {
             sources[path] = dapple[path];
         }
         return sources;
     }
+    // TODO make static
     build(build_dir, opts) {
         if( opts === undefined ) {
             opts= {
@@ -25,23 +27,32 @@ module.exports = class Builder {
             build_dir = this.workspace.getBuildDir();
         }
         var sources = this.workspace.loadWorkspaceSources();
-        sources = this.addDappleVirtualPackage(sources);
+
+        var ignore = this.workspace.dappfile.ignore;
+        if( ignore === undefined ) {
+            ignore = [];
+        }
+        sources = _.filter(sources, function(src, path) {
+            return _.all(ignore, function(regex) {
+                return (new RegExp(regex)).test(path);
+            });
+        });
+        sources = Builder.addDappleVirtualPackage(sources);
         var unfiltered_classes = Builder.buildSources(sources);
         var classes = Builder.filterSolcOut(unfiltered_classes);
+        var headers = Builder.extractClassHeaders(classes);
         fs.writeJsonSync(build_dir + "/classes.json", classes);
-        var headers = Builder.assembleDappHeader({testobj:"0x0"}, classes);
         if( ! opts.export_dapple_headers ) {
             headers.class_headers = _.omit(headers.class_headers, ["Test", "Debug", "Tester"]);
         }
-        fs.writeJsonSync(build_dir+"/header.json", headers);
+        var js_module = Builder.compileJsModule(headers);
+        fs.writeFileSync(path.join(build_dir, "js_module.js"), js_module);
         return classes;
     }
-    static assembleDappHeader(objects, classes) {
-        var headers = Builder.extractClassHeaders(classes);
-        return {
-            objects: objects,
-            class_headers: Builder.extractClassHeaders(classes)
-        }
+    static compileJsModule(header) {
+        //TODO constants
+        var template = _.template(constants.JS_HEADER_TEMPLATE());
+        return template({header: JSON.stringify(header)});
     }
     static extractClassHeaders(classes) {
         return _.mapObject(classes, function(_class, classname) {

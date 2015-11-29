@@ -12,7 +12,7 @@ describe("class Workspace", function() {
     it(" .initialize(emptydir) matches golden version", function() {
         var dir = fs.tmpdir();
         Workspace.initialize(dir)
-        // fs.copySync(dir, testenv.golden.INIT_EMPTY_DIR); //  Create a new golden record
+        //fs.copySync(dir, testenv.golden.INIT_EMPTY_DIR); //  Create a new golden record
         var diff = dircompare.compareSync(dir, testenv.golden.INIT_EMPTY_DIR);
         assert( diff.same );
     });

@@ -1,4 +1,5 @@
 // Get stuff from the `const` folder.
+// TODO this class is a disaster
 "use strict";
 var fs = require("./file");
 var path = require("path");
@@ -9,6 +10,9 @@ module.exports = new (class Const {
         this.CONSTANTS_DIRECTORY = constants_directory;
         this.DAPPFILE_FILENAME = "dappfile";
         this.DAPPLERC_FILENAME = "_dapplerc";
+        this.JS_HEADER_TEMPLATE = function() {
+            return fs.readFileStringSync(path.join(this.CONSTANTS_DIRECTORY, "js_module.template"));
+        }
 
         this.DAPPLE_VMTEST_CLASSES = {
             'dapple/test.sol': path.join(constants_directory, "/test.sol"),
