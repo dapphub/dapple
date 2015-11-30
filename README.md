@@ -2,11 +2,6 @@
   <img src="http://ipfs.pics/ipfs/QmPQcPiaep6Bfp956b5xLDaQdtQVtAWBT9QjWNRiL9y8Cw"/>
 </p>
 
-##### Join us on SLACK
-------
-[![Slack Status](http://slack.makerdao.com/badge.svg)](https:/slack.makerdao.com)
-
-
 `dapple` is a tool for Solidity developers to help build and manage complex contract systems on Ethereum-like blockchains.
 
 Some features:
@@ -31,6 +26,9 @@ Basic installation
 ==================
 
 [![Join the chat at https://gitter.im/NexusDevelopment/dapple](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/NexusDevelopment/dapple?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+[![Slack Status](http://slack.makerdao.com/badge.svg)](https:/slack.makerdao.com)
+
 
     python setup.py install
 
