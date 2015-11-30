@@ -20,9 +20,14 @@ The term "contract" introduces ambiguity. We use the familiar terms "class" and 
 
 #### system
 
-**universe**: A set of objectnames.
+**system variables**: A set of object headers.
 
 **environment:**: A set of object references.
+
+**context**: A mapping of system variables to an environment, defined as a union of
+one or more other environments. For example, you might have a "working environment"
+or an environment with no blockchain, but a context is associated with a specific
+blockchain and a specific set of contracts.
 
 **LINK(objectname) macro**: a preprocessor macro used in Solidity code.
 It is populated with a unique dummy address by the dapple preprocessor.
@@ -38,6 +43,8 @@ and not an address).
 #### dev cycle
 
 **build step**
+
+A process that adds an object reference to environment
 
 
 

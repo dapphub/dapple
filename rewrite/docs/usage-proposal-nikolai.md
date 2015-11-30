@@ -32,6 +32,9 @@ pull a **package** or **dapp** into dependencies
 
 utilities for being fast
 
+`dapple build`
+
+
 
 interact with contract systems
 ---

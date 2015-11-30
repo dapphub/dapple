@@ -45,7 +45,7 @@ module.exports = class Builder {
         var headers = Builder.extractClassHeaders(classes);
         fs.writeJsonSync(build_dir + "/classes.json", classes);
         if( ! opts.export_dapple_headers ) {
-            headers.class_headers = _.omit(headers.class_headers, ["Test", "Debug", "Tester"]);
+            headers = _.omit(headers, ["Test", "Debug", "Tester"]);
         }
         var js_module = Builder.compileJsModule(headers);
         fs.writeFileSync(path.join(build_dir, "js_module.js"), js_module);
