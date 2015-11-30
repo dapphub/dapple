@@ -1,8 +1,0 @@
-/*[[[cog
-import cog
-with open('latest.pack.json') as latest:
-    cog.outl("var pack = ")
-    cog.outl(latest.read())
-]]]*/
-
-//[[[end]]]
