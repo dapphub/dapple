@@ -2,10 +2,14 @@
   <img src="http://ipfs.pics/ipfs/QmPQcPiaep6Bfp956b5xLDaQdtQVtAWBT9QjWNRiL9y8Cw"/>
 </p>
 
+##### Join us on SLACK
+------
+[![Slack Status](http://slack.makerdao.com/badge.svg)](https:/slack.makerdao.com)
+
+
 `dapple` is a tool for Solidity developers to help build and manage complex contract systems on Ethereum-like blockchains.
 
 Some features:
-
 
 
 * `dapple test`: You write your Solidity tests in Solidity, not the harness language
