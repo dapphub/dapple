@@ -1,9 +1,3 @@
-<p align="center">
-  <img src="http://ipfs.pics/ipfs/QmPQcPiaep6Bfp956b5xLDaQdtQVtAWBT9QjWNRiL9y8Cw"/>
-</p>
-
-`dapple` is a tool for Solidity developers to help build and manage complex contract systems on Ethereum-like blockchains.
-
 Some features:
 
 
@@ -147,4 +141,3 @@ If you're using the latest Docker image, you should already have [Mkdocs](http:/
 
 From the root project directory, run `mkdocs build`. To run a local server for previewing the documentation, run `mkdocs serve`.
 =======
-# dapple
