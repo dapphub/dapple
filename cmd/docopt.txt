@@ -1,7 +1,5 @@
 Usage:
     dapple init
     dapple build
-    dapple env new
-    dapple env ls
-    dapple env use
-    dapple env rebuild
+    dapple chain
+    dapple step

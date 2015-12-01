@@ -40,7 +40,6 @@ describe('class Builder', function() {
         var classes = testenv.golden.SOLC_OUT();
         var headers = Builder.extractClassHeaders(classes);
         var compiled = Builder.compileJsModule(headers);
-        console.log(compiled);
         done();
     });
     it.skip("has helpful error when directory layout misconfigured");
