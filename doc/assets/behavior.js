@@ -17,36 +17,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
         "projectPath": "README.md",
         "targetPath": "index",
         "pageTitle": "index",
-        "firstHeader": {
-          "type": "heading",
-          "data": {
-            "level": 1,
-            "title": "Dapple",
-            "slug": "dapple",
-            "isFileHeader": true
-          },
-          "depth": 1,
-          "children": [
-            {
-              "type": "heading",
-              "data": {
-                "level": 4,
-                "title": "Installation",
-                "slug": "installation"
-              },
-              "depth": 4
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 4,
-                "title": "Basic Usage",
-                "slug": "basic-usage"
-              },
-              "depth": 4
-            }
-          ]
-        },
-        "title": "Dapple"
+        "title": "index"
       },
       "depth": 1,
       "outline": [
