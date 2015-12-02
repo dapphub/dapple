@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="en"><head><title>index</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="index"><meta name="groc-project-path" content="README.md"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/README.md">README.md</a></div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><h1 id="dapple">Dapple</h1>
+<p align="center">
+  <img src="http://ipfs.pics/ipfs/QmPQcPiaep6Bfp956b5xLDaQdtQVtAWBT9QjWNRiL9y8Cw"/>
+</p>
+
+
+<p><code>dapple</code> is a tool for Solidity developers to help build and manage complex contract systems on Ethereum-like blockchains.</p>
+<h4 id="installation">Installation</h4>
+<p>Pre 0.2, it is best to install directly from source:</p>
+<p><code>git clone https://github.com/NexusDevelopment/dapple &amp;&amp; cd dapple &amp;&amp; npm install -g</code></p>
+<p>Any stable releases (once they exist) will be available on npm:</p>
+<p><code>npm install -g dapple</code></p>
+<h4 id="basic-usage">Basic Usage</h4>
+<pre><code>mkdir mydapp &amp;&amp; cd mydapp
+dapple init
+
+# Write some contracts - see docs for test contract format
+vim src/sol/mycontract.sol
+vim src/sol/mycontract_test.sol
+
+dapple test # run VM tests
+dapple build # export contract definitions, solidity headers, and JS headers (node and browser)</code></pre></div></div></div></div></body></html>

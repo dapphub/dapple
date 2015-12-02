@@ -1,0 +1,4 @@
+{
+  "glob": ["cmd/*.js", "lib/*.js", "README.md", "usage.md"],
+  "repository-url": "http://github.com/NexusDevelopment/dapple"
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html><html lang="en"><head><title>lib/workspace</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/workspace"><meta name="groc-project-path" content="lib/workspace.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/lib/workspace.js">lib/workspace.js</a></div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>dapple workspace and dev environment object
+all interactions with the filestystem should be contained to this module
+dapplerc, dappfile, subpackages, etc</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>A workspace will be initialized when you run any <code>dapple</code> command. It is dapple&#39;s
+internal configuration object and single point of interaction with the filesystem.</p>
+<p>It will look for the <code>.dapplerc</code> file in <code>DAPPLERC</code> env var or <code>~/.dapplerc</code>
+It will look for the <code>dappfile</code> in all parents in order (like <code>git</code> command and <code>.git</code> folder)</p></div></div><div class="code"><div class="wrapper"><span class="hljs-pi">
+"use strict"</span>;
+<span class="hljs-keyword">var</span> readyaml = <span class="hljs-built_in">require</span>(<span class="hljs-string">"read-yaml"</span>);
+<span class="hljs-keyword">var</span> os = <span class="hljs-built_in">require</span>(<span class="hljs-string">"os"</span>);
+<span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./file"</span>);
+<span class="hljs-keyword">var</span> readdir = <span class="hljs-built_in">require</span>(<span class="hljs-string">"fs-readdir-recursive"</span>);
+<span class="hljs-keyword">var</span> constants = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./constants"</span>);
+<span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">"path"</span>);
+
+<span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Workspace</span> </span>{
+    constructor(path) {
+        <span class="hljs-keyword">if</span>( path === <span class="hljs-literal">undefined</span> ) {
+            path = process.cwd();
+        }
+        <span class="hljs-keyword">this</span>.package_root = Workspace.findWorkspaceRoot(path);
+        <span class="hljs-keyword">if</span>( <span class="hljs-keyword">this</span>.package_root === <span class="hljs-literal">undefined</span> ) {
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Couldn't find workspace. Use `dapple init`"</span>);
+        }
+        <span class="hljs-keyword">this</span>.dappfile = <span class="hljs-keyword">this</span>.loadDappfile();
+    }
+    static initialize(root_dir) {
+        <span class="hljs-keyword">var</span> mkdirp = <span class="hljs-built_in">require</span>(<span class="hljs-string">"mkdirp"</span>);
+        fs.writeFileSync(path.join(root_dir, constants.DAPPFILE_FILENAME), constants.DEFAULT_DAPPFILE_CONTENTS);
+        <span class="hljs-keyword">var</span> dappfile = constants.DEFAULT_DAPPFILE_OBJECT;
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"dappfile:"</span>, dappfile);
+        <span class="hljs-keyword">for</span>( <span class="hljs-keyword">let</span> dir <span class="hljs-keyword">in</span> dappfile.layout ) {
+            mkdirp.sync(path.join(root_dir, dappfile.layout[dir]));
+        }
+    }
+    getBuildDir() {
+        <span class="hljs-keyword">return</span> path.join(<span class="hljs-keyword">this</span>.package_root, <span class="hljs-keyword">this</span>.dappfile.layout.build_dir);
+    }
+    static findWorkspaceRoot(command_dir) {
+        <span class="hljs-keyword">var</span> location = command_dir;
+        <span class="hljs-keyword">do</span> {
+            <span class="hljs-keyword">var</span> dappfile_path = path.join(location, constants.DAPPFILE_FILENAME );
+            <span class="hljs-keyword">if</span>( fs.existsSync(dappfile_path) ) {
+                <span class="hljs-keyword">return</span> location;
+            }
+            location = path.join(location, <span class="hljs-string">".."</span>);
+        } <span class="hljs-keyword">while</span>( location != <span class="hljs-string">"/"</span> );
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
+    }
+    loadDappfile(path) {
+        <span class="hljs-keyword">if</span>( path === <span class="hljs-literal">undefined</span> ) {
+            path = <span class="hljs-keyword">this</span>.package_root +<span class="hljs-string">"/"</span>+ constants.DAPPFILE_FILENAME;
+        }
+        <span class="hljs-keyword">return</span> readyaml.sync(path);
+    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>get solidity source files for just this package - no sub-packages</p></div></div><div class="code"><div class="wrapper">    loadWorkspaceSources() {
+        <span class="hljs-keyword">var</span> dir = <span class="hljs-keyword">this</span>.package_root +<span class="hljs-string">"/"</span> + <span class="hljs-keyword">this</span>.dappfile.layout.sol_sources;
+        <span class="hljs-keyword">var</span> files = readdir(dir);
+        files = files.filter(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">file</span>) </span>{
+            <span class="hljs-keyword">return</span> file.endsWith(<span class="hljs-string">".sol"</span>);
+        });
+        <span class="hljs-keyword">var</span> sources = {};
+        files.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">file</span>) </span>{
+            <span class="hljs-keyword">var</span> origin = dir +<span class="hljs-string">"/"</span>+ file;
+            sources[file] = fs.readFileStringSync(origin);
+        });
+        <span class="hljs-keyword">return</span> sources;
+    }
+}</div></div></div></div></body></html>
