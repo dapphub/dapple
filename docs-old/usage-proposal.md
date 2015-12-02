@@ -81,6 +81,26 @@ Each command operates on the package defined in the current working directory,
 if any such package is indeed defined. If no package is defined in the current
 working directory, it returns an error.
 
+```
+Usage:
+    dapple init
+    dapple install [-e <environment>] <name or IPFS hash> [-v <version>] [--save]
+    dapple new <contract name>
+    dapple build [-e <environment>]
+    dapple shell [-e <environment>]
+    dapple run <script> [--save] [--unsafe] [-e <environment>]
+    dapple test [-e <environment>] [-d <deploy script>]
+    dapple rpc [-e <environment>] [-d <deploy script>]
+    dapple publish [-e <environment>]
+    dapple chain
+    dapple step
+    
+    dapple env sync [<environment>]
+    dapple env new <name>
+    dapple env ls
+    dapple env rm <name>
+```
+
 ## `init`
 
 Converts the current directory into a Dapple package with a `dapple` directory
