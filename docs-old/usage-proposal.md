@@ -136,7 +136,8 @@ the installation succeeds. Outputs an error to stderr otherwise.
 
 #### description
 
-utilities for being fast
+Creates a new contract file with a simple skeleton and a corresponding file with
+a Test contract for it. (Just a scaffolding nicety.)
 
 ## build
 
