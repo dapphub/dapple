@@ -81,13 +81,42 @@ Each command operates on the package defined in the current working directory,
 if any such package is indeed defined. If no package is defined in the current
 working directory, it returns an error.
 
-## `init`
+```
+Usage:
+    dapple init
+    dapple install [-e <environment>] <name or IPFS hash> [-v <version>] [--save]
+    dapple new <contract name>
+    dapple build [-e <environment>]
+    dapple shell [-e <environment>]
+    dapple run <script> [--save] [--unsafe] [-e <environment>]
+    dapple test [-e <environment>] [-d <deploy script>]
+    dapple rpc [-e <environment>] [-d <deploy script>]
+    dapple publish [-e <environment>]
+    dapple chain
+    dapple step
+    
+    dapple env sync [<environment>]
+    dapple env new <name>
+    dapple env ls
+    dapple env rm <name>
+```
+
+## init
+
+#### Usage
+`init`
+
+#### Description
 
 Converts the current directory into a Dapple package with a `dapple` directory
 and a `dappfile` containing all the requisite boilerplate. Attempts to install a
 core Dapple package via IPFS.
 
-## `install [-e <environment>] <name or IPFS hash> [-v <version>] [--save]`
+## install
+#### Usage
+`install [-e <environment>] <name or IPFS hash> [-v <version>] [--save]`
+
+#### Description
 
 Connects to the IPFS node specified in `.dapplerc`. If a package name was given
 instead of an IPFS hash, connects to an Ethereum node and queries Dapple's ENS
@@ -101,25 +130,42 @@ IPFS hash if no package name was given, to your package's `dappfile`.
 Outputs a success message to stdout showing the path of the installed package if
 the installation succeeds. Outputs an error to stderr otherwise.
 
-## `new <contract name>`
+## new
+#### usage
+`new <contract name>`
+
+#### description
 
 utilities for being fast
 
-## `build [-e <environment>]`
+## build
+
+#### usage
+`build [-e <environment>]`
+
+#### description
 
 Links and compiles all a Dapple package's classes and dependencies and writes
 the combined JSON result (containing contract names mapped to their ABIs and
 EVM bytecode) to stdout. The output produced is formatted identically to what
 one would get from running `solc --combined-json abi,bin`.
 
-## `shell [-e <environment>]`
+## shell
 
+#### usage
+`shell [-e <environment>]`
+
+#### description
 Drops the user into a simple DDS shell, where they can issue deploy script
 commands against the specified chain environment
 interactively.
 
-## `run <script> [--save] [--unsafe] [-e <environment>]`
+## run
 
+#### usage
+`run <script> [--save] [--unsafe] [-e <environment>]`
+
+#### description
 Builds your Dapple package and then runs the given deploy script against the
 specified chain environment. If the specified chain environment is a local
 private chain, then it runs it against it immediately. If the specified chain is
@@ -174,19 +220,31 @@ By default, `dapple` deploys the package defined in the current working
 directory. Sub-packages of the package in the current working directory can be
 specified via the `package` parameter.
 
-## `test [-e <environment>] [-d <deploy script>]`
+## test
+#### usage
+`test [-e <environment>] [-d <deploy script>]`
+
+#### description
 
 Runs the package's tests against a private fork of the given chain environment.
 If a deploy script is specified, it runs that before running the tests.
 
-## `rpc [-e <environment>] [-d <deploy script>]`
+## rpc
 
+#### usage
+`rpc [-e <environment>] [-d <deploy script>]`
+
+#### description
 Opens a JSON-RPC endpoint for interacting with the given chain environment using
 the settings specified in `.dapplerc`. Also runs the specified deploy script
 against it, if one was passed in.
 
-## `publish [-e <environment>]`
+## publish
 
+#### usage
+`publish [-e <environment>]`
+
+#### description
 Connects to ENS and IPFS using the settings in your `.dapplerc` file. Publishes
 your package to IPFS and attempts to associate the package name and version
 specified in your `dappfile` with the resulting IPFS hash to ENS. Outputs the
@@ -196,24 +254,39 @@ succeeds and an error message to stderr if it fails.
 If a specific chain environment is passed in, it tries to interact with ENS in
 that particular environment.
 
-## `env sync [<environment>]`
+## env sync
 
+#### usage
+`env sync [<environment>]`
+
+#### description
 Attempts to sync up the given chain environment. Does nothing for private test
 forks, but can be useful for JSON-RPC and "internal" chain environments.
 
-## `env new <name>`
+## env new
 
+#### usage
+`env new <name>`
+
+#### description
 Creates a new persistent private test chain from the live, main chain. You can
 then use that chain's name wherever a "chain environment" is called for.
 (JSON-RPC and "internal" chain environments can only be added by modifying
 `.dapplerc` manually.)
 
-## `env ls`
+## env ls 
 
+#### usage
+`env ls`
+
+#### description
 Lists all the chain environments and their block heights.
 
-## `env rm <name>`
+## env rm 
+#### usage
+`env rm <name>`
 
+#### description
 Removes a persistent private test chain. (JSON-RPC and "internal" chain
 environments can only be removed by modifying `.dapplerc` manually.) 
 
@@ -263,6 +336,13 @@ A Solidity "contract" definition (potentially any bit of code that can be deploy
 
 (Alternatively: contract definition)
 
+#### example
+```
+contract A { 
+  function A() {
+  }
+}
+```
 
 ## Class name
 
@@ -270,12 +350,29 @@ A class (contract) name used during compilation.
 
 (Alternatively: contract name)
 
+#### example
+```
+"A"
+```
+
 
 ## Class header
 
 Class name + the ABI for the class.
 
 (Alternatively: contract header)
+
+#### example
+
+```
+[
+  "A",
+  [{
+    "inputs": [],
+    "type": "constructor"
+  }]
+]
+```
 
 
 ## Object name
