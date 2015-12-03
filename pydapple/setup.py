@@ -1,7 +1,7 @@
-"""dapple is tool for building and managing complex contract
+"""pydapple is tool for building and managing complex contract
 systems on Ethereum (and Ethereum-based) blockchains.
 
-https://github.com/MakerDAO/dapple
+https://github.com/NexusDevelopment/dapple/tree/master/pydapple
 """
 
 from setuptools import setup, find_packages
@@ -14,13 +14,13 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='dapple',
+    name='pydapple',
     version=__version__,
     description='An Ethereum smart contract build & management tool.',
     long_description=long_description,
-    url='https://github.com/MakerDAO/dapple',
-    author='Maker DAO',
-    author_email='rune@makerdao.com',
+    url='https://github.com/NexusDevelopment/dapple',
+    author='Nexus Development',
+    author_email='contact@nexusdev.us',
     license='Apache License 2.0',
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -55,7 +55,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'dapple=dapple.__main__:cli',
+            'pydapple=dapple.__main__:cli',
         ],
     }
 )
