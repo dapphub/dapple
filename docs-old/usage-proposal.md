@@ -345,7 +345,7 @@ contract A {
 }
 ```
 
-## Class name
+## Class Name
 
 A class (contract) name used during compilation.
 
@@ -357,7 +357,7 @@ A class (contract) name used during compilation.
 ```
 
 
-## Class header
+## Class Header
 
 Class name + the ABI for the class.
 
@@ -376,21 +376,21 @@ Class name + the ABI for the class.
 ```
 
 
-## Object name
+## Object Name
 
 The name of an address in an abstract contract system, like `my_root_registry`.
 
 (Alternately: unbound address placeholder)
 
 
-## Object reference
+## Object Reference
 
 Object name + address.
 
 (Alternatively: bound address placeholder)
 
 
-## Object header
+## Object Header
 
 Object name + class header.
 
@@ -404,79 +404,136 @@ Object reference and header.
 (Alternatively: bound contract instance)
 
 
-
 **TODO** - Continue expanding and formatting the definitions below.
 
 
-#### system
+## System Variables
 
-**system variables**: A set of object headers.
+A set of object headers.
 
-**environment:**: A set of object references.
+(Alternatively: the unbound contract instances)
 
-**context**: A mapping of system variables to an environment, defined as a union of
-one or more other environments. For example, you might have a "working environment"
-or an environment with no blockchain, but a context is associated with a specific
-blockchain and a specific set of contracts.
 
-**LINK(objectname) macro**: a preprocessor macro used in Solidity code.
+## Environment
+
+A set of object references.
+
+(Alternatively: chain state, bound address placeholders)
+
+
+## Context
+
+A mapping of system variables to an environment, defined as a union of
+one or more other environments. For example, you might have a "working
+environment" or an environment with no blockchain, but a context is associated
+with a specific blockchain and a specific set of contracts.
+
+(Alternatively: chain context)
+
+
+## LINK(objectname) Macro
+
+A preprocessor macro used in Solidity code.
 It is populated with a unique dummy address by the dapple preprocessor.
 You can think of using LINK as adding a special type of argument to
 the constructor which can only be called at deploy time (by a key
 and not an address).
 
-**class template definition**: Any class definition that has a LINK macro.
 
-**class template header**: A class header + metadata about LINKs (set of objectnames)
+## Class Template Definition
 
+Any class definition that has a LINK macro.
 
-#### dev cycle
-
-**build step**
-
-A process that adds an object reference to environment
+(Alternatively: contract template definition)
 
 
-#### deploy
+## Class Template Header
 
-**deploy step**: An instruction that makes a change to a (staged package?) AND/OR the global network state
+A class header + metadata about LINKs (set of objectnames)
+
+
+## Build Step
+
+A step in the build process. May involve things such as gathering source files,
+filling in macros, and compiling.
+
+
+## Deploy Step
+
+An instruction that makes a change to a (staged package?) AND/OR the global
+network state.
 
     * pending: dapple sent a transaction, but has not confirmed the action
-    * complete: dapple has confirmed that the transaction had the intended effect and is permanent
+    * complete: dapple has confirmed that the transaction had the intended 
+      effect and is permanent.
 
-**deploy script**: A sequence of deploy steps associated with a particular (workspace/environment?). 
+## Deploy Script
 
-
-#### chain management
-
-**chain config** - A chain connection descriptor  (rpc config, datadir)
-
-**chain** - Enough metadata to unambigously specify a blockchain database.
-Two default chains are named `ethereum` and `localtestnet`.
-Chains have a default chain config, but a chain might have multiple valid
-chain config options (connect to the same network/blockchain through different connections).
-
-#### not finalized
-
-packfile vs dappfile (vs libfile?)
+A sequence of deploy steps associated with a particular package. Scripts should
+be agnostic to their environment, relying on link macros to fill in
+environment-specific values based on the contexts defined in the package's
+dappfile, but may not necessarily be.
 
 
-**chain context**: A set of named addresses (possibly null/undefined) for a given blockchain.
+## Chain Config
 
-**contract sources**: A set of Solidity source files.
-
-**package**: collection of contract sources with a chain context, name, version, and list of dependencies.
-
-**bound package**: A package with all named addresses defined.
-
-**unbound package**: A package with at least one undefined named address.
-
-**staged package**: A package whose chain context can be modified.
-
-**complete package**: A package that can be bound with the result of the deploy script of a collection of some dependent package
-
-**system instance**: The set of objects named by the chain context of a deployed system type.
+The information Dapple needs in order to connect to a particular chain. (e.g.,
+the JSON-RPC configuration data in your `.dapplerc`.)
 
 
-A package will typically ship a dev deploy sequence which will create a chain context which mocks the
-one deployed on Ethereum.
+## Chain
+
+Enough data and metadata to comprise a blockchain database. Two default chains
+are named `ethereum` and `localtestnet`. Chains have a default chain config, but
+a chain might have multiple valid chain config options (connect to the same
+network/blockchain through different connections).
+
+# Definition Proposals
+
+## Packfile/Dappfile/Libfile
+
+The file that defines a given package. Referred to in the above documentation
+as "dappfile" for convenience and compatibility with `pydapple`, even though
+the term is currently tentative.
+
+
+## Contract Sources
+
+A set of Solidity source files.
+
+
+## Package
+
+A collection of contract sources with a chain context, name, version, and list
+of dependencies. This is what Dapple pulls in when one runs `dapple install`.
+
+
+## Bound Package
+
+A package with all named object/address references defined.
+
+
+## Unbound Package
+
+A package with at least one undefined object/address reference defined.
+
+
+## Staged Package
+
+A package whose chain context can be modified.
+
+
+## Complete Package
+
+A package which either is bound or which can become bound if a deploy script
+distributed with it is run, and which only has complete packages as
+dependencies.
+
+
+## System Instance
+
+The set of objects named by the chain context of a deployed system type.
+
+
+A package will typically ship a dev deploy sequence which will create a chain
+context which mocks the one deployed on Ethereum.
