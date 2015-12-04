@@ -378,9 +378,15 @@ Class name + the ABI for the class.
 
 ## Object Name
 
-The name of an address in an abstract contract system, like `my_root_registry`.
+The name of an address in an abstract contract system.
 
 (Alternately: unbound address placeholder)
+
+#### example
+
+```
+"my_root_registry"
+```
 
 
 ## Object Reference
@@ -389,12 +395,33 @@ Object name + address.
 
 (Alternatively: bound address placeholder)
 
+#### example
+
+```
+[ "my_root_registry", "0x90f0b1ebbba1c1936aff7aaf20a7878ff9e04b6c" ]
+```
+
 
 ## Object Header
 
 Object name + class header.
 
 (Alternatively: unbound contract instance)
+
+#### example
+
+```
+[ 
+  "my_root_registry", 
+  [
+    "A",
+    [{
+      "inputs": [],
+      "type": "constructor"
+    }]
+  ]
+]
+```
 
 
 ## Object
@@ -403,8 +430,21 @@ Object reference and header.
 
 (Alternatively: bound contract instance)
 
+#### example
 
-**TODO** - Continue expanding and formatting the definitions below.
+```
+[ 
+  "my_root_registry", 
+  "0x90f0b1ebbba1c1936aff7aaf20a7878ff9e04b6c",
+  [
+    "A",
+    [{
+      "inputs": [],
+      "type": "constructor"
+    }]
+  ]
+]
+```
 
 
 ## System Variables
@@ -419,6 +459,33 @@ A set of object headers.
 A set of object references.
 
 (Alternatively: chain state, bound address placeholders)
+
+#### Example
+```
+[
+  [ 
+    "my_root_registry", 
+    [
+      "A",
+      [{
+        "inputs": [],
+        "type": "constructor"
+      }]
+    ]
+  ],
+  [ 
+    "my_root_registry2", 
+    [
+      "A",
+      [{
+        "inputs": [],
+        "type": "constructor"
+      }]
+    ]
+  ],
+  ...
+]
+```
 
 
 ## Context
