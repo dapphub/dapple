@@ -1,4 +1,5 @@
 {
-  "glob": ["cmd/*.js", "lib/*.js", "README.md", "usage.md"],
+  "glob": ["cmd/*.js", "lib/*.js", "README.md", "doc/*.md"],
+  "out": "./doc/dist",
   "repository-url": "http://github.com/NexusDevelopment/dapple"
 }
