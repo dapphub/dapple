@@ -61,7 +61,7 @@ class InitialCLI(click.MultiCommand):
             return init
 
         print('This does not appear to be a Dapple package.'
-              ' Run `dapple init` first.', file=sys.stderr)
+              ' Run `pydapple init` first.', file=sys.stderr)
         sys.exit(1)
 
 
