@@ -1,4 +1,5 @@
-var assert = require("assert");
+var expect = require("chai").expect;
+var assert = require("chai").assert;
 var fs = require("../lib/file");
 var tmp = require("tmp");
 var Workspace = require("../lib/workspace");
@@ -27,6 +28,7 @@ describe("class Workspace", function() {
     it("loads local .sol source tree", function(done) {
         var workspace = new Workspace(testenv.golden_package_dir);
         var sources = workspace.loadWorkspaceSources();
+        expect(sources).to.exist;
         assert.deepEqual( Object.keys(sources), [ 'example.sol','example_test.sol','subdirectory/example2.sol'] );
         done();
     });

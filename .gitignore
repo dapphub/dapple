@@ -2,6 +2,6 @@
 *.sw*
 *bower_components*
 build
-dist
+build/dist
 *.egg-info
 node_modules
