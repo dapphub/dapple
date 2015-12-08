@@ -1,0 +1,137 @@
+{
+  "id": "dapple-usage-proposal",
+  "type": "object",
+  "definitions": {
+    
+    "class": {
+      "type": "string",
+      "title": "Class Definition",
+      "description": "A Solidity “contract” definition (potentially any bit of code that can be deployed)"
+    },
+    
+    "class_name": {
+      "type": "string",
+      "title": "Class Name",
+      "description": "A class (contract) name used during compilation."
+    },
+    
+    "class_header": {
+      "title": "Class Header",
+      "description": "Class name + the ABI for the class.",
+      "type": "object",
+      "required": [ "name", "abi" ],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "$ref": "#/definitions/class_name" },
+        "abi": { "$ref": "/mem/ABI" }
+      }
+    },
+
+    "object_name": {
+      "title": "Object Name",
+      "description": "The name of an address in an abstract contract system.",
+      "type": "string"
+    },
+    
+    "object_reference": {
+      "title": "Object Reference",
+      "description": "Object name + address.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "name", "address" ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        }
+      }
+    },
+    
+    "object_header": {
+      "title": "Object Header",
+      "description": "Object name + class header.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "name", "class_header" ],
+      "properties": {
+        "name":{
+          "type": "string"
+        },
+        "class_header": {
+          "$ref": "#/definitions/class_header"
+        }
+      }
+    },
+    
+    "object": {
+      "title": "Object",
+      "description": "Object reference and header.",
+      "type": "object",
+      "required": [ "reference", "header" ],
+      "additionalProperties": false,
+      "properties": {
+        "reference": {
+          "$ref": "#/definitions/object_reference"
+        },
+        "header": {
+          "$ref": "#/definitions/object_header"
+        }
+      }
+    },
+    
+    "system_variables": {
+      "title": "System Variables",
+      "description": "A set of object headers.",
+      "type": "array",
+      "items": { "$ref": "#/definitions/object_header" }
+    },
+
+    "environment": {
+      "title": "Environment",
+      "description": "A set of object references.",
+      "type": "array",
+      "items": { "$ref": "#/definitions/object_reference" }
+    },
+
+    "context": {
+      "title": "context",
+      "description": "A mapping of system variables to an environment, defined as a union of one or more other environments. For example, you might have a 'working environment' or an environment with no blockchain, but a context is associated with a specific blockchain and a specific set of contracts.",
+      "type": "array"
+    },
+    
+    "link": {
+      "title": "LINK(objectname) Macro",
+      "description": "A preprocessor macro used in Solidity code.\nIt is populated with a unique dummy address by the dapple preprocessor.  You can think of using LINK as adding a special type of argument to the constructor which can only be called at deploy time (by a key and not an address).",
+      "type": "string",
+      "pattern": "^LINK(\\w+)$"
+    },
+    
+    "class_template": {
+      "title": "Class Template",
+      "description": "Any class definition that has a LINK macro.",
+      "type": "string",
+      "pattern": "LINK\\(\\w+\\)"
+    },
+
+    "class_template_header": {
+      "title": "Class Template Header",
+      "description": "A class header + metadata about LINKs (set of objectnames)",
+      "type": "object",
+      "required": [  ],
+      "additionalProperties": false,
+      "properties": {
+        "class_header": { "$ref": "#/definitions/class_header" },
+        "links": {
+          "type": "object",
+          "additionalProperties": false,
+          "patternProperties": {
+            "^\\w+$": { "type": "object" }
+          }
+        }
+      }
+    }
+
+  }
+}
