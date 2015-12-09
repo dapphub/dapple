@@ -5,6 +5,7 @@
 
 `dapple` is a tool for Solidity developers to help build and manage complex contract systems on Ethereum-like blockchains.
 
+
 #### Installation
 
 Pre 0.2, it is best to install directly from source:
@@ -17,6 +18,7 @@ Any stable releases (once they exist) will be available on npm:
 
 #### Basic Usage
 
+Note that not everything is implemented in the JS rewrite.
 ```
 mkdir mydapp && cd mydapp
 dapple init
@@ -27,4 +29,11 @@ vim src/sol/mycontract_test.sol
 
 dapple test # run VM tests
 dapple build # export contract definitions, solidity headers, and JS headers (node and browser)
+
+# Write a deploy sequence
+vim steps/deploy.step
+dapple chain ethereum          # switch chains to default mainnet
+dapple run steps/deploy.step   # run the deploy sequence
+
+
 ```
