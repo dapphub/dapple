@@ -1,7 +1,9 @@
-<p align="center">
-  <img src="http://ipfs.pics/ipfs/QmPQcPiaep6Bfp956b5xLDaQdtQVtAWBT9QjWNRiL9y8Cw"/>
-</p>
+# Dapple
+[![Slack Status](http://slack.makerdao.com/badge.svg)](https://slack.makerdao.com)
 
+<p align="center">
+  <img width=196" src="http://ipfs.pics/ipfs/QmPQcPiaep6Bfp956b5xLDaQdtQVtAWBT9QjWNRiL9y8Cw"/>
+</p>
 
 `dapple` is a tool for Solidity developers to help build and manage complex contract systems on Ethereum-like blockchains.
 
