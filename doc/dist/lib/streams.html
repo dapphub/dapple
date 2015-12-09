@@ -1,0 +1,93 @@
+<!DOCTYPE html><html lang="en"><head><title>lib/streams</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/streams"><meta name="groc-project-path" content="lib/streams.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/lib/streams.js">lib/streams.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">"underscore"</span>)._;
+<span class="hljs-keyword">var</span> buffer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'vinyl-buffer'</span>);
+<span class="hljs-keyword">var</span> Builder = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./build.js'</span>);
+<span class="hljs-keyword">var</span> constants = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./constants'</span>);
+<span class="hljs-keyword">var</span> File = <span class="hljs-built_in">require</span>(<span class="hljs-string">'vinyl'</span>);
+<span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);
+<span class="hljs-keyword">var</span> through = <span class="hljs-built_in">require</span>(<span class="hljs-string">'through2'</span>);
+<span class="hljs-keyword">var</span> vinyl = <span class="hljs-built_in">require</span>(<span class="hljs-string">"vinyl-fs"</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This stream gathers all the files relevant to the package in the current
+directory.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> package_stream = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sourceRoot</span>) </span>{
+    <span class="hljs-keyword">if</span> (sourceRoot &amp;&amp; !sourceRoot.endsWith(path.sep)) {
+        sourceRoot += path.sep;
+    }
+
+    <span class="hljs-keyword">return</span> vinyl
+        .src([<span class="hljs-string">'**/*.sol'</span>, <span class="hljs-string">'**/dappfile'</span>, <span class="hljs-string">'dappfile'</span>])
+        .pipe(buffer())
+        .pipe(through.obj(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">file, enc, cb</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: Find a more elegant way of doing this.
+Perhaps hook into each package&#39;s dappfile during
+the file linking step and handle it then.</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Move every file so its path is relative to the
+<code>sourceRoot</code> path passed in.</p></div></div><div class="code"><div class="wrapper">            <span class="hljs-keyword">var</span> newPath = file.path;
+            <span class="hljs-keyword">if</span> (file.path.startsWith(sourceRoot)) {
+                newPath = newPath.replace(sourceRoot, <span class="hljs-string">""</span>);
+            }
+
+            <span class="hljs-keyword">this</span>.push(<span class="hljs-keyword">new</span> File({
+                path: newPath,
+                contents: file.contents
+            }));
+            
+            cb();
+        }));
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This stream injects some built-in contracts for the other contracts to use.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> inject_virtual_contracts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> through.obj(</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>No-op. We aren&#39;t interested in transforming...</p></div></div><div class="code"><div class="wrapper">        (file, enc, cb) =&gt; cb(<span class="hljs-literal">null</span>, file),</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>...we&#39;re more interested in injecting.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">cb</span>) </span>{
+            <span class="hljs-keyword">var</span> sources = constants.DAPPLE_PACKAGE_SOURCES;
+
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> path <span class="hljs-keyword">in</span> sources) {
+                <span class="hljs-keyword">this</span>.push(<span class="hljs-keyword">new</span> File({
+                    path: path,
+                    contents: <span class="hljs-keyword">new</span> Buffer(sources[path])
+                }));
+            }
+            cb();
+        });
+}; </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This stream converts all Dapple import statements into their absolute paths.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> file_linker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> through.obj(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">file, enc, cb</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: Grab <code>src</code> attribute from package
+being imported and use it when calculating
+absolute import paths. This will require
+some internal state. For now, we&#39;ll be naive.</p></div></div><div class="code"><div class="wrapper">        cb();
+    });
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This stream takes Solidity contract files and hands them off to the Solidity
+compiler, post-processes the output, and passes it on.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> build = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">opts</span>) </span>{
+    opts = _.extend({
+        export_dapple_headers: <span class="hljs-literal">false</span>
+    }, opts);
+
+    <span class="hljs-keyword">var</span> sources = {};
+
+    <span class="hljs-keyword">return</span> through.obj(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">file, enc, cb</span>) </span>{
+        <span class="hljs-keyword">if</span> (file.path.endsWith(<span class="hljs-string">".sol"</span>)) {
+            sources[file.path] = <span class="hljs-built_in">String</span>(file.contents);
+        }
+        cb();
+
+    }, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">cb</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: Either split this stream up into two parts,
+or add an optional &quot;postprocess&quot; function parameter to
+allow for different kinds of post-processing.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">var</span> unfiltered_classes = Builder.buildSources(sources);
+        <span class="hljs-keyword">var</span> classes = Builder.filterSolcOut(unfiltered_classes);
+        <span class="hljs-keyword">var</span> headers = Builder.extractClassHeaders(classes);
+
+        <span class="hljs-keyword">if</span> (!opts.export_dapple_headers) {
+            headers = _.omit(headers, [<span class="hljs-string">"Test"</span>, <span class="hljs-string">"Debug"</span>, <span class="hljs-string">"Tester"</span>]);
+        }
+
+        <span class="hljs-keyword">this</span>.push(<span class="hljs-keyword">new</span> File({
+            path: <span class="hljs-string">'js_module.js'</span>,
+            contents: <span class="hljs-keyword">new</span> Buffer(Builder.compileJsModule(headers))
+        }));
+
+        <span class="hljs-keyword">this</span>.push(<span class="hljs-keyword">new</span> File({
+            path: <span class="hljs-string">'classes.json'</span>,
+            contents: <span class="hljs-keyword">new</span> Buffer(<span class="hljs-built_in">JSON</span>.stringify(classes))
+        }));
+
+        cb();
+    });
+};
+
+<span class="hljs-built_in">module</span>.exports = {
+    build: build,
+    file_linker: file_linker,
+    inject_virtual_contracts: inject_virtual_contracts,
+    package_stream: package_stream
+};</div></div></div></div></body></html>

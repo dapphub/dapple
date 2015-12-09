@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="en"><head><title>lib/workspace</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/workspace"><meta name="groc-project-path" content="lib/workspace.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/lib/workspace.js">lib/workspace.js</a></div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><h1 id="dapple-workspace-and-dev-environment-object">dapple workspace and dev environment object</h1>
-<p>most interactions with the filestystem should be contained to this module
-dapplerc, dappfile, subpackages, etc this should be one of the few stateful
-modules in all of lib/dapple</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>A workspace will be initialized when you run any <code>dapple</code> command. It is
+<p>Most interactions with the filestystem should be contained to this module.
+(<code>.dapplerc</code>, <code>dappfile</code>, subpackages, etc.) This should be one of the few
+stateful modules in all of <code>lib/dapple</code>.</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>A workspace will be initialized when you run any <code>dapple</code> command. It is
 dapple&#39;s internal configuration object and single point of interaction with the
 filesystem.</p>
 <p>It will look for the <code>.dapplerc</code> file in <code>DAPPLERC</code> env var or <code>~/.dapplerc</code> It
@@ -18,6 +18,8 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
 <span class="hljs-keyword">var</span> vinyl = <span class="hljs-built_in">require</span>(<span class="hljs-string">"vinyl-fs"</span>);
 
 <span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Workspace</span> </span>{
+
+
     constructor(path) {
         <span class="hljs-keyword">if</span>( path === <span class="hljs-literal">undefined</span> ) {
             path = process.cwd();
@@ -31,7 +33,8 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
     }
 
     static initialize(root_dir) {
-        fs.writeFileSync(path.join(root_dir, constants.DAPPFILE_FILENAME), constants.DEFAULT_DAPPFILE_CONTENTS);
+        fs.writeFileSync(path.join(root_dir, constants.DAPPFILE_FILENAME),
+                         constants.DEFAULT_DAPPFILE_CONTENTS);
         <span class="hljs-keyword">var</span> dappfile = constants.DEFAULT_DAPPFILE_OBJECT;
         <span class="hljs-keyword">for</span>( <span class="hljs-keyword">let</span> dir <span class="hljs-keyword">in</span> dappfile.layout ) {
             fs.mkdirp.sync(path.join(root_dir, dappfile.layout[dir]));
@@ -59,14 +62,5 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
             dappfile_path = path.join(<span class="hljs-keyword">this</span>.package_root, constants.DAPPFILE_FILENAME);
         }
         <span class="hljs-keyword">return</span> readyaml.sync(dappfile_path);
-    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>get solidity source files for just this package - no sub-packages</p></div></div><div class="code"><div class="wrapper">    loadWorkspaceSources() {
-        <span class="hljs-keyword">var</span> sources = {};
-        <span class="hljs-keyword">var</span> dir = path.join(<span class="hljs-keyword">this</span>.package_root, <span class="hljs-keyword">this</span>.dappfile.layout.sol_sources)
-        <span class="hljs-keyword">var</span> files = glob().readdirSync(<span class="hljs-string">'**/*.sol'</span>, {cwd: dir});
-        files.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">file</span>) </span>{
-            <span class="hljs-keyword">var</span> origin = path.join(dir, file);
-            sources[file] = fs.readFileStringSync(origin);
-        });
-        <span class="hljs-keyword">return</span> sources;
     }
 }</div></div></div></div></body></html>

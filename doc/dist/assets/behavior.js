@@ -105,8 +105,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             "pageTitle": "lib/constants",
             "title": "constants"
           },
-          "depth": 2,
-          "outline": []
+          "depth": 2
         }, {
           "type": "file",
           "data": {
@@ -145,6 +144,26 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             "title": "ipfs"
           },
           "depth": 2
+        }, {
+          "type": "file",
+          "data": {
+            "language": {
+              "nameMatchers": [".js"],
+              "pygmentsLexer": "javascript",
+              "multiLineComment": ["/*", "*", "*/"],
+              "singleLineComment": ["//"],
+              "ignorePrefix": "}",
+              "foldPrefix": "^",
+              "name": "JavaScript"
+            },
+            "sourcePath": "/root/devenv/dapple/lib/streams.js",
+            "projectPath": "lib/streams.js",
+            "targetPath": "lib/streams",
+            "pageTitle": "lib/streams",
+            "title": "streams"
+          },
+          "depth": 2,
+          "outline": []
         }, {
           "type": "file",
           "data": {
