@@ -2,26 +2,17 @@
 "use strict"</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This is the file that gets executed when you run <code>dapple</code>. It uses <code>docopt</code>
 to parse the arguments passed in.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> docopt = <span class="hljs-built_in">require</span>(<span class="hljs-string">'docopt'</span>);
 <span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>);
-<span class="hljs-keyword">var</span> ignore = <span class="hljs-built_in">require</span>(<span class="hljs-string">'gulp-ignore'</span>);
 <span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">"path"</span>);
-<span class="hljs-keyword">var</span> streams = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../lib/streams'</span>);
-<span class="hljs-keyword">var</span> through = <span class="hljs-built_in">require</span>(<span class="hljs-string">'through2'</span>);
-<span class="hljs-keyword">var</span> vinyl = <span class="hljs-built_in">require</span>(<span class="hljs-string">"vinyl-fs"</span>);
+<span class="hljs-keyword">var</span> pipelines = <span class="hljs-built_in">require</span>(<span class="hljs-string">"../lib/pipelines"</span>);
 <span class="hljs-keyword">var</span> Workspace = <span class="hljs-built_in">require</span>(<span class="hljs-string">"../lib/workspace"</span>);
 
 <span class="hljs-keyword">var</span> doc = fs.readFileSync(__dirname+<span class="hljs-string">"/docopt.txt"</span>).toString();
 <span class="hljs-keyword">var</span> cli = docopt.docopt(doc);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If the user set the <code>--build</code> flag, we&#39;re going to open the current directory
 as if it were a package and commence with building.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">if</span>( cli.build ) {
-    <span class="hljs-keyword">var</span> workspace = <span class="hljs-keyword">new</span> Workspace();
-    <span class="hljs-keyword">var</span> sourceRoot = workspace.package_root;
-
-    <span class="hljs-keyword">if</span> (workspace.dappfile.layout.sol_sources) {
-        sourceRoot = path.join(sourceRoot, workspace.dappfile.layout.sol_sources);
-    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Grab all the files relevant to the package.</p></div></div><div class="code"><div class="wrapper">    streams.package_stream(sourceRoot)</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Inject a couple built-in contracts.</p></div></div><div class="code"><div class="wrapper">        .pipe(streams.inject_virtual_contracts())</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: Implement hierarchical ignore filter.
-Using gulp-ignore directly for now.</p></div></div><div class="code"><div class="wrapper">        .pipe(ignore.exclude(workspace.dappfile.ignore))</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: Preprocessors.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-comment">//.pipe(streams.preprocessor())</span>
-        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: File linking.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-comment">//.pipe(streams.link_files())</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: Contract linking.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-comment">//.pipe(streams.link_contracts())</span>
-        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: Add any missing steps.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-comment">//.pipe(...)</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Build!</p></div></div><div class="code"><div class="wrapper">        .pipe(streams.build())</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Write output to filesystem.</p></div></div><div class="code"><div class="wrapper">        .pipe(vinyl.dest(workspace.getBuildDir()));</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If they set the <code>--init</code> flag, we just set up the current directory as a
+    <span class="hljs-keyword">var</span> workspace = <span class="hljs-keyword">new</span> Workspace();</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Run our build pipeline.</p></div></div><div class="code"><div class="wrapper">    pipelines.BuildPipeline(workspace.getSourceDir(),
+                            workspace.getIgnoreGlobs())</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Write output to filesystem.</p></div></div><div class="code"><div class="wrapper">        .pipe(workspace.getBuildDest());</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If they set the <code>--init</code> flag, we just set up the current directory as a
 Dapple package and exit.</p></div></div><div class="code"><div class="wrapper">} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cli.init) {
     <span class="hljs-built_in">console</span>.log(process.cwd());
     Workspace.initialize(process.cwd());
+
 }</div></div></div></div></body></html>

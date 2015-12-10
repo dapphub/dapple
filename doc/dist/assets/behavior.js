@@ -156,14 +156,32 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
+            "sourcePath": "/root/devenv/dapple/lib/pipelines.js",
+            "projectPath": "lib/pipelines.js",
+            "targetPath": "lib/pipelines",
+            "pageTitle": "lib/pipelines",
+            "title": "pipelines"
+          },
+          "depth": 2
+        }, {
+          "type": "file",
+          "data": {
+            "language": {
+              "nameMatchers": [".js"],
+              "pygmentsLexer": "javascript",
+              "multiLineComment": ["/*", "*", "*/"],
+              "singleLineComment": ["//"],
+              "ignorePrefix": "}",
+              "foldPrefix": "^",
+              "name": "JavaScript"
+            },
             "sourcePath": "/root/devenv/dapple/lib/streams.js",
             "projectPath": "lib/streams.js",
             "targetPath": "lib/streams",
             "pageTitle": "lib/streams",
             "title": "streams"
           },
-          "depth": 2,
-          "outline": []
+          "depth": 2
         }, {
           "type": "file",
           "data": {
@@ -222,7 +240,8 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
         "pageTitle": "main",
         "title": "main"
       },
-      "depth": 1
+      "depth": 1,
+      "outline": []
     }
   ];
 
