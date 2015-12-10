@@ -30,7 +30,7 @@ the file linking step and handle it then.</p></div></div><div class="code"><div 
             cb();
         }));
 };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This stream injects some built-in contracts for the other contracts to use.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> inject_virtual_contracts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">return</span> through.obj(</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>No-op. We aren&#39;t interested in transforming...</p></div></div><div class="code"><div class="wrapper">        (file, enc, cb) =&gt; cb(<span class="hljs-literal">null</span>, file),</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>...we&#39;re more interested in injecting.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">cb</span>) </span>{
+    <span class="hljs-keyword">return</span> through.obj(</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>No-op. We aren&#39;t interested in transforming...</p></div></div><div class="code"><div class="wrapper">        (file, enc, cb) =&gt; cb(<span class="hljs-literal">null</span>, file),</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>...we&#39;re more interested in injecting.</p></div></div><div class="code"><div class="wrapper">        (cb) =&gt; {
             <span class="hljs-keyword">var</span> sources = constants.DAPPLE_PACKAGE_SOURCES;
 
             <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> path <span class="hljs-keyword">in</span> sources) {
@@ -55,16 +55,16 @@ compiler, post-processes the output, and passes it on.</p></div></div><div class
 
     <span class="hljs-keyword">var</span> sources = {};
 
-    <span class="hljs-keyword">return</span> through.obj(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">file, enc, cb</span>) </span>{
+    <span class="hljs-keyword">return</span> through.obj((file, enc, cb) =&gt; {
         <span class="hljs-keyword">if</span> (file.path.endsWith(<span class="hljs-string">".sol"</span>)) {
             sources[file.path] = <span class="hljs-built_in">String</span>(file.contents);
         }
         cb();
 
-    }, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">cb</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: Either split this stream up into two parts,
+    }, (cb) =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: Either split this stream up into two parts,
 or add an optional &quot;postprocess&quot; function parameter to
 allow for different kinds of post-processing.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">var</span> unfiltered_classes = Builder.buildSources(sources);
-        <span class="hljs-keyword">var</span> classes = Builder.filterSolcOut(unfiltered_classes);
+        <span class="hljs-keyword">var</span> classes = Builder.removeSolcClutter(unfiltered_classes);
         <span class="hljs-keyword">var</span> headers = Builder.extractClassHeaders(classes);
 
         <span class="hljs-keyword">if</span> (!opts.export_dapple_headers) {
@@ -86,7 +86,7 @@ allow for different kinds of post-processing.</p></div></div><div class="code"><
 };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This stream takes file objects and looks for an additional, non-standard
 <code>error</code> property. If the property exists and is set to true, the file&#39;s
 contents are sent to <code>stderr</code>. Otherwise, they are sent to <code>stdout</code>.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> cli_out = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-   <span class="hljs-keyword">return</span> through2.obj(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">file, enc, cb</span>) </span>{
+   <span class="hljs-keyword">return</span> through2.obj((file, enc, cb) =&gt; {
         (file.error ? <span class="hljs-built_in">console</span>.error : <span class="hljs-built_in">console</span>.log)(<span class="hljs-built_in">String</span>(file.contents));
         <span class="hljs-keyword">this</span>.push(file);
    });

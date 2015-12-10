@@ -21,7 +21,7 @@ if( cli.build ) {
 
     // Run our build pipeline.
     pipelines
-        .BuildPipeline(workspace.getSourceDir(),
+        .JSBuildPipeline(workspace.getSourceDir(),
                        workspace.getIgnoreGlobs())
 
         // Write output to filesystem.
