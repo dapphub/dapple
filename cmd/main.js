@@ -19,8 +19,9 @@ if( cli.build ) {
     var workspace = new Workspace();
 
     // Run our build pipeline.
-    pipelines.BuildPipeline(workspace.getSourceDir(),
-                            workspace.getIgnoreGlobs())
+    pipelines
+        .BuildPipeline(workspace.getSourceDir(),
+                       workspace.getIgnoreGlobs())
 
         // Write output to filesystem.
         .pipe(workspace.getBuildDest());
@@ -32,5 +33,7 @@ if( cli.build ) {
 } else if (cli.init) {
     console.log(process.cwd());
     Workspace.initialize(process.cwd());
+
+} else if (cli.test) {
 
 }
