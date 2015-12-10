@@ -72,7 +72,7 @@ compiler and passes it on.</p></div></div><div class="code"><div class="wrapper"
 };
 
 <span class="hljs-keyword">var</span> js_postprocess = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">return</span> through2.obj((file, enc, cb) =&gt; { 
+    <span class="hljs-keyword">return</span> through.obj((file, enc, cb) =&gt; { 
         <span class="hljs-keyword">var</span> raw_solc_output = <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-built_in">String</span>(file.contents));
         <span class="hljs-keyword">var</span> classes = Builder.removeSolcClutter(raw_solc_output);
         <span class="hljs-keyword">var</span> headers = Builder.extractClassHeaders(classes);
@@ -96,7 +96,7 @@ compiler and passes it on.</p></div></div><div class="code"><div class="wrapper"
 };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This stream takes file objects and looks for an additional, non-standard
 <code>error</code> property. If the property exists and is set to true, the file&#39;s
 contents are sent to <code>stderr</code>. Otherwise, they are sent to <code>stdout</code>.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> cli_out = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-   <span class="hljs-keyword">return</span> through2.obj((file, enc, cb) =&gt; {
+   <span class="hljs-keyword">return</span> through.obj((file, enc, cb) =&gt; {
         (file.error ? <span class="hljs-built_in">console</span>.error : <span class="hljs-built_in">console</span>.log)(<span class="hljs-built_in">String</span>(file.contents));
         <span class="hljs-keyword">this</span>.push(file);
    });
