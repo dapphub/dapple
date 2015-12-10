@@ -48,7 +48,7 @@ absolute import paths. This will require
 some internal state. For now, we&#39;ll be naive.</p></div></div><div class="code"><div class="wrapper">        cb();
     });
 };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This stream takes Solidity contract files and hands them off to the Solidity
-compiler, post-processes the output, and passes it on.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> build = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">opts</span>) </span>{
+compiler and passes it on.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> build = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">opts</span>) </span>{
     opts = _.extend({
         export_dapple_headers: <span class="hljs-literal">false</span>
     }, opts);
@@ -61,10 +61,20 @@ compiler, post-processes the output, and passes it on.</p></div></div><div class
         }
         cb();
 
-    }, (cb) =&gt; {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: Either split this stream up into two parts,
-or add an optional &quot;postprocess&quot; function parameter to
-allow for different kinds of post-processing.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">var</span> unfiltered_classes = Builder.buildSources(sources);
-        <span class="hljs-keyword">var</span> classes = Builder.removeSolcClutter(unfiltered_classes);
+    }, (cb) =&gt; {
+        <span class="hljs-keyword">var</span> solc_out = Builder.buildSources(sources);
+
+        <span class="hljs-keyword">this</span>.push(<span class="hljs-keyword">new</span> File({
+            path: <span class="hljs-string">'classes.json'</span>,
+            contents: <span class="hljs-keyword">new</span> Buffer(solc_out.contracts)
+        }));
+    });
+};
+
+<span class="hljs-keyword">var</span> js_postprocess = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> through2.obj((file, enc, cb) =&gt; { 
+        <span class="hljs-keyword">var</span> raw_solc_output = <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-built_in">String</span>(file.contents));
+        <span class="hljs-keyword">var</span> classes = Builder.removeSolcClutter(raw_solc_output);
         <span class="hljs-keyword">var</span> headers = Builder.extractClassHeaders(classes);
 
         <span class="hljs-keyword">if</span> (!opts.export_dapple_headers) {
@@ -98,5 +108,6 @@ contents are sent to <code>stderr</code>. Otherwise, they are sent to <code>stdo
     cli_out: cli_out,
     file_linker: file_linker,
     inject_virtual_contracts: inject_virtual_contracts,
+    js_postprocess: js_postprocess,
     package_stream: package_stream
 };</div></div></div></div></body></html>
