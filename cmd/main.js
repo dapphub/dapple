@@ -13,8 +13,9 @@ var Workspace = require("../lib/workspace");
 var doc = fs.readFileSync(__dirname+"/docopt.txt").toString();
 var cli = docopt.docopt(doc);
 
-// If the user set the `--build` flag, we're going to open the current directory
+// If the user ran the `build` command, we're going to open the current directory
 // as if it were a package and commence with building.
+//
 if( cli.build ) {
     var workspace = new Workspace();
 
@@ -27,13 +28,22 @@ if( cli.build ) {
         .pipe(workspace.getBuildDest());
 
 
-// If they set the `--init` flag, we just set up the current directory as a
+// If they ran the `init` command, we just set up the current directory as a
 // Dapple package and exit.
-
+//
 } else if (cli.init) {
     console.log(process.cwd());
     Workspace.initialize(process.cwd());
 
+// If they ran the `test` command, we're going to run our build pipeline and
+// then pass the output on to our test pipeline, finally spitting out the
+// results to stdout and stderr (in case of failure).
+//
 } else if (cli.test) {
+    var workspace = new Workspace();
 
+    pipelines
+        .BuildPipeline(workspace.getSourceDir(),
+                       workspace.getIgnoreBlogs())
+        .pipe(TestPipeline());
 }
