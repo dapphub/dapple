@@ -32,7 +32,9 @@ if( cli.build ) {
         // Inject a couple built-in contracts.
         .pipe(streams.inject_virtual_contracts())
 
-        // **TODO**: Implement hierarchical ignore filter.
+        // **TODO**: Either implement a hierarchical ignore
+        // filter, or determine that files in the "ignore"
+        // pattern get filtered out during publishing.
         // Using gulp-ignore directly for now.
         .pipe(ignore.exclude(workspace.dappfile.ignore))
 
