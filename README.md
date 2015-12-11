@@ -37,5 +37,16 @@ vim steps/deploy.step
 dapple chain ethereum          # switch chains to default mainnet
 dapple run steps/deploy.step   # run the deploy sequence
 
-
 ```
+
+#### Example dapple packages
+
+Some may still be in an outdated package format.
+
+https://github.com/NexusDevelopment/dappsys
+
+https://github.com/NexusDevelopment/keeper/tree/nexus/keeperd/dapp
+
+https://github.com/NexusDevelopment/ENS
+
+https://github.com/NexusDevelopment/guts
