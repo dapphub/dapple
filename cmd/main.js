@@ -44,6 +44,6 @@ if( cli.build ) {
 
     pipelines
         .BuildPipeline(workspace.getSourceDir(),
-                       workspace.getIgnoreBlogs())
+                       workspace.getIgnoreGlobs())
         .pipe(TestPipeline());
 }
