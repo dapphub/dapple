@@ -44,8 +44,8 @@ if( cli.build ) {
     var initStream;
 
     if (cli['--skip-build']) {
-        initStream = pipelines.PackagePipeline(workspace.getSourceDir(),
-                                               workspace.getIgnoreGlobs());
+        initStream = pipelines.BuiltClassesPipeline(workspace.getBuildDir());
+
     } else {
         initStream = pipelines.BuildPipeline(workspace.getSourceDir(),
                                              workspace.getIgnoreGlobs());
