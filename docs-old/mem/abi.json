@@ -1,0 +1,36 @@
+{
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [ "type", "name" ],
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": [ "function", "constructor", "event" ]
+      },
+      "name": {
+        "type": "string"
+      },
+      "inputs": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["type"],
+          "properties": {
+            "type": "string"
+          }
+        }
+      },
+      "outputs": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["type"],
+          "properties": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
