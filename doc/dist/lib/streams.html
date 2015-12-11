@@ -5,7 +5,8 @@
 <span class="hljs-keyword">var</span> File = <span class="hljs-built_in">require</span>(<span class="hljs-string">'vinyl'</span>);
 <span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);
 <span class="hljs-keyword">var</span> through = <span class="hljs-built_in">require</span>(<span class="hljs-string">'through2'</span>);
-<span class="hljs-keyword">var</span> vinyl = <span class="hljs-built_in">require</span>(<span class="hljs-string">"vinyl-fs"</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This stream gathers all the files relevant to the package in the current
+<span class="hljs-keyword">var</span> vinyl = <span class="hljs-built_in">require</span>(<span class="hljs-string">"vinyl-fs"</span>);
+<span class="hljs-keyword">var</span> VMTest = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./vmtest'</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This stream gathers all the files relevant to the package in the current
 directory.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> package_stream = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sourceRoot</span>) </span>{
     <span class="hljs-keyword">if</span> (sourceRoot &amp;&amp; !sourceRoot.endsWith(path.sep)) {
         sourceRoot += path.sep;
@@ -93,6 +94,29 @@ compiler and passes it on.</p></div></div><div class="code"><div class="wrapper"
 
         cb();
     });
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This stream takes the output of either the build stream or pipeline (they
+produce the same output) and returns a stream of files containing the output
+of running each <code>Test</code> contract. A special, non-standard <code>error</code> flag is set
+on File objects representing failed tests. This allows the <code>cli_out</code> stream
+to push the content of those files to <code>stderr</code> instead of <code>stdout</code>.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> test = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> through.obj(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">file, enc, cb</span>) </span>{
+        <span class="hljs-keyword">var</span> classes = <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-built_in">String</span>(file.contents));
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> className <span class="hljs-keyword">in</span> classes) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: See if there&#39;s a more robust
+way to determine if the class is a test.</p></div></div><div class="code"><div class="wrapper">            <span class="hljs-keyword">if</span> (!<span class="hljs-regexp">/^.+Test$/</span>.test(className)) {
+                <span class="hljs-keyword">continue</span>;
+            }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: Parallelize local execution in EVMs.
+(Run tests asynchronously, cache EVM instances,
+and block in the &quot;flush&quot; function until all the
+tests have been run and pushed.)</p></div></div><div class="code"><div class="wrapper">            <span class="hljs-keyword">var</span> result = VMTest.run(classes[className]);
+            <span class="hljs-keyword">var</span> file = <span class="hljs-keyword">new</span> File({
+                path: className + <span class="hljs-string">'.result'</span>,
+                contents: <span class="hljs-keyword">new</span> Buffer(result.message)
+            });
+            file.error = result.error;
+            <span class="hljs-keyword">this</span>.push(file);
+        }
+    });
 };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This stream takes file objects and looks for an additional, non-standard
 <code>error</code> property. If the property exists and is set to true, the file&#39;s
 contents are sent to <code>stderr</code>. Otherwise, they are sent to <code>stdout</code>.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> cli_out = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
@@ -109,5 +133,6 @@ contents are sent to <code>stderr</code>. Otherwise, they are sent to <code>stdo
     file_linker: file_linker,
     inject_virtual_contracts: inject_virtual_contracts,
     js_postprocess: js_postprocess,
-    package_stream: package_stream
+    package_stream: package_stream,
+    test: test
 };</div></div></div></div></body></html>
