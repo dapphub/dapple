@@ -22,7 +22,7 @@ if( cli.build ) {
     // Run our build pipeline.
     pipelines
         .JSBuildPipeline(workspace.getSourceDir(),
-                       workspace.getIgnoreGlobs())
+                         workspace.getIgnoreGlobs())
 
         // Write output to filesystem.
         .pipe(workspace.getBuildDest());
@@ -41,9 +41,15 @@ if( cli.build ) {
 //
 } else if (cli.test) {
     var workspace = new Workspace();
+    var initStream;
 
-    pipelines
-        .BuildPipeline(workspace.getSourceDir(),
-                       workspace.getIgnoreGlobs())
-        .pipe(TestPipeline());
+    if (cli['--skip-build']) {
+        initStream = pipelines.PackagePipeline(workspace.getSourceDir(),
+                                               workspace.getIgnoreGlobs());
+    } else {
+        initStream = pipelines.BuildPipeline(workspace.getSourceDir(),
+                                             workspace.getIgnoreGlobs());
+    }
+
+    initStream.pipe(pipelines.TestPipeline());
 }
