@@ -43,12 +43,16 @@
     "fs-readdir-recursive": "^1.0.0",
     "geth": "^0.1.4",
     "glob-fs": "^0.1.6",
+    "gulp-ignore": "^2.0.1",
     "mkdirp": "^0.5.1",
     "mocha": "^2.3.4",
     "read-yaml": "^1.0.0",
     "solc": "^0.1.6",
+    "stream-combiner": "^0.2.2",
+    "through2": "^2.0.0",
     "tmp": "0.0.28",
     "underscore": "^1.8.3",
+    "vinyl-buffer": "^1.0.0",
     "vinyl-fs": "^2.2.1",
     "web3": "^0.15.1"
   },
@@ -56,6 +60,7 @@
     "node": ">=5.0.0"
   },
   "devDependencies": {
+    "eslint": "^1.10.3",
     "groc": "^0.8.0",
     "gulp": "^3.9.0"
   }

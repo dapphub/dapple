@@ -2,5 +2,5 @@
   "glob": ["cmd/*.js", "lib/*.js", "README.md", "doc/*.md"],
   "out": "./doc/dist",
   "repository-url": "http://github.com/NexusDevelopment/dapple",
-  "github": true
+  "github": false
 }

@@ -8,12 +8,15 @@ Everything in here should work its way into someone else&#39;s library.</p></div
 fs.readFileStringSync = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">path</span>) </span>{
     <span class="hljs-keyword">return</span> fs.readFileSync(path).toString();
 }
+
 fs.readJsonSync = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">path</span>) </span>{
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">JSON</span>.parse(fs.readFileStringSync(path));
 }
+
 fs.writeJsonSync = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">path, data</span>) </span>{
     <span class="hljs-keyword">return</span> fs.writeFileSync(path, <span class="hljs-built_in">JSON</span>.stringify(data));
 }
+
 fs.existsSync = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">path</span>) </span>{
     <span class="hljs-keyword">try</span> {
         <span class="hljs-keyword">var</span> stats = fs.lstatSync(path);
@@ -25,11 +28,15 @@ fs.existsSync = <span class="hljs-function"><span class="hljs-keyword">function<
         <span class="hljs-keyword">throw</span> e;
     }
 }
+
 fs.readYamlSync = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">path</span>) </span>{
     <span class="hljs-keyword">return</span> readyaml.sync(path);
 }
+
 fs.tmpdir = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">return</span> tmp.dirSync().name;
 }
-fs.mkdirp = mkdirp
+
+fs.mkdirp = mkdirp;
+
 <span class="hljs-built_in">module</span>.exports = fs;</div></div></div></div></body></html>

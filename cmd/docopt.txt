@@ -3,3 +3,4 @@ Usage:
     dapple build
     dapple chain
     dapple step
+    dapple test [--skip-build]

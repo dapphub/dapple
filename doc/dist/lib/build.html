@@ -1,76 +1,32 @@
-<!DOCTYPE html><html lang="en"><head><title>lib/build</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/build"><meta name="groc-project-path" content="lib/build.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/lib/build.js">lib/build.js</a></div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>The build </p></div></div><div class="code"><div class="wrapper"><span class="hljs-pi">"use strict"</span>;
+<!DOCTYPE html><html lang="en"><head><title>lib/build</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/build"><meta name="groc-project-path" content="lib/build.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/lib/build.js">lib/build.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">"use strict"</span>;
 <span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./file"</span>);
 <span class="hljs-keyword">var</span> solc = <span class="hljs-built_in">require</span>(<span class="hljs-string">"solc"</span>);
 <span class="hljs-keyword">var</span> constants = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./constants"</span>);
 <span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">"underscore"</span>)._;
-<span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">"path"</span>);
-
-<span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Builder</span> </span>{
-    constructor(workspace) {
-        <span class="hljs-keyword">this</span>.workspace = workspace;
-    }
-    static addDappleVirtualPackage(sources) {
-        <span class="hljs-keyword">var</span> dapple = constants.DAPPLE_PACKAGE_SOURCES;
-        <span class="hljs-keyword">for</span>( <span class="hljs-keyword">let</span> path <span class="hljs-keyword">in</span> dapple ) {
-            sources[path] = dapple[path];
-        }
-        <span class="hljs-keyword">return</span> sources;
-    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>TODO make static</p></div></div><div class="code"><div class="wrapper">    build(build_dir, opts) {
-        <span class="hljs-keyword">if</span>( opts === <span class="hljs-literal">undefined</span> ) {
-            opts= {
-                export_dapple_headers: <span class="hljs-literal">false</span>
-            };
-        }
-        <span class="hljs-keyword">if</span>( build_dir === <span class="hljs-literal">undefined</span> ) {
-            build_dir = <span class="hljs-keyword">this</span>.workspace.getBuildDir();
-        }
-        <span class="hljs-keyword">var</span> sources = <span class="hljs-keyword">this</span>.workspace.loadWorkspaceSources();
-
-        <span class="hljs-keyword">var</span> ignore = <span class="hljs-keyword">this</span>.workspace.dappfile.ignore;
-        <span class="hljs-keyword">if</span>( ignore === <span class="hljs-literal">undefined</span> ) {
-            ignore = [];
-        }
-        sources = _.omit(sources, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">src, path</span>) </span>{
-            <span class="hljs-keyword">return</span> _.any(ignore, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">regex</span>) </span>{
-                <span class="hljs-keyword">var</span> re = <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(regex);
-                <span class="hljs-keyword">var</span> match = re.test(path);
-                <span class="hljs-keyword">return</span> match;
-            });
-        });
-        sources = Builder.addDappleVirtualPackage(sources);
-        <span class="hljs-keyword">var</span> unfiltered_classes = Builder.buildSources(sources);
-        <span class="hljs-keyword">var</span> classes = Builder.filterSolcOut(unfiltered_classes);
-        <span class="hljs-keyword">var</span> headers = Builder.extractClassHeaders(classes);
-        fs.writeJsonSync(build_dir + <span class="hljs-string">"/classes.json"</span>, classes);
-        <span class="hljs-keyword">if</span>( ! opts.export_dapple_headers ) {
-            headers = _.omit(headers, [<span class="hljs-string">"Test"</span>, <span class="hljs-string">"Debug"</span>, <span class="hljs-string">"Tester"</span>]);
-        }
-        <span class="hljs-keyword">var</span> js_module = Builder.compileJsModule(headers);
-        fs.writeFileSync(path.join(build_dir, <span class="hljs-string">"js_module.js"</span>), js_module);
-        <span class="hljs-keyword">return</span> classes;
-    }
+<span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">"path"</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This is a static helper class for our streams.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Builder</span> </span>{
     static compileJsModule(header) {
         <span class="hljs-comment">//TODO constants</span>
         <span class="hljs-keyword">var</span> template = _.template(constants.JS_HEADER_TEMPLATE());
         <span class="hljs-keyword">return</span> template({header: <span class="hljs-built_in">JSON</span>.stringify(header)});
     }
+
     static extractClassHeaders(classes) {
         <span class="hljs-keyword">return</span> _.mapObject(classes, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">_class, classname</span>) </span>{
             <span class="hljs-keyword">return</span> _.pick(_class, [<span class="hljs-string">"interface"</span>, <span class="hljs-string">"solidity_interface"</span>, <span class="hljs-string">"bytecode"</span>]);
         });
     }
+
     static buildSources(sources) {
         <span class="hljs-keyword">var</span> solc_out = solc.compile({sources:sources});
         <span class="hljs-keyword">if</span>( solc_out.errors ) {
             <span class="hljs-keyword">throw</span> solc_out.errors;
         }
-        <span class="hljs-keyword">var</span> classes = solc_out.contracts;
-        <span class="hljs-keyword">return</span> classes;
-    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Filters out useless solc output</p></div></div><div class="code"><div class="wrapper">    static filterSolcOut(sources) {
+        <span class="hljs-keyword">return</span> solc_out;
+    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Filters out useless solc output</p></div></div><div class="code"><div class="wrapper">    static removeSolcClutter(sources) {
         <span class="hljs-keyword">var</span> bad_keys =  [<span class="hljs-string">"assembly"</span>, <span class="hljs-string">"opcodes"</span>];
         <span class="hljs-keyword">return</span> _.mapObject(sources, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">_class, classname</span>) </span>{
             <span class="hljs-keyword">var</span> omitted = _.omit(_class, bad_keys);
             <span class="hljs-keyword">return</span> omitted;
         });
     }
-}</div></div></div></div></body></html>
+};</div></div></div></div></body></html>

@@ -13,30 +13,51 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "commentsOnly": true,
           "name": "Markdown"
         },
-        "sourcePath": "/Users/nikolai/devenv/dapple/README.md",
+        "sourcePath": "/root/devenv/dapple/README.md",
         "projectPath": "README.md",
         "targetPath": "index",
         "pageTitle": "index",
         "title": "index"
       },
+      "depth": 1
+    }, {
+      "type": "folder",
+      "data": {
+        "path": "doc",
+        "title": "doc"
+      },
       "depth": 1,
-      "outline": [
+      "children": [
         {
-          "type": "heading",
+          "type": "file",
           "data": {
-            "level": 4,
-            "title": "Installation",
-            "slug": "installation"
+            "language": {
+              "nameMatchers": [".md", ".markdown", ".mkd", ".mkdn", ".mdown"],
+              "commentsOnly": true,
+              "name": "Markdown"
+            },
+            "sourcePath": "/root/devenv/dapple/doc/dappfile.md",
+            "projectPath": "doc/dappfile.md",
+            "targetPath": "doc/dappfile",
+            "pageTitle": "doc/dappfile",
+            "title": "dappfile"
           },
-          "depth": 4
+          "depth": 2
         }, {
-          "type": "heading",
+          "type": "file",
           "data": {
-            "level": 4,
-            "title": "Basic Usage",
-            "slug": "basic-usage"
+            "language": {
+              "nameMatchers": [".md", ".markdown", ".mkd", ".mkdn", ".mdown"],
+              "commentsOnly": true,
+              "name": "Markdown"
+            },
+            "sourcePath": "/root/devenv/dapple/doc/usage.md",
+            "projectPath": "doc/usage.md",
+            "targetPath": "doc/usage",
+            "pageTitle": "doc/usage",
+            "title": "usage"
           },
-          "depth": 4
+          "depth": 2
         }
       ]
     }, {
@@ -59,14 +80,13 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nikolai/devenv/dapple/lib/build.js",
+            "sourcePath": "/root/devenv/dapple/lib/build.js",
             "projectPath": "lib/build.js",
             "targetPath": "lib/build",
             "pageTitle": "lib/build",
             "title": "build"
           },
-          "depth": 2,
-          "outline": []
+          "depth": 2
         }, {
           "type": "file",
           "data": {
@@ -79,34 +99,13 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nikolai/devenv/dapple/lib/chain.js",
-            "projectPath": "lib/chain.js",
-            "targetPath": "lib/chain",
-            "pageTitle": "lib/chain",
-            "title": "chain"
-          },
-          "depth": 2,
-          "outline": []
-        }, {
-          "type": "file",
-          "data": {
-            "language": {
-              "nameMatchers": [".js"],
-              "pygmentsLexer": "javascript",
-              "multiLineComment": ["/*", "*", "*/"],
-              "singleLineComment": ["//"],
-              "ignorePrefix": "}",
-              "foldPrefix": "^",
-              "name": "JavaScript"
-            },
-            "sourcePath": "/Users/nikolai/devenv/dapple/lib/constants.js",
+            "sourcePath": "/root/devenv/dapple/lib/constants.js",
             "projectPath": "lib/constants.js",
             "targetPath": "lib/constants",
             "pageTitle": "lib/constants",
             "title": "constants"
           },
-          "depth": 2,
-          "outline": []
+          "depth": 2
         }, {
           "type": "file",
           "data": {
@@ -119,14 +118,13 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nikolai/devenv/dapple/lib/file.js",
+            "sourcePath": "/root/devenv/dapple/lib/file.js",
             "projectPath": "lib/file.js",
             "targetPath": "lib/file",
             "pageTitle": "lib/file",
             "title": "file"
           },
-          "depth": 2,
-          "outline": []
+          "depth": 2
         }, {
           "type": "file",
           "data": {
@@ -139,14 +137,13 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nikolai/devenv/dapple/lib/ipfs.js",
+            "sourcePath": "/root/devenv/dapple/lib/ipfs.js",
             "projectPath": "lib/ipfs.js",
             "targetPath": "lib/ipfs",
             "pageTitle": "lib/ipfs",
             "title": "ipfs"
           },
-          "depth": 2,
-          "outline": []
+          "depth": 2
         }, {
           "type": "file",
           "data": {
@@ -159,14 +156,13 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nikolai/devenv/dapple/lib/step.js",
-            "projectPath": "lib/step.js",
-            "targetPath": "lib/step",
-            "pageTitle": "lib/step",
-            "title": "step"
+            "sourcePath": "/root/devenv/dapple/lib/pipelines.js",
+            "projectPath": "lib/pipelines.js",
+            "targetPath": "lib/pipelines",
+            "pageTitle": "lib/pipelines",
+            "title": "pipelines"
           },
-          "depth": 2,
-          "outline": []
+          "depth": 2
         }, {
           "type": "file",
           "data": {
@@ -179,7 +175,26 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nikolai/devenv/dapple/lib/vmtest.js",
+            "sourcePath": "/root/devenv/dapple/lib/streams.js",
+            "projectPath": "lib/streams.js",
+            "targetPath": "lib/streams",
+            "pageTitle": "lib/streams",
+            "title": "streams"
+          },
+          "depth": 2
+        }, {
+          "type": "file",
+          "data": {
+            "language": {
+              "nameMatchers": [".js"],
+              "pygmentsLexer": "javascript",
+              "multiLineComment": ["/*", "*", "*/"],
+              "singleLineComment": ["//"],
+              "ignorePrefix": "}",
+              "foldPrefix": "^",
+              "name": "JavaScript"
+            },
+            "sourcePath": "/root/devenv/dapple/lib/vmtest.js",
             "projectPath": "lib/vmtest.js",
             "targetPath": "lib/vmtest",
             "pageTitle": "lib/vmtest",
@@ -199,14 +214,13 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/Users/nikolai/devenv/dapple/lib/workspace.js",
+            "sourcePath": "/root/devenv/dapple/lib/workspace.js",
             "projectPath": "lib/workspace.js",
             "targetPath": "lib/workspace",
             "pageTitle": "lib/workspace",
             "title": "workspace"
           },
-          "depth": 2,
-          "outline": []
+          "depth": 2
         }
       ]
     }, {
@@ -221,40 +235,13 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "foldPrefix": "^",
           "name": "JavaScript"
         },
-        "sourcePath": "/Users/nikolai/devenv/dapple/cmd/main.js",
+        "sourcePath": "/root/devenv/dapple/cmd/main.js",
         "projectPath": "cmd/main.js",
         "targetPath": "main",
         "pageTitle": "main",
         "title": "main"
       },
-      "depth": 1,
-      "outline": []
-    }, {
-      "type": "file",
-      "data": {
-        "language": {
-          "nameMatchers": [".md", ".markdown", ".mkd", ".mkdn", ".mdown"],
-          "commentsOnly": true,
-          "name": "Markdown"
-        },
-        "sourcePath": "/Users/nikolai/devenv/dapple/usage.md",
-        "projectPath": "usage.md",
-        "targetPath": "usage",
-        "pageTitle": "usage",
-        "firstHeader": {
-          "type": "heading",
-          "data": {
-            "level": 1,
-            "title": "Usage",
-            "slug": "usage",
-            "isFileHeader": true
-          },
-          "depth": 1
-        },
-        "title": "Usage"
-      },
-      "depth": 1,
-      "outline": []
+      "depth": 1
     }
   ];
 

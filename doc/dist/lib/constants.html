@@ -10,7 +10,8 @@ TODO this class is a disaster</p></div></div><div class="code"><div class="wrapp
         <span class="hljs-keyword">this</span>.DAPPFILE_FILENAME = <span class="hljs-string">"dappfile"</span>;
         <span class="hljs-keyword">this</span>.DAPPLERC_FILENAME = <span class="hljs-string">"_dapplerc"</span>;
         <span class="hljs-keyword">this</span>.JS_HEADER_TEMPLATE = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-            <span class="hljs-keyword">return</span> fs.readFileStringSync(path.join(<span class="hljs-keyword">this</span>.CONSTANTS_DIRECTORY, <span class="hljs-string">"js_module.template"</span>));
+            <span class="hljs-keyword">return</span> fs.readFileStringSync(
+                path.join(<span class="hljs-keyword">this</span>.CONSTANTS_DIRECTORY, <span class="hljs-string">"js_module.template"</span>));
         }
 
         <span class="hljs-keyword">this</span>.DAPPLE_VMTEST_CLASSES = {
