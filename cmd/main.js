@@ -9,6 +9,8 @@ var fs = require('fs');
 var path = require("path");
 var pipelines = require("../lib/pipelines");
 var Workspace = require("../lib/workspace");
+var Builder = require("../lib/build");
+var VMTest = require("../lib/vmtest");
 
 var doc = fs.readFileSync(__dirname+"/docopt.txt").toString();
 var cli = docopt.docopt(doc);
@@ -32,7 +34,6 @@ if( cli.build ) {
 // Dapple package and exit.
 //
 } else if (cli.init) {
-    console.log(process.cwd());
     Workspace.initialize(process.cwd());
 
 // If they ran the `test` command, we're going to run our build pipeline and
