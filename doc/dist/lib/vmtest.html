@@ -1,29 +1,78 @@
 <!DOCTYPE html><html lang="en"><head><title>lib/vmtest</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/vmtest"><meta name="groc-project-path" content="lib/vmtest.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/lib/vmtest.js">lib/vmtest.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">"use strict"</span>
-<span class="hljs-keyword">const</span> EVM = <span class="hljs-built_in">require</span>(<span class="hljs-string">'ethereumjs-vm'</span>);
-<span class="hljs-keyword">const</span> deasync = <span class="hljs-built_in">require</span>(<span class="hljs-string">"deasync"</span>);
-<span class="hljs-keyword">const</span> Trie = <span class="hljs-built_in">require</span>(<span class="hljs-string">'merkle-patricia-tree/secure'</span>);
+<span class="hljs-keyword">var</span> deasync = <span class="hljs-built_in">require</span>(<span class="hljs-string">"deasync"</span>);
+<span class="hljs-keyword">var</span> EVM = <span class="hljs-built_in">require</span>(<span class="hljs-string">'ethereumjs-lib'</span>).VM;
+<span class="hljs-keyword">var</span> utils = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./utils'</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>TODO use ethersim
+TODO use chain manager</p></div></div><div class="code"><div class="wrapper"> 
+<span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VMTest</span> </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: Chain snapshotting and async/parallel tests.
+Needs to be faster.</p></div></div><div class="code"><div class="wrapper">    </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Takes a web3 instance, a compiled contract (<code>class_definition</code>),
+and a callback. Collects all the tests in the class definition,
+deploys an instance of the contract for each test on the given
+web3 object, runs &quot;setUp&quot;, and then runs the test. The callback
+takes an error string as its first argument and an object
+containing the results of each test. The callback gets called
+once per test. The test results object includes flags indicating the
+number of tests to be run (<code>testCount</code>) and the number of the test being
+reported on (<code>testNumber</code>).</p></div></div><div class="code"><div class="wrapper">    static run(web3, class_definition, cb) {
 
-<span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VMTest</span> </span>{
-    static run(class_definition, evm) {
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span>(evm) == <span class="hljs-string">'undefined'</span>) {
-            evm = <span class="hljs-keyword">new</span> EVM(<span class="hljs-keyword">new</span> Trie());
+        cb = utils.optionalCallback(cb);
+
+        <span class="hljs-keyword">if</span>( !class_definition.bytecode ) {
+            <span class="hljs-keyword">return</span> cb(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Test class definition has no bytecode"</span>));
         }
 
-        <span class="hljs-keyword">var</span> runCode = deasync(evm.runCode)
-        <span class="hljs-keyword">var</span> code = class_definition.bytecode;
-        code = <span class="hljs-keyword">new</span> Buffer(code, <span class="hljs-string">'hex'</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Deploy the test contract.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">try</span> {
-            <span class="hljs-keyword">var</span> results = runCode({
-                code: code,
-                gasLimit: <span class="hljs-keyword">new</span> Buffer(<span class="hljs-string">'ffffffff'</span>, <span class="hljs-string">'hex'</span>)
-            });
+        <span class="hljs-keyword">if</span>( !class_definition.interface ) {
+            <span class="hljs-keyword">return</span> cb(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Test class definition has no interface"</span>));
+        }
 
-        } <span class="hljs-keyword">catch</span> (e) {
-            <span class="hljs-built_in">console</span>.error(e.stack);
-            <span class="hljs-keyword">return</span> {
-                message: <span class="hljs-string">"FAILED TO DEPLOY"</span>,
-                error: e
-            };
-        }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: Run all the test functions.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-built_in">console</span>.log(results);
+        <span class="hljs-keyword">var</span> abi = class_definition.interface;
+        <span class="hljs-keyword">if</span>( <span class="hljs-keyword">typeof</span>(abi) === <span class="hljs-string">"string"</span> ) {
+            abi = <span class="hljs-built_in">JSON</span>.parse(abi);
+        }
 
+        <span class="hljs-keyword">var</span> tests = [];
+        <span class="hljs-keyword">for</span>( <span class="hljs-keyword">var</span> item <span class="hljs-keyword">of</span> abi ) {
+            <span class="hljs-keyword">if</span>( item.name &amp;&amp; item.name.indexOf(<span class="hljs-string">"test"</span>) == <span class="hljs-number">0</span> ) {
+                tests.push(item.name);
+            }
+        }
+
+        <span class="hljs-keyword">var</span> runSingleSync = deasync(VMTest.run_single);
+        <span class="hljs-keyword">var</span> results = [];
+        <span class="hljs-keyword">try</span> {
+            <span class="hljs-keyword">for</span>( <span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>; i &lt; tests.length; i+=<span class="hljs-number">1</span> ) {
+                <span class="hljs-keyword">var</span> instance = web3.eth.contract(abi);
+                instance.bytecode = class_definition.bytecode;
+                results.push(runSingleSync(web3, instance, tests[i]));
+            }
+        } <span class="hljs-keyword">catch</span>(err) {
+            <span class="hljs-keyword">return</span> cb(err);
+        }
+
+        <span class="hljs-keyword">return</span> cb(<span class="hljs-literal">null</span>, results);
+    }
+
+    static run_single(web3, test, testname, cb) {
+        <span class="hljs-keyword">var</span> failed = <span class="hljs-literal">false</span>;
+
+        test.new({
+            from: web3.eth.accounts[<span class="hljs-number">0</span>],
+            data: <span class="hljs-string">"0x"</span> + test.bytecode,
+            gas: <span class="hljs-number">900000000</span>
+
+        }, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, instance</span>) </span>{
+            <span class="hljs-keyword">if</span>(err) cb(err);
+            <span class="hljs-keyword">if</span>( instance.address ) {
+                <span class="hljs-keyword">if</span>( instance.setUp !== <span class="hljs-literal">undefined</span> ) {
+                    instance.setUp()
+                }
+                <span class="hljs-keyword">var</span> trxid = instance[testname]();
+                <span class="hljs-keyword">var</span> failed = instance.failed();
+                <span class="hljs-keyword">var</span> receipt = web3.eth.getTransactionReceipt(trxid);
+                cb(<span class="hljs-literal">null</span>, failed);
+            }
+        });
+    }
+
+    static run_suite() {
     }
 }</div></div></div></div></body></html>
