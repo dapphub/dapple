@@ -1,9 +1,16 @@
-<!DOCTYPE html><html lang="en"><head><title>lib/streams</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/streams"><meta name="groc-project-path" content="lib/streams.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/lib/streams.js">lib/streams.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">"underscore"</span>)._;
+<!DOCTYPE html><html lang="en"><head><title>lib/streams</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/streams"><meta name="groc-project-path" content="lib/streams.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/lib/streams.js">lib/streams.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
+
+<span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">"underscore"</span>)._;
 <span class="hljs-keyword">var</span> buffer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'vinyl-buffer'</span>);
 <span class="hljs-keyword">var</span> Builder = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./build.js'</span>);
+<span class="hljs-keyword">var</span> clc = <span class="hljs-built_in">require</span>(<span class="hljs-string">"cli-color-tty"</span>)(<span class="hljs-literal">true</span>);
 <span class="hljs-keyword">var</span> constants = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./constants'</span>);
+<span class="hljs-keyword">var</span> Contract = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./contract"</span>);
+<span class="hljs-keyword">var</span> deasync = <span class="hljs-built_in">require</span>(<span class="hljs-string">"deasync"</span>);
 <span class="hljs-keyword">var</span> File = <span class="hljs-built_in">require</span>(<span class="hljs-string">'vinyl'</span>);
+<span class="hljs-keyword">var</span> LogTranslator = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./logtranslator'</span>);
 <span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);
+<span class="hljs-keyword">var</span> RLP = <span class="hljs-built_in">require</span>(<span class="hljs-string">'rlp'</span>);
 <span class="hljs-keyword">var</span> through = <span class="hljs-built_in">require</span>(<span class="hljs-string">'through2'</span>);
 <span class="hljs-keyword">var</span> vinyl = <span class="hljs-built_in">require</span>(<span class="hljs-string">"vinyl-fs"</span>);
 <span class="hljs-keyword">var</span> VMTest = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./vmtest'</span>);
@@ -101,31 +108,85 @@ of running each <code>Test</code> contract. A special, non-standard <code>error<
 on File objects representing failed tests. This allows the <code>cli_out</code> stream
 to push the content of those files to <code>stderr</code> instead of <code>stdout</code>.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> test = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">return</span> through.obj(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">file, enc, cb</span>) </span>{
+        <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
         <span class="hljs-keyword">var</span> classes = <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-built_in">String</span>(file.contents));
 
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> className <span class="hljs-keyword">in</span> classes) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: See if there&#39;s a more robust
 way to determine if the class is a test.</p></div></div><div class="code"><div class="wrapper">            <span class="hljs-keyword">if</span> (!<span class="hljs-regexp">/^.+Test$/</span>.test(className)) {
                 <span class="hljs-keyword">continue</span>;
+            }
+
+            <span class="hljs-keyword">try</span> {
+                <span class="hljs-keyword">var</span> contract = <span class="hljs-keyword">new</span> Contract(classes[className]);
+
+            } <span class="hljs-keyword">catch</span>(err) {
+                <span class="hljs-keyword">return</span> cb(err);
             }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: Parallelize local execution in EVMs.
 (Run tests asynchronously, cache EVM instances,
 and block in the &quot;flush&quot; function until all the
-tests have been run and pushed.)</p></div></div><div class="code"><div class="wrapper">            <span class="hljs-keyword">var</span> web3 = Web3Factory.EVM();
-            <span class="hljs-keyword">var</span> result = VMTest.run(web3, classes[className]);
-            <span class="hljs-keyword">var</span> file = <span class="hljs-keyword">new</span> File({
-                path: className + <span class="hljs-string">'.result'</span>,
-                contents: <span class="hljs-keyword">new</span> Buffer(result.message)
+tests have been run and pushed.)</p></div></div><div class="code"><div class="wrapper">            <span class="hljs-keyword">var</span> remaining = -<span class="hljs-number">1</span>;
+            <span class="hljs-keyword">var</span> web3 = Web3Factory.EVM();
+            <span class="hljs-keyword">var</span> logTranslator = <span class="hljs-keyword">new</span> LogTranslator(contract.abi);
+            <span class="hljs-keyword">var</span> vmtest = <span class="hljs-keyword">new</span> VMTest(web3, contract, logTranslator);
+            vmtest.run(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, result</span>) </span>{
+                <span class="hljs-keyword">var</span> color = clc.green;
+
+                <span class="hljs-keyword">if</span> (result.failed) {
+                    color = clc.red;
+                }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>TODO: Clean this up. We want it to be
+easy to have special log formatting for
+particular types of events, and this is
+a discreet logical chunk that belongs in
+its own function or class somewhere.</p></div></div><div class="code"><div class="wrapper">                <span class="hljs-keyword">var</span> output = <span class="hljs-string">"  "</span> + result.title + <span class="hljs-string">"\n"</span>;
+                <span class="hljs-keyword">var</span> logPrefix = <span class="hljs-string">"    LOG:  "</span>
+
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> entry <span class="hljs-keyword">of</span> result.logs) {
+                    output += logPrefix + entry.event + <span class="hljs-string">"\n"</span>;
+
+                    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> arg <span class="hljs-keyword">of</span> _.pairs(entry.args)) {
+                        output += logPrefix + <span class="hljs-string">"  "</span>
+                                  + arg[<span class="hljs-number">0</span>] + <span class="hljs-string">": "</span> + arg[<span class="hljs-number">1</span>] + <span class="hljs-string">"\n"</span>;
+                    }
+                }
+                output += <span class="hljs-string">"    "</span> + color(result.message) + <span class="hljs-string">"\n"</span>;
+
+                <span class="hljs-keyword">var</span> file = <span class="hljs-keyword">new</span> File({
+                    path: path.join(
+                        className,
+                        result.title + (result.failed ? <span class="hljs-string">'.stderr'</span> : <span class="hljs-string">'.stdout'</span>)),
+                    contents: <span class="hljs-keyword">new</span> Buffer(output)
+                });
+                that.push(file);
+
+                remaining = result.remaining;
             });
-            file.error = result.error;
-            <span class="hljs-keyword">this</span>.push(file);
+
+            deasync.loopWhile(() =&gt; remaining != <span class="hljs-number">0</span>);
         }
+        cb();
     });
-};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This stream takes file objects and looks for an additional, non-standard
-<code>error</code> property. If the property exists and is set to true, the file&#39;s
-contents are sent to <code>stderr</code>. Otherwise, they are sent to <code>stdout</code>.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> cli_out = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-   <span class="hljs-keyword">return</span> through.obj(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">file, enc, cb</span>) </span>{
-        (file.error ? <span class="hljs-built_in">console</span>.error : <span class="hljs-built_in">console</span>.log)(<span class="hljs-built_in">String</span>(file.contents));
+};
+
+
+<span class="hljs-keyword">var</span> cli_out = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> lastDirectory;
+
+    <span class="hljs-keyword">return</span> through.obj(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">file, enc, cb</span>) </span>{
+        <span class="hljs-keyword">var</span> out = <span class="hljs-built_in">console</span>.log;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/\.stderr$/</span>.test(file.path)) {
+           out = <span class="hljs-built_in">console</span>.error;
+        }
+
+        <span class="hljs-keyword">if</span> (lastDirectory != path.dirname(file.path)) {
+           lastDirectory = path.dirname(file.path);
+           <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"\n"</span> + clc.bold(lastDirectory));
+        }
+        out(<span class="hljs-built_in">String</span>(file.contents));
         <span class="hljs-keyword">this</span>.push(file);
-   });
+        cb();
+
+    });
 };
 
 

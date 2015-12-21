@@ -118,6 +118,25 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
+            "sourcePath": "/home/dev/devenv/dapple/lib/contract.js",
+            "projectPath": "lib/contract.js",
+            "targetPath": "lib/contract",
+            "pageTitle": "lib/contract",
+            "title": "contract"
+          },
+          "depth": 2
+        }, {
+          "type": "file",
+          "data": {
+            "language": {
+              "nameMatchers": [".js"],
+              "pygmentsLexer": "javascript",
+              "multiLineComment": ["/*", "*", "*/"],
+              "singleLineComment": ["//"],
+              "ignorePrefix": "}",
+              "foldPrefix": "^",
+              "name": "JavaScript"
+            },
             "sourcePath": "/home/dev/devenv/dapple/lib/file.js",
             "projectPath": "lib/file.js",
             "targetPath": "lib/file",
@@ -142,6 +161,25 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             "targetPath": "lib/ipfs",
             "pageTitle": "lib/ipfs",
             "title": "ipfs"
+          },
+          "depth": 2
+        }, {
+          "type": "file",
+          "data": {
+            "language": {
+              "nameMatchers": [".js"],
+              "pygmentsLexer": "javascript",
+              "multiLineComment": ["/*", "*", "*/"],
+              "singleLineComment": ["//"],
+              "ignorePrefix": "}",
+              "foldPrefix": "^",
+              "name": "JavaScript"
+            },
+            "sourcePath": "/home/dev/devenv/dapple/lib/logtranslator.js",
+            "projectPath": "lib/logtranslator.js",
+            "targetPath": "lib/logtranslator",
+            "pageTitle": "lib/logtranslator",
+            "title": "logtranslator"
           },
           "depth": 2
         }, {
@@ -219,7 +257,8 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             "pageTitle": "lib/vmtest",
             "title": "vmtest"
           },
-          "depth": 2
+          "depth": 2,
+          "outline": []
         }, {
           "type": "file",
           "data": {
