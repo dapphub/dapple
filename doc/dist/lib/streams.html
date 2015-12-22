@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="en"><head><title>lib/streams</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/streams"><meta name="groc-project-path" content="lib/streams.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/lib/streams.js">lib/streams.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
 
-<span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">"underscore"</span>)._;
+<span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">"lodash"</span>);
 <span class="hljs-keyword">var</span> buffer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'vinyl-buffer'</span>);
 <span class="hljs-keyword">var</span> Builder = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./build.js'</span>);
 <span class="hljs-keyword">var</span> clc = <span class="hljs-built_in">require</span>(<span class="hljs-string">"cli-color-tty"</span>)(<span class="hljs-literal">true</span>);
@@ -77,7 +77,7 @@ compiler and passes it on.</p></div></div><div class="code"><div class="wrapper"
 };
 
 <span class="hljs-keyword">var</span> js_postprocess = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">opts</span>) </span>{
-    opts = _.extend({
+    opts = _.assign({
         export_dapple_headers: <span class="hljs-literal">false</span>
     }, opts);
 
