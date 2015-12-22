@@ -26,7 +26,8 @@ results to stdout and stderr (in case of failure).</p></div></div><div class="co
     } <span class="hljs-keyword">else</span> {
         initStream = pipelines
             .BuildPipeline(workspace.getSourceDir(),
-                           workspace.getIgnoreGlobs())
+                           workspace.getIgnoreGlobs(),
+                           workspace.getPreprocessorVars())
             .pipe(workspace.getBuildDest());
     }
 

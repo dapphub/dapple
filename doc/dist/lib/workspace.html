@@ -74,6 +74,10 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.dappfile.ignore;
     }
 
+    getPreprocessorVars() {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.dappfile.preprocessor_vars;
+    }
+
     loadDappfile(dappfile_path) {
         <span class="hljs-keyword">if</span>( dappfile_path === <span class="hljs-literal">undefined</span> ) {
             dappfile_path = path.join(<span class="hljs-keyword">this</span>.package_root, constants.DAPPFILE_FILENAME);
