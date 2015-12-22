@@ -75,18 +75,21 @@ interface will end up changing in the future.</p></div></div><div class="code"><
             gasLimit: DEFAULT_GAS
 
         }, deployCheck);
-    }
-
-    testRunner(contractClass, testFunction, cb) {
+    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Returns a callback function for <code>getTransactionReceipt</code>
+bound to the given contract class, test function name,
+and callback. The returned function runs the specified
+test on the contract at the address the receipt deployed
+a contract to. The deployed contract is assumed to be
+an instance of the passed-in contract class.</p></div></div><div class="code"><div class="wrapper">    testRunner(contractClass, testFunction, cb) {
         <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
 
         <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, receipt</span>) </span>{
             that.runOne(contractClass.at(receipt.contractAddress),
                         testFunction, cb);
         };
-    }
-
-    runOne(contractInstance, testFunction, cb) {
+    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Runs the given test function on the given contract instance.
+Passes back an object representing the results of the test
+to the callback function.</p></div></div><div class="code"><div class="wrapper">    runOne(contractInstance, testFunction, cb) {
         <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
 
         <span class="hljs-keyword">var</span> captureTestResults = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, txHash</span>) </span>{

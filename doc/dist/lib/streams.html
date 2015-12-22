@@ -81,9 +81,8 @@ compiler and passes it on.</p></div></div><div class="code"><div class="wrapper"
             contents: <span class="hljs-keyword">new</span> Buffer(<span class="hljs-built_in">JSON</span>.stringify(solc_out.contracts))
         }));
     });
-};
-
-<span class="hljs-keyword">var</span> js_postprocess = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">opts</span>) </span>{
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This stream wraps built contracts in JSON and Javascript,
+making them easier for frontend developers to work with.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> js_postprocess = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">opts</span>) </span>{
     opts = _.assign({
         export_dapple_headers: <span class="hljs-literal">false</span>
     }, opts);
@@ -172,9 +171,10 @@ its own function or class somewhere.</p></div></div><div class="code"><div class
         }
         cb();
     });
-};
-
-<span class="hljs-keyword">var</span> test_summarizer = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Takes the output of the test stream and summarizes the test results.
+Outputs one file object if all the tests passed, and two if some
+tests failed. One file object has a string describing the overall
+test status, and the other has a list of all failing tests.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> test_summarizer = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">var</span> totalTests = <span class="hljs-number">0</span>;
     <span class="hljs-keyword">var</span> failingTests = [];
 
@@ -215,10 +215,9 @@ its own function or class somewhere.</p></div></div><div class="code"><div class
 
         cb();
     });
-};
-
-
-<span class="hljs-keyword">var</span> cli_out = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Takes the output of the test and test_summarizer streams
+and emits it to stdout and stderr (as appropriate) before
+passing it on to the next stream in the pipeline.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> cli_out = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">var</span> lastDirectory;
 
     <span class="hljs-keyword">return</span> through.obj(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">file, enc, cb</span>) </span>{
