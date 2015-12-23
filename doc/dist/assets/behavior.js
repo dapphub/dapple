@@ -13,7 +13,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "commentsOnly": true,
           "name": "Markdown"
         },
-        "sourcePath": "/root/devenv/dapple/README.md",
+        "sourcePath": "/home/dev/devenv/dapple/README.md",
         "projectPath": "README.md",
         "targetPath": "index",
         "pageTitle": "index",
@@ -36,7 +36,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "commentsOnly": true,
               "name": "Markdown"
             },
-            "sourcePath": "/root/devenv/dapple/doc/dappfile.md",
+            "sourcePath": "/home/dev/devenv/dapple/doc/dappfile.md",
             "projectPath": "doc/dappfile.md",
             "targetPath": "doc/dappfile",
             "pageTitle": "doc/dappfile",
@@ -51,7 +51,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "commentsOnly": true,
               "name": "Markdown"
             },
-            "sourcePath": "/root/devenv/dapple/doc/usage.md",
+            "sourcePath": "/home/dev/devenv/dapple/doc/usage.md",
             "projectPath": "doc/usage.md",
             "targetPath": "doc/usage",
             "pageTitle": "doc/usage",
@@ -80,7 +80,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/root/devenv/dapple/lib/build.js",
+            "sourcePath": "/home/dev/devenv/dapple/lib/build.js",
             "projectPath": "lib/build.js",
             "targetPath": "lib/build",
             "pageTitle": "lib/build",
@@ -99,7 +99,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/root/devenv/dapple/lib/constants.js",
+            "sourcePath": "/home/dev/devenv/dapple/lib/constants.js",
             "projectPath": "lib/constants.js",
             "targetPath": "lib/constants",
             "pageTitle": "lib/constants",
@@ -118,7 +118,26 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/root/devenv/dapple/lib/file.js",
+            "sourcePath": "/home/dev/devenv/dapple/lib/contract.js",
+            "projectPath": "lib/contract.js",
+            "targetPath": "lib/contract",
+            "pageTitle": "lib/contract",
+            "title": "contract"
+          },
+          "depth": 2
+        }, {
+          "type": "file",
+          "data": {
+            "language": {
+              "nameMatchers": [".js"],
+              "pygmentsLexer": "javascript",
+              "multiLineComment": ["/*", "*", "*/"],
+              "singleLineComment": ["//"],
+              "ignorePrefix": "}",
+              "foldPrefix": "^",
+              "name": "JavaScript"
+            },
+            "sourcePath": "/home/dev/devenv/dapple/lib/file.js",
             "projectPath": "lib/file.js",
             "targetPath": "lib/file",
             "pageTitle": "lib/file",
@@ -137,7 +156,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/root/devenv/dapple/lib/ipfs.js",
+            "sourcePath": "/home/dev/devenv/dapple/lib/ipfs.js",
             "projectPath": "lib/ipfs.js",
             "targetPath": "lib/ipfs",
             "pageTitle": "lib/ipfs",
@@ -156,7 +175,26 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/root/devenv/dapple/lib/pipelines.js",
+            "sourcePath": "/home/dev/devenv/dapple/lib/logtranslator.js",
+            "projectPath": "lib/logtranslator.js",
+            "targetPath": "lib/logtranslator",
+            "pageTitle": "lib/logtranslator",
+            "title": "logtranslator"
+          },
+          "depth": 2
+        }, {
+          "type": "file",
+          "data": {
+            "language": {
+              "nameMatchers": [".js"],
+              "pygmentsLexer": "javascript",
+              "multiLineComment": ["/*", "*", "*/"],
+              "singleLineComment": ["//"],
+              "ignorePrefix": "}",
+              "foldPrefix": "^",
+              "name": "JavaScript"
+            },
+            "sourcePath": "/home/dev/devenv/dapple/lib/pipelines.js",
             "projectPath": "lib/pipelines.js",
             "targetPath": "lib/pipelines",
             "pageTitle": "lib/pipelines",
@@ -175,7 +213,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/root/devenv/dapple/lib/streams.js",
+            "sourcePath": "/home/dev/devenv/dapple/lib/streams.js",
             "projectPath": "lib/streams.js",
             "targetPath": "lib/streams",
             "pageTitle": "lib/streams",
@@ -194,7 +232,26 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/root/devenv/dapple/lib/vmtest.js",
+            "sourcePath": "/home/dev/devenv/dapple/lib/utils.js",
+            "projectPath": "lib/utils.js",
+            "targetPath": "lib/utils",
+            "pageTitle": "lib/utils",
+            "title": "utils"
+          },
+          "depth": 2
+        }, {
+          "type": "file",
+          "data": {
+            "language": {
+              "nameMatchers": [".js"],
+              "pygmentsLexer": "javascript",
+              "multiLineComment": ["/*", "*", "*/"],
+              "singleLineComment": ["//"],
+              "ignorePrefix": "}",
+              "foldPrefix": "^",
+              "name": "JavaScript"
+            },
+            "sourcePath": "/home/dev/devenv/dapple/lib/vmtest.js",
             "projectPath": "lib/vmtest.js",
             "targetPath": "lib/vmtest",
             "pageTitle": "lib/vmtest",
@@ -214,7 +271,26 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
-            "sourcePath": "/root/devenv/dapple/lib/workspace.js",
+            "sourcePath": "/home/dev/devenv/dapple/lib/web3Factory.js",
+            "projectPath": "lib/web3Factory.js",
+            "targetPath": "lib/web3Factory",
+            "pageTitle": "lib/web3Factory",
+            "title": "web3Factory"
+          },
+          "depth": 2
+        }, {
+          "type": "file",
+          "data": {
+            "language": {
+              "nameMatchers": [".js"],
+              "pygmentsLexer": "javascript",
+              "multiLineComment": ["/*", "*", "*/"],
+              "singleLineComment": ["//"],
+              "ignorePrefix": "}",
+              "foldPrefix": "^",
+              "name": "JavaScript"
+            },
+            "sourcePath": "/home/dev/devenv/dapple/lib/workspace.js",
             "projectPath": "lib/workspace.js",
             "targetPath": "lib/workspace",
             "pageTitle": "lib/workspace",
@@ -235,7 +311,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
           "foldPrefix": "^",
           "name": "JavaScript"
         },
-        "sourcePath": "/root/devenv/dapple/cmd/main.js",
+        "sourcePath": "/home/dev/devenv/dapple/cmd/main.js",
         "projectPath": "cmd/main.js",
         "targetPath": "main",
         "pageTitle": "main",

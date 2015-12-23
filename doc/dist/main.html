@@ -24,8 +24,11 @@ results to stdout and stderr (in case of failure).</p></div></div><div class="co
         initStream = pipelines.BuiltClassesPipeline(workspace.getBuildDir());
 
     } <span class="hljs-keyword">else</span> {
-        initStream = pipelines.BuildPipeline(workspace.getSourceDir(),
-                                             workspace.getIgnoreGlobs());
+        initStream = pipelines
+            .BuildPipeline(workspace.getSourceDir(),
+                           workspace.getIgnoreGlobs(),
+                           workspace.getPreprocessorVars())
+            .pipe(workspace.getBuildDest());
     }
 
     initStream.pipe(pipelines.TestPipeline());

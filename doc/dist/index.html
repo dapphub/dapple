@@ -11,6 +11,7 @@
 <p>Any stable releases (once they exist) will be available on npm:</p>
 <p><code>npm install -g dapple</code></p>
 <h4 id="basic-usage">Basic Usage</h4>
+<p>Note that not everything is implemented in the JS rewrite.</p>
 <pre><code>mkdir mydapp &amp;&amp; cd mydapp
 dapple init
 
@@ -19,4 +20,15 @@ vim src/sol/mycontract.sol
 vim src/sol/mycontract_test.sol
 
 dapple test # run VM tests
-dapple build # export contract definitions, solidity headers, and JS headers (node and browser)</code></pre></div></div></div></div></body></html>
+dapple build # export contract definitions, solidity headers, and JS headers (node and browser)
+
+# Write a deploy sequence
+vim steps/deploy.step
+dapple chain ethereum          # switch chains to default mainnet
+dapple run steps/deploy.step   # run the deploy sequence</code></pre>
+<h4 id="example-dapple-packages">Example dapple packages</h4>
+<p>Some may still be in an outdated package format.</p>
+<p><a href="https://github.com/NexusDevelopment/dappsys">https://github.com/NexusDevelopment/dappsys</a></p>
+<p><a href="https://github.com/NexusDevelopment/keeper/tree/nexus/keeperd/dapp">https://github.com/NexusDevelopment/keeper/tree/nexus/keeperd/dapp</a></p>
+<p><a href="https://github.com/NexusDevelopment/ENS">https://github.com/NexusDevelopment/ENS</a></p>
+<p><a href="https://github.com/NexusDevelopment/guts">https://github.com/NexusDevelopment/guts</a></p></div></div></div></div></body></html>

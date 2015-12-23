@@ -1,10 +1,10 @@
 'use strict';
+var _ = require("lodash");
 var assert = require('chai').assert;
-var Workspace = require("../lib/workspace");
-var testenv = require("./testenv");
 var fs = require("../lib/file");
 var path = require("path");
-var _ = require("underscore")._
+var testenv = require("./testenv");
+var Workspace = require("../lib/workspace");
 
 describe('class Builder', function() {
     var workspace = new Workspace(testenv.golden_package_dir);
@@ -31,7 +31,7 @@ describe('class Builder', function() {
         var filtered_sources = Builder.filterSolcOut(golden_sources);
         var tester_class = filtered_sources["Tester"];
         var required_outputs = ["bytecode", "interface", "solidity_interface"];
-        _.each(required_outputs, function(key) {
+        _.forEach(required_outputs, function(key) {
             assert( _.has(tester_class, key), "missing a required key: " + key );
         });
         done();

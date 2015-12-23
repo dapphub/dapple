@@ -47,8 +47,11 @@ if( cli.build ) {
         initStream = pipelines.BuiltClassesPipeline(workspace.getBuildDir());
 
     } else {
-        initStream = pipelines.BuildPipeline(workspace.getSourceDir(),
-                                             workspace.getIgnoreGlobs());
+        initStream = pipelines
+            .BuildPipeline(workspace.getSourceDir(),
+                           workspace.getIgnoreGlobs(),
+                           workspace.getPreprocessorVars())
+            .pipe(workspace.getBuildDest());
     }
 
     initStream.pipe(pipelines.TestPipeline());
