@@ -2,6 +2,6 @@
 while : ; do
     echo "Watching for changes..."
     inotifywait -r -qq -e close_write -e create -e delete --exclude ^.+?\.sw.?$ .
-    echo "File changed! Rebuilding documentation..."
-    groc --only-render-newer
+    echo "File changed! Linting and rebuilding docs..."
+    eslint . && echo "Linter passed." && groc --only-render-newer
 done
