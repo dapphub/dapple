@@ -24,7 +24,9 @@ if( cli.build ) {
     // Run our build pipeline.
     pipelines
         .JSBuildPipeline(workspace.getSourceDir(),
-                         workspace.getIgnoreGlobs())
+                         workspace.getIgnoreGlobs(),
+                         workspace.getPreprocessorVars(),
+                         console)
 
         // Write output to filesystem.
         .pipe(workspace.getBuildDest());
@@ -51,7 +53,8 @@ if( cli.build ) {
         initStream = pipelines
             .BuildPipeline(workspace.getSourceDir(),
                            workspace.getIgnoreGlobs(),
-                           workspace.getPreprocessorVars())
+                           workspace.getPreprocessorVars(),
+                           console)
             .pipe(workspace.getBuildDest());
     }
 
