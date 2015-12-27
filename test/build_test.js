@@ -28,8 +28,8 @@ describe('class Builder', function() {
     });
     it("filterSolcOut doesn't exclude output we need", function(done) {
         var golden_sources = testenv.golden.SOLC_OUT();
-        var filtered_sources = Builder.filterSolcOut(golden_sources);
-        var tester_class = filtered_sources["Tester"];
+        var filtered_sources = Builder.removeSolcClutter(golden_sources);
+        var tester_class = filtered_sources.contracts.Tester;
         var required_outputs = ["bytecode", "interface", "solidity_interface"];
         _.forEach(required_outputs, function(key) {
             assert( _.has(tester_class, key), "missing a required key: " + key );
