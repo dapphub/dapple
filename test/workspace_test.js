@@ -25,13 +25,6 @@ describe("class Workspace", function() {
         var workspace = new Workspace(testenv.golden_package_dir);
         done();
     });
-    it("loads local .sol source tree", function(done) {
-        var workspace = new Workspace(testenv.golden_package_dir);
-        var sources = workspace.loadWorkspaceSources();
-        expect(sources).to.exist;
-        assert.deepEqual( Object.keys(sources), [ 'example.sol','example_test.sol','subdirectory/example2.sol'] );
-        done();
-    });
     it("findWorkspaceRoot returns undefined if it hits root", function(done) {
         var dir = fs.tmpdir();
         assert.equal(undefined, Workspace.findWorkspaceRoot(dir));
