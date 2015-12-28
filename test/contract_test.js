@@ -44,4 +44,16 @@ describe("class Contract", function () {
             assert(false, err);
         }
     });
+
+    it("accepts raw native-solc JSON-style output", function () {
+        try {
+            new Contract({"bin": bytecode,
+                          "abi": abi,
+                          "interface": solidity_interface});
+            assert(true);
+
+        } catch (err) {
+            assert(false, err);
+        }
+    });
 });
