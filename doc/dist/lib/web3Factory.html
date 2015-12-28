@@ -25,8 +25,9 @@
         <span class="hljs-keyword">return</span> cb(<span class="hljs-literal">null</span>, web3);
     },
 
-    EVM: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">cb</span>) </span>{
-        <span class="hljs-keyword">const</span> INITIAL_WEI = <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span>, <span class="hljs-number">256</span>);
+    EVM: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">cb</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Technically this number is too big to represent as an integer in
+Javascript, but the actual value doesn&#39;t really matter and 2^256 is
+the maximum integer size in Solidity.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">const</span> INITIAL_WEI = <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span>, <span class="hljs-number">256</span>);
         cb = utils.optionalCallback(cb);
 
         <span class="hljs-keyword">var</span> provider = EtherSim.web3Provider();

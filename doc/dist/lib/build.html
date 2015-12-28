@@ -4,9 +4,9 @@
 <span class="hljs-keyword">var</span> solc = <span class="hljs-built_in">require</span>(<span class="hljs-string">"solc"</span>);
 <span class="hljs-keyword">var</span> constants = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./constants"</span>);
 <span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">"fs-extra"</span>);
+<span class="hljs-keyword">var</span> NativeCompiler = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./native_compiler"</span>);
 <span class="hljs-keyword">var</span> os = <span class="hljs-built_in">require</span>(<span class="hljs-string">"os"</span>);
 <span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">"path"</span>);
-<span class="hljs-keyword">var</span> child_process = <span class="hljs-built_in">require</span>(<span class="hljs-string">"child_process"</span>);
 <span class="hljs-keyword">var</span> through = <span class="hljs-built_in">require</span>(<span class="hljs-string">'through2'</span>);
 <span class="hljs-keyword">var</span> vinyl = <span class="hljs-built_in">require</span>(<span class="hljs-string">"vinyl-fs"</span>);
 <span class="hljs-keyword">var</span> web3 = <span class="hljs-keyword">new</span> <span class="hljs-built_in">require</span>(<span class="hljs-string">"web3"</span>)();</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This is a static helper class for our streams.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Builder</span> </span>{
@@ -23,49 +23,17 @@
     }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Compiles the passed-in mapping of Solidity source paths to
 Solidity source code. Prefers a native <code>solc</code> installation
 if one is available. Fails over to a Javascript <code>solc</code>
-implementation if one is not.</p></div></div><div class="code"><div class="wrapper">    static buildSources(sources) {
-        <span class="hljs-keyword">var</span> useNative = <span class="hljs-literal">true</span>;
-
-        <span class="hljs-keyword">try</span> {
-            child_process.execSync(<span class="hljs-string">"solc"</span>);
-
-        } <span class="hljs-keyword">catch</span> (err) {
-            useNative = <span class="hljs-literal">false</span>;
-        }
-
-        <span class="hljs-keyword">if</span> (!useNative) {
-            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Found solc."</span>);
-            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.nativeBuildSources(sources);
+implementation if one is not.</p></div></div><div class="code"><div class="wrapper">    static buildSources(sources, logger) {
+        <span class="hljs-keyword">var</span> compiler = solc;
+        <span class="hljs-keyword">if</span> (NativeCompiler.isAvailable()) {
+            logger.info(<span class="hljs-string">"Using local solc installation..."</span>);
+            compiler = NativeCompiler;
 
         } <span class="hljs-keyword">else</span> {
-            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Could not find solc."</span>);
-            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.jsBuildSources(sources);
+            logger.info(<span class="hljs-string">"No local solc found. Failing over to JS compiler..."</span>);
         }
-    }
 
-    static nativeBuildSources(sources) {
-        <span class="hljs-keyword">var</span> tmpDir = path.join(os.tmpdir(), <span class="hljs-string">'dapple'</span>,
-                               <span class="hljs-built_in">String</span>(<span class="hljs-built_in">Math</span>.random()).slice(<span class="hljs-number">2</span>));
-        fs.emptyDirSync(tmpDir); <span class="hljs-comment">// Create or empty the directory. </span>
-
-        _.forIn(sources, (val, key) =&gt; {
-            fs.outputFileSync(path.join(tmpDir, key), val);
-        });
-
-        <span class="hljs-keyword">var</span> output = <span class="hljs-built_in">JSON</span>.parse(child_process.execSync(
-                <span class="hljs-string">"solc -o - --combined-json abi,bin,bin-runtime "</span>
-                + <span class="hljs-built_in">Object</span>.keys(sources).join(<span class="hljs-string">" "</span>), {cwd: tmpDir}));
-
-        fs.removeSync(tmpDir); <span class="hljs-comment">// Clean up.</span>
-
-        output.contracts = _.mapValues(output.contracts, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">contract</span>) </span>{
-            <span class="hljs-keyword">return</span> {bytecode: contract.bin, interface: contract.abi};
-        });
-        <span class="hljs-keyword">return</span> output; 
-    }
-
-    static jsBuildSources(sources) {
-        <span class="hljs-keyword">var</span> solc_out = solc.compile({sources:sources});
+        <span class="hljs-keyword">var</span> solc_out = compiler.compile({sources:sources});
         <span class="hljs-keyword">if</span>( solc_out.errors ) {
             <span class="hljs-keyword">throw</span> solc_out.errors;
         }

@@ -21,7 +21,7 @@
     "url": "https://github.com/NexusDevelopment/dapple/issues"
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha test/*"
+    "test": "./node_modules/mocha/bin/mocha --recursive test/*"
   },
   "main": "cmd/main.js",
   "bin": {
