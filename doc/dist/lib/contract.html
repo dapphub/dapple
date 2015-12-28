@@ -2,18 +2,24 @@
 
 <span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Contract</span> </span>{
     constructor(classDefinition) {
-        <span class="hljs-keyword">if</span>( !classDefinition.bytecode ) {
+        <span class="hljs-keyword">if</span>( !classDefinition.bytecode &amp;&amp; !classDefinition.bin ) {
             <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Test class definition has no bytecode"</span>);
         }
 
-        <span class="hljs-keyword">if</span>( !classDefinition.interface ) {
+        <span class="hljs-keyword">if</span>( !classDefinition.interface &amp;&amp; !classDefinition.abi ) {
             <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Test class definition has no interface"</span>);
         }
 
-        <span class="hljs-keyword">this</span>.abi = classDefinition.interface;
+        <span class="hljs-keyword">if</span> (classDefinition.bin) {
+            <span class="hljs-keyword">this</span>.abi = classDefinition.abi || classDefinition.interface;
+
+        } <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">this</span>.abi = classDefinition.interface || classDefinition.abi;
+        }
+
         <span class="hljs-keyword">if</span>( <span class="hljs-keyword">typeof</span>(<span class="hljs-keyword">this</span>.abi) === <span class="hljs-string">"string"</span> ) {
             <span class="hljs-keyword">this</span>.abi = <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-keyword">this</span>.abi);
         }
-        <span class="hljs-keyword">this</span>.bytecode = classDefinition.bytecode;
+        <span class="hljs-keyword">this</span>.bytecode = classDefinition.bytecode || classDefinition.bin;
     }
 };</div></div></div></div></body></html>
