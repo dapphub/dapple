@@ -23,5 +23,7 @@ module.exports = {
             __dirname, "_fixtures", "golden", "golden_init"),
         FILTERED_SOLC_OUT_PATH: path.join(
             __dirname, "_fixtures", "golden", "golden_solc_classes_out")
-    }
+    },
+
+    linker_package_dir: path.join(__dirname, "_fixtures", "linker_test_package")
 }
