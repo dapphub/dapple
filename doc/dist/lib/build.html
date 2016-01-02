@@ -37,6 +37,7 @@ implementation if one is not.</p></div></div><div class="code"><div class="wrapp
         <span class="hljs-keyword">if</span>( solc_out.errors ) {
             <span class="hljs-keyword">throw</span> solc_out.errors;
         }
+
         <span class="hljs-keyword">return</span> solc_out;
     }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Filters out useless solc output</p></div></div><div class="code"><div class="wrapper">    static removeSolcClutter(sources) {
         <span class="hljs-keyword">var</span> bad_keys =  [<span class="hljs-string">"assembly"</span>, <span class="hljs-string">"opcodes"</span>];

@@ -1,29 +1,55 @@
 <!DOCTYPE html><html lang="en"><head><title>lib/pipelines</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/pipelines"><meta name="groc-project-path" content="lib/pipelines.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/lib/pipelines.js">lib/pipelines.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">"use strict"</span>;
 
+<span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lodash'</span>);
 <span class="hljs-keyword">var</span> buffer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'vinyl-buffer'</span>);
 <span class="hljs-keyword">var</span> Combine = <span class="hljs-built_in">require</span>(<span class="hljs-string">'stream-combiner'</span>)
+<span class="hljs-keyword">var</span> filter = <span class="hljs-built_in">require</span>(<span class="hljs-string">'gulp-filter'</span>);
 <span class="hljs-keyword">var</span> ignore = <span class="hljs-built_in">require</span>(<span class="hljs-string">'gulp-ignore'</span>);
+<span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);
+<span class="hljs-keyword">var</span> process = <span class="hljs-built_in">require</span>(<span class="hljs-string">'process'</span>);
 <span class="hljs-keyword">var</span> streams = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../lib/streams'</span>);
 <span class="hljs-keyword">var</span> through = <span class="hljs-built_in">require</span>(<span class="hljs-string">'through2'</span>);
 <span class="hljs-keyword">var</span> vinyl = <span class="hljs-built_in">require</span>(<span class="hljs-string">"vinyl-fs"</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This file contains collections of streams that have been packaged up into
 discreet &quot;pipelines&quot; which are ultimately themselves streams. This helps keep
-<code>main.js</code> clean and easy to read.</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This pipeline gathers together all the files that go into a given package.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> PackagePipeline = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sourceRoot, ignoreGlobs, preprocessorVars</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Grab all the files relevant to the package.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">return</span> Combine(
-        streams.package_stream(sourceRoot),</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: Either implement a hierarchical ignore
-filter, or determine that files in the &quot;ignore&quot;
-pattern get filtered out during publishing.
-Using gulp-ignore directly for now.</p></div></div><div class="code"><div class="wrapper">        ignore.exclude(ignoreGlobs),</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Inject a couple built-in contracts.</p></div></div><div class="code"><div class="wrapper">        streams.inject_virtual_contracts(),</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Lodash.template is the default preprocessor.</p></div></div><div class="code"><div class="wrapper">        streams.preprocess(preprocessorVars));</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: File linking.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-comment">//streams.link_files(),</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: Contract linking.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-comment">//streams.link_contracts(),</span>
-        </div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: Add any missing steps.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-comment">//...</span>
+<code>main.js</code> clean and easy to read.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> _fillOptionDefaults = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">opts</span>) </span>{
+    <span class="hljs-keyword">if</span> (!opts) opts = {};
+
+    <span class="hljs-keyword">var</span> defaults = {
+        packageRoot: process.cwd(),
+        sourceRoot: process.cwd(),
+        ignore: [],
+        preprocessorVars: {},
+        logger: <span class="hljs-built_in">console</span>
+    };
+
+    <span class="hljs-keyword">return</span> _.assign(defaults, opts);
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This pipeline gathers together all the raw source files that go into a
+given package.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> SourcePipeline = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">opts</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Defaults</p></div></div><div class="code"><div class="wrapper">    opts = _fillOptionDefaults(opts);
+
+    <span class="hljs-keyword">var</span> solidityFilter = filter([<span class="hljs-string">'*.sol'</span>, <span class="hljs-string">'**/*.sol'</span>], {restore: <span class="hljs-literal">true</span>});</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Grab all the files relevant to the package.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">return</span> Combine(
+        streams.package_stream(opts.packageRoot),</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Only preprocess Solidity source files.</p></div></div><div class="code"><div class="wrapper">        solidityFilter,</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: Files in the &quot;ignore&quot; pattern
+should get filtered out during publishing.</p></div></div><div class="code"><div class="wrapper">        ignore.exclude(opts.ignore),</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Inject a couple built-in contracts.</p></div></div><div class="code"><div class="wrapper">        streams.inject_virtual_contracts(),</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Lodash.template is the default preprocessor.</p></div></div><div class="code"><div class="wrapper">        streams.preprocess(opts.preprocessorVars),</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Return filtered-out files to the stream.</p></div></div><div class="code"><div class="wrapper">        solidityFilter.restore</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: Add any missing steps.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-comment">//...</span>
+    );
+};
+
+<span class="hljs-keyword">var</span> PackagePipeline = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">opts</span>) </span>{
+    <span class="hljs-keyword">return</span> Combine(
+        SourcePipeline(opts),
+        streams.linker(),
+        streams.linker_filter.exclude()
+    );
 };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Returns raw output of <code>solc</code>.
-<strong>TODO</strong>: Remove need for <code>sourceRoot</code> via intelligent file linking.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> BuildPipeline = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">
-        sourceRoot, ignoreGlobs, preprocessorVars, logger</span>) </span>{
+<strong>TODO</strong>: Remove need for <code>sourceRoot</code> via intelligent file linking.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> BuildPipeline = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">opts</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Defaults</p></div></div><div class="code"><div class="wrapper">    opts = _fillOptionDefaults(opts);
+
+    <span class="hljs-keyword">var</span> solidityFilter = filter([<span class="hljs-string">'*.sol'</span>, <span class="hljs-string">'**/*.sol'</span>], {restore: <span class="hljs-literal">true</span>});
 
     <span class="hljs-keyword">return</span> Combine(
-        PackagePipeline(sourceRoot, ignoreGlobs, preprocessorVars),</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Build!</p></div></div><div class="code"><div class="wrapper">        streams.build(logger));
-};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Builds JS-specific output.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> JSBuildPipeline = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">
-        sourceRoot, ignoreGlobs, preprocessorVars, logger</span>) </span>{
-    <span class="hljs-keyword">return</span> Combine(
-            BuildPipeline(sourceRoot, ignoreGlobs, preprocessorVars, logger),
-            streams.js_postprocess());
+        PackagePipeline(opts),
+        solidityFilter,
+        streams.build(opts.logger),
+        solidityFilter.restore);
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Builds JS-specific output.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> JSBuildPipeline = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">opts</span>) </span>{
+    <span class="hljs-keyword">return</span> Combine(BuildPipeline(opts), streams.js_postprocess());
 };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Grabs pre-built contracts from build directory.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> BuiltClassesPipeline = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">buildDir</span>) </span>{
     <span class="hljs-keyword">return</span> Combine(vinyl.src([buildDir + <span class="hljs-string">'/classes.json'</span>]), buffer());
 };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Takes built contracts and deploys and runs any test
@@ -40,5 +66,6 @@ and passing them downstream as File objects.</p></div></div><div class="code"><d
     BuiltClassesPipeline: BuiltClassesPipeline,
     JSBuildPipeline: JSBuildPipeline,
     PackagePipeline: PackagePipeline,
+    SourcePipeline: SourcePipeline,
     TestPipeline: TestPipeline
 };</div></div></div></div></body></html>
