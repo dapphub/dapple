@@ -19,6 +19,8 @@ var cli = docopt.docopt(doc);
 // as if it were a package and commence with building.
 //
 if( cli.build ) {
+    console.log("Building...");
+
     var workspace = new Workspace();
 
     // Run our build pipeline.
@@ -43,6 +45,8 @@ if( cli.build ) {
 // results to stdout and stderr (in case of failure).
 //
 } else if (cli.test) {
+    console.log("Testing...");
+
     var workspace = new Workspace();
     var initStream;
 
