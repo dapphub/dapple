@@ -1,5 +1,7 @@
 'use strict';
+
 var assert = require('chai').assert;
+var filter = require('gulp-filter');
 var fs = require("../lib/file");
 var NativeCompiler = require("../lib/native_compiler");
 var PackagePipeline = require('../lib/pipelines.js').PackagePipeline;
@@ -9,19 +11,24 @@ var Workspace = require("../lib/workspace");
 
 describe("NativeCompiler", function() {
     var sources = {};
+    var solidityFilter = filter(['*.sol', '**/*.sol'], {restore: true});
 
     // In order for this test suite to pass, solc must be installed.
     // We also need to grab all the source files first.
     before(function (done) {
         var workspace = new Workspace(testenv.golden_package_dir);
-        PackagePipeline(workspace.getSourceDir())
+        PackagePipeline({
+            packageRoot: workspace.package_root,
+            sourceRoot: workspace.getSourceDir()
+        })
+            .pipe(solidityFilter)
             .pipe(through.obj(function(file, enc, cb) {
                 sources[file.path] = String(file.contents);
                 cb();
 
             }, function (cb) {
                 done();
-                cb();            
+                cb();
             }));
     });
 

@@ -25,10 +25,13 @@ if( cli.build ) {
 
     // Run our build pipeline.
     pipelines
-        .JSBuildPipeline(workspace.getSourceDir(),
-                         workspace.getIgnoreGlobs(),
-                         workspace.getPreprocessorVars(),
-                         console)
+        .JSBuildPipeline({
+            packageRoot: workspace.package_root,
+            sourceRoot: workspace.getSourceDir(),
+            ignore: workspace.getIgnoreGlobs(),
+            preprocessorVars: workspace.getPreprocessorVars(),
+            logger: console
+        })
 
         // Write output to filesystem.
         .pipe(workspace.getBuildDest());
@@ -55,11 +58,13 @@ if( cli.build ) {
 
     } else {
         initStream = pipelines
-            .BuildPipeline(workspace.getSourceDir(),
-                           workspace.getIgnoreGlobs(),
-                           workspace.getPreprocessorVars(),
-                           console)
-            .pipe(workspace.getBuildDest());
+            .BuildPipeline({
+            packageRoot: workspace.package_root,
+            sourceRoot: workspace.getSourceDir(),
+            ignore: workspace.getIgnoreGlobs(),
+            preprocessorVars: workspace.getPreprocessorVars(),
+            logger: console
+        }).pipe(workspace.getBuildDest());
     }
 
     initStream.pipe(pipelines.TestPipeline());
