@@ -46,7 +46,7 @@
     "geth": "^0.1.4",
     "glob-fs": "^0.1.6",
     "gulp-filter": "^3.0.1",
-    "gulp-ignore": "https://github.com/pearmaster/gulp-ignore.git",
+    "gulp-ignore": "^2.0.1",
     "gulp-smake": "^0.2.2",
     "lodash": "^3.10.1",
     "mkdirp": "^0.5.1",
