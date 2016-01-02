@@ -19,7 +19,7 @@ describe("NativeCompiler", function() {
         var workspace = new Workspace(testenv.golden_package_dir);
         PackagePipeline({
             packageRoot: workspace.package_root,
-            sourceRoot: workspace.getSourceDir()
+            sourceRoot: workspace.getSourcePath()
         })
             .pipe(solidityFilter)
             .pipe(through.obj(function(file, enc, cb) {

@@ -17,21 +17,21 @@ describe("Linker", function() {
     var sources = {};
     var workspace = new Workspace(testenv.linker_package_dir);
 
-    var source_path = workspace.getSourceDir();
+    var source_path = workspace.getSourcePath();
     var pkg_contract_hash = Linker.uniquifyContractName(
         path.join(source_path, "contract.sol"), "Contract");
 
-    var dapple_packages = workspace.getPackagesDir();
+    var dapple_packages = workspace.getPackagesPath();
     var pkg_workspace = new Workspace(path.join(dapple_packages, "pkg"));
     var dapple_pkg_contract_hash = Linker.uniquifyContractName(
-        path.join(pkg_workspace.getSourceDir(), "contract.sol"), "Contract");
+        path.join(pkg_workspace.getSourcePath(), "contract.sol"), "Contract");
 
     // Grab all the source files first.
     before(function (done) {
         var workspace = new Workspace(testenv.linker_package_dir);
         SourcePipeline({
             packageRoot: workspace.package_root,
-            sourceRoot: workspace.getSourceDir(),
+            sourceRoot: workspace.getSourcePath(),
             ignore: ['**/src.linked/**']
         })
             .pipe(through.obj(function(file, enc, cb) {

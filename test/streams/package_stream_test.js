@@ -26,7 +26,7 @@ describe("streams.package_stream", function() {
     });
 
     it("loads package sources", function() {
-        var sourceDir = workspace.getSourceDir();
+        var sourceDir = workspace.getSourcePath();
 
         assert.deepEqual(Object.keys(sources), [
             path.join(workspace.package_root, 'dappfile'),
