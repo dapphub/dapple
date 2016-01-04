@@ -24,17 +24,21 @@ if( cli.build ) {
     var workspace = new Workspace();
 
     // Run our build pipeline.
-    pipelines
+    var jsBuildPipeline = pipelines
         .JSBuildPipeline({
+            environment: cli['--environment'] || workspace.getEnvironment(),
+            environments: workspace.getEnvironments(),
             packageRoot: workspace.package_root,
             sourceRoot: workspace.getSourceDir(),
             ignore: workspace.getIgnoreGlobs(),
             preprocessorVars: workspace.getPreprocessorVars(),
             logger: console
-        })
+        });
 
-        // Write output to filesystem.
-        .pipe(workspace.getBuildDest());
+    if (!jsBuildPipeline) return;
+
+    // Write output to filesystem.
+    jsBuildPipeline.pipe(workspace.getBuildDest());
 
 
 // If they ran the `init` command, we just set up the current directory as a
