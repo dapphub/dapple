@@ -42,12 +42,12 @@ for any given file.</p></div></div><div class="code"><div class="wrapper">      
             <span class="hljs-keyword">if</span> (!importPath.startsWith(<span class="hljs-string">'./'</span>)) {
                 <span class="hljs-keyword">var</span> importParts = importPath.split(path.sep);
                 <span class="hljs-keyword">var</span> packageRootPath = path.join(
-                    workspace.getPackagesDir(), importParts[<span class="hljs-number">0</span>]);
+                    workspace.getPackagesPath(), importParts[<span class="hljs-number">0</span>]);
 
                 <span class="hljs-keyword">if</span> (packageRootPath <span class="hljs-keyword">in</span> workspaces) {
                     <span class="hljs-keyword">var</span> packageWorkspace = workspaces[packageRootPath];
                     <span class="hljs-keyword">var</span> packagePath = path.join.apply(
-                        path, [packageWorkspace.getSourceDir()]
+                        path, [packageWorkspace.getSourcePath()]
                                 .concat(importParts.slice(<span class="hljs-number">1</span>)));
 
                     <span class="hljs-keyword">if</span> (packagePath <span class="hljs-keyword">in</span> sources) {
@@ -57,7 +57,7 @@ for any given file.</p></div></div><div class="code"><div class="wrapper">      
             }
 
             <span class="hljs-keyword">var</span> localPath = path.normalize(
-                path.join(workspace.getSourceDir(), importPath));
+                path.join(workspace.getSourcePath(), importPath));
 
             <span class="hljs-keyword">if</span> (localPath <span class="hljs-keyword">in</span> sources) {
                 <span class="hljs-keyword">return</span> localPath;

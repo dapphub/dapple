@@ -13,10 +13,8 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
 <span class="hljs-keyword">var</span> constants = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./constants"</span>);
 <span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./file"</span>);
 <span class="hljs-keyword">var</span> glob = <span class="hljs-built_in">require</span>(<span class="hljs-string">"glob-fs"</span>);
-<span class="hljs-keyword">var</span> os = <span class="hljs-built_in">require</span>(<span class="hljs-string">"os"</span>);
 <span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">"path"</span>);
 <span class="hljs-keyword">var</span> process = <span class="hljs-built_in">require</span>(<span class="hljs-string">'process'</span>);
-<span class="hljs-keyword">var</span> readdir = <span class="hljs-built_in">require</span>(<span class="hljs-string">"fs-readdir-recursive"</span>);
 <span class="hljs-keyword">var</span> readyaml = <span class="hljs-built_in">require</span>(<span class="hljs-string">"read-yaml"</span>);
 <span class="hljs-keyword">var</span> vinyl = <span class="hljs-built_in">require</span>(<span class="hljs-string">"vinyl-fs"</span>);
 
@@ -63,24 +61,25 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
     }
 
     getSourceDir() {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.dappfile.layout.sol_sources;
+    }
+
+    getSourcePath() {
         <span class="hljs-keyword">var</span> sourceRoot = <span class="hljs-keyword">this</span>.package_root;
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dappfile.layout.sol_sources) {
-            sourceRoot = path.join(sourceRoot, <span class="hljs-keyword">this</span>.dappfile.layout.sol_sources);
+            sourceRoot = path.join(sourceRoot, <span class="hljs-keyword">this</span>.getSourceDir());
         }
 
         <span class="hljs-keyword">return</span> sourceRoot;
     }
 
     getPackagesDir() {
-        <span class="hljs-keyword">var</span> packagesDir = <span class="hljs-keyword">this</span>.dappfile.layout.packages_directory
-                          || <span class="hljs-string">"dapple_packages"</span>;
-
-        <span class="hljs-keyword">return</span> path.join(<span class="hljs-keyword">this</span>.package_root, packagesDir);
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.dappfile.layout.packages_director || <span class="hljs-string">"dapple_packages"</span>;
     }
 
-    getDependencies() {
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.dappfile.dependencies;
+    getPackagesPath() {
+        <span class="hljs-keyword">return</span> path.join(<span class="hljs-keyword">this</span>.package_root, <span class="hljs-keyword">this</span>.getPackagesDir());
     }
 
     getIgnoreGlobs() {
@@ -92,6 +91,14 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
 
     getPreprocessorVars() {
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.dappfile.preprocessor_vars;
+    }
+
+    getEnvironment() {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.dappfile.environment;
+    }
+
+    getEnvironments() {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.dappfile.environments;
     }
 
     loadDappfile(dappfile_path) {

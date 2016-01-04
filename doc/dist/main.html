@@ -13,14 +13,18 @@ to parse the arguments passed in.</p></div></div><div class="code"><div class="w
 as if it were a package and commence with building.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">if</span>( cli.build ) {
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Building..."</span>);
 
-    <span class="hljs-keyword">var</span> workspace = <span class="hljs-keyword">new</span> Workspace();</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Run our build pipeline.</p></div></div><div class="code"><div class="wrapper">    pipelines
+    <span class="hljs-keyword">var</span> workspace = <span class="hljs-keyword">new</span> Workspace();</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Run our build pipeline.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">var</span> jsBuildPipeline = pipelines
         .JSBuildPipeline({
+            environment: cli[<span class="hljs-string">'--environment'</span>] || workspace.getEnvironment(),
+            environments: workspace.getEnvironments(),
             packageRoot: workspace.package_root,
             sourceRoot: workspace.getSourceDir(),
             ignore: workspace.getIgnoreGlobs(),
             preprocessorVars: workspace.getPreprocessorVars(),
             logger: <span class="hljs-built_in">console</span>
-        })</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Write output to filesystem.</p></div></div><div class="code"><div class="wrapper">        .pipe(workspace.getBuildDest());</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If they ran the <code>init</code> command, we just set up the current directory as a
+        });
+
+    <span class="hljs-keyword">if</span> (!jsBuildPipeline) <span class="hljs-keyword">return</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Write output to filesystem.</p></div></div><div class="code"><div class="wrapper">    jsBuildPipeline.pipe(workspace.getBuildDest());</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If they ran the <code>init</code> command, we just set up the current directory as a
 Dapple package and exit.</p></div></div><div class="code"><div class="wrapper">} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cli.init) {
     Workspace.initialize(process.cwd());</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If they ran the <code>test</code> command, we&#39;re going to run our build pipeline and
 then pass the output on to our test pipeline, finally spitting out the
