@@ -1,6 +1,9 @@
 Usage:
     dapple init
-    dapple build
+    dapple build [options]
     dapple chain
     dapple step
     dapple test [--skip-build]
+
+Options:
+    -e ENVIRONMENT, --env ENVIRONMENT

@@ -19,17 +19,26 @@ var cli = docopt.docopt(doc);
 // as if it were a package and commence with building.
 //
 if( cli.build ) {
+    console.log("Building...");
+
     var workspace = new Workspace();
 
     // Run our build pipeline.
-    pipelines
-        .JSBuildPipeline(workspace.getSourceDir(),
-                         workspace.getIgnoreGlobs(),
-                         workspace.getPreprocessorVars(),
-                         console)
+    var jsBuildPipeline = pipelines
+        .JSBuildPipeline({
+            environment: cli['--environment'] || workspace.getEnvironment(),
+            environments: workspace.getEnvironments(),
+            packageRoot: workspace.package_root,
+            sourceRoot: workspace.getSourceDir(),
+            ignore: workspace.getIgnoreGlobs(),
+            preprocessorVars: workspace.getPreprocessorVars(),
+            logger: console
+        });
 
-        // Write output to filesystem.
-        .pipe(workspace.getBuildDest());
+    if (!jsBuildPipeline) return;
+
+    // Write output to filesystem.
+    jsBuildPipeline.pipe(workspace.getBuildDest());
 
 
 // If they ran the `init` command, we just set up the current directory as a
@@ -43,6 +52,8 @@ if( cli.build ) {
 // results to stdout and stderr (in case of failure).
 //
 } else if (cli.test) {
+    console.log("Testing...");
+
     var workspace = new Workspace();
     var initStream;
 
@@ -51,11 +62,13 @@ if( cli.build ) {
 
     } else {
         initStream = pipelines
-            .BuildPipeline(workspace.getSourceDir(),
-                           workspace.getIgnoreGlobs(),
-                           workspace.getPreprocessorVars(),
-                           console)
-            .pipe(workspace.getBuildDest());
+            .BuildPipeline({
+            packageRoot: workspace.package_root,
+            sourceRoot: workspace.getSourceDir(),
+            ignore: workspace.getIgnoreGlobs(),
+            preprocessorVars: workspace.getPreprocessorVars(),
+            logger: console
+        }).pipe(workspace.getBuildDest());
     }
 
     initStream.pipe(pipelines.TestPipeline());

@@ -1,0 +1,6 @@
+layout:
+    sol_sources: "src/sol"
+    build_dir: "build"
+
+dependencies:
+    - pkg

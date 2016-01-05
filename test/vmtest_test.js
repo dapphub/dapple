@@ -7,7 +7,8 @@ var Web3Factory = require('../lib/web3Factory.js');
 var VMTest = require("../lib/vmtest.js");
 
 describe("VMTest", function() {
-    var mock = JSON.parse(String(fs.readFileSync("./test/mocktest.json")));
+    var mock = JSON.parse(
+        String(fs.readFileSync("./test/_fixtures/mocktest.json")));
 
     it("parses Contract objects for test functions", function() {
         var contract = new Contract(mock.contracts.Pass);
