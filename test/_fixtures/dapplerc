@@ -1,0 +1,8 @@
+environments:
+    live:
+        ipfs:
+            host: 'localhost'
+            port: '4001'
+        eth:
+            host: 'localhost'
+            port: '8545'
