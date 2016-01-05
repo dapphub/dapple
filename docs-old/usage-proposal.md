@@ -34,18 +34,18 @@ not be immediately intuitive. Definitions for our perhaps-unusual use of
 language may be found in the [definitions](#Definitions) section of this
 document.
 
-# Installation
+# Configuration
 
-Upon installation (`npm -g install dapple`), the user is prompted for the
-configuration values necessary to fill in the `default` environment in their
-`.dapplerc` file. Sensible defaults are provided for people who want to just
-speed through the prompts.
+Upon first run, the user is prompted for the configuration values necessary to
+fill in the `default` environment in their `.dapplerc` file. Sensible defaults
+are provided for people who want to just speed through the prompts.
 
 Also checks for IPFS and geth installations and warns the user if neither is
 found. While Dapple can run without local instances of either, it's best if they
 have their own copy of both.
 
-# Configuration
+If the user wishes to regenerate their configuration via the same set of prompts
+later on, they may do so via `dapple config`.
 
 ## .dapplerc
 
@@ -83,6 +83,7 @@ working directory, it returns an error.
 
 ```
 Usage:
+    dapple config
     dapple init
     dapple install [-e <environment>] <name or IPFS hash> [-v <version>] [--save]
     dapple new <contract name>
@@ -94,12 +95,24 @@ Usage:
     dapple publish [-e <environment>]
     dapple chain
     dapple step
-    
+
     dapple env sync [<environment>]
     dapple env new <name>
     dapple env ls
     dapple env rm <name>
 ```
+
+## config
+
+#### Usage
+`config`
+
+#### Description
+
+Triggers the set of configuration prompts the user is presented upon first run.
+If a `.dapplerc` file already exists in the user's home directory, it first
+warns the user that the existing file will be replaced with a new one and asks
+if they wish to continue.
 
 ## init
 
@@ -275,7 +288,7 @@ then use that chain's name wherever a "chain environment" is called for.
 (JSON-RPC and "internal" chain environments can only be added by modifying
 `.dapplerc` manually.)
 
-## env ls 
+## env ls
 
 #### usage
 `env ls`
@@ -283,13 +296,13 @@ then use that chain's name wherever a "chain environment" is called for.
 #### description
 Lists all the chain environments and their block heights.
 
-## env rm 
+## env rm
 #### usage
 `env rm <name>`
 
 #### description
 Removes a persistent private test chain. (JSON-RPC and "internal" chain
-environments can only be removed by modifying `.dapplerc` manually.) 
+environments can only be removed by modifying `.dapplerc` manually.)
 
 
 
@@ -339,7 +352,7 @@ A Solidity "contract" definition (potentially any bit of code that can be deploy
 
 #### example
 ```
-contract A { 
+contract A {
   function A() {
   }
 }
@@ -411,8 +424,8 @@ Object name + class header.
 #### example
 
 ```
-[ 
-  "my_root_registry", 
+[
+  "my_root_registry",
   [
     "A",
     [{
@@ -433,8 +446,8 @@ Object reference and header.
 #### example
 
 ```
-[ 
-  "my_root_registry", 
+[
+  "my_root_registry",
   "0x90f0b1ebbba1c1936aff7aaf20a7878ff9e04b6c",
   [
     "A",
@@ -463,8 +476,8 @@ A set of object references.
 #### Example
 ```
 [
-  [ 
-    "my_root_registry", 
+  [
+    "my_root_registry",
     [
       "A",
       [{
@@ -473,8 +486,8 @@ A set of object references.
       }]
     ]
   ],
-  [ 
-    "my_root_registry2", 
+  [
+    "my_root_registry2",
     [
       "A",
       [{
@@ -531,7 +544,7 @@ An instruction that makes a change to a (staged package?) AND/OR the global
 network state.
 
     * pending: dapple sent a transaction, but has not confirmed the action
-    * complete: dapple has confirmed that the transaction had the intended 
+    * complete: dapple has confirmed that the transaction had the intended
       effect and is permanent.
 
 ## Deploy Script
