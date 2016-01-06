@@ -1,8 +1,13 @@
 environments:
-    live:
+    default:
         ipfs:
             host: 'localhost'
             port: '4001'
-        eth:
+        ethereum:
             host: 'localhost'
             port: '8545'
+
+    evm:
+        ethereum: "internal"
+
+    live: default

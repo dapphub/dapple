@@ -47,7 +47,7 @@ describe("class Workspace", function() {
     it('knows how to load .dapplerc', function() {
         var fixtureRC = path.join(__dirname, '_fixtures', 'dapplerc');
         var rc = Workspace.getDappleRC({paths: [fixtureRC]});
-        var expectedRC = fs.readYamlSync(fixtureRC);
+        var expectedRC = fs.readYamlSync(fixtureRC + '.expanded');
         assert.deepEqual(rc.data, expectedRC, "did not load " + fixtureRC);
     })
 });
