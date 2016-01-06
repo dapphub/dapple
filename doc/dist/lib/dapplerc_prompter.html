@@ -39,19 +39,19 @@
             rc = {
                 environments: {
                     <span class="hljs-keyword">default</span>: {
-                        ethereum: {
-                            host: res.eth_host,
-                            port: res.eth_port
-                        },
+                        ethereum: <span class="hljs-string">"internal"</span>,
                         ipfs: {
                             host: res.ipfs_host,
                             port: res.ipfs_port
                         }
                     },
-                    evm: {
-                        ethereum: <span class="hljs-string">"internal"</span>
+                    live: {
+                        ethereum: {
+                            host: res.eth_host,
+                            port: res.eth_port
+                        },
                     },
-                    live: <span class="hljs-string">"default"</span>
+                    evm: <span class="hljs-string">"default"</span>
                 }
             };
             done = <span class="hljs-literal">true</span>;

@@ -15,7 +15,6 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
 <span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./file"</span>);
 <span class="hljs-keyword">var</span> glob = <span class="hljs-built_in">require</span>(<span class="hljs-string">"glob-fs"</span>);
 <span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">"path"</span>);
-<span class="hljs-keyword">var</span> process = <span class="hljs-built_in">require</span>(<span class="hljs-string">'process'</span>);
 <span class="hljs-keyword">var</span> readyaml = <span class="hljs-built_in">require</span>(<span class="hljs-string">"read-yaml"</span>);
 <span class="hljs-keyword">var</span> vinyl = <span class="hljs-built_in">require</span>(<span class="hljs-string">"vinyl-fs"</span>);
 
@@ -103,7 +102,7 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
     }
 
     getEnvironment() {
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.dappfile.environment;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.dappfile.environment || <span class="hljs-string">'default'</span>;
     }
 
     getEnvironments() {

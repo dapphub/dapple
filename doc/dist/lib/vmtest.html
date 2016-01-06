@@ -5,7 +5,11 @@
 <span class="hljs-keyword">var</span> LogTranslator = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./logtranslator'</span>);
 <span class="hljs-keyword">var</span> utils = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./utils'</span>);
 
-<span class="hljs-keyword">const</span> DEFAULT_GAS = <span class="hljs-number">900000000</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>TODO use chain manager</p></div></div><div class="code"><div class="wrapper"><span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VMTest</span> </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Takes a web3 instance, a Contract object (from ./contract.js),
+<span class="hljs-keyword">const</span> DEFAULT_GAS = <span class="hljs-number">900000000</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>TODO use chain manager
+TODO Use transaction manager. Retrying transactions like we do at present
+works, but it&#39;s kludgy and unmaintainable. There needs to be a clean
+abstraction around it because we&#39;re going to need to re-use those techniques
+elsewhere.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VMTest</span> </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Takes a web3 instance, a Contract object (from ./contract.js),
 and a LogTranslator (from ./logTranslator.js). Will later use
 these values to run the tests defined in the given contract.</p></div></div><div class="code"><div class="wrapper">    constructor(web3, contract, logTranslator) {
         <span class="hljs-keyword">this</span>.web3 = web3;
@@ -36,6 +40,10 @@ Passes the result to the callback function once it&#39;s done.</p></div></div><d
         <span class="hljs-keyword">var</span> contractClass = that.web3.eth.contract(that.contract.abi);
 
         that.deploy(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, receipt</span>) </span>{
+            <span class="hljs-keyword">if</span> (err) {
+                <span class="hljs-keyword">return</span> cb(err);
+            }
+
             that.runInstanceTestByName(
                 contractClass.at(receipt.contractAddress),
                 that.tests[testIndex], cb);
@@ -49,11 +57,12 @@ Passes the result to the callback function once it&#39;s done.</p></div></div><d
         <span class="hljs-keyword">var</span> deployCheck = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, txHash</span>) </span>{
             <span class="hljs-keyword">if</span> (err) {
                 <span class="hljs-keyword">return</span> cb(
-                    <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Error on contract deployment: "</span> + err));
+                    <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Contract deployment failure: "</span> + err));
             }
 
             that.web3.eth.getTransactionReceipt(txHash, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, res</span>) </span>{
-                <span class="hljs-keyword">if</span> (!res.contractAddress) {
+                <span class="hljs-keyword">if</span> (!err &amp;&amp; !res) {
+                    setTimeout(deployCheck.bind(<span class="hljs-keyword">this</span>, <span class="hljs-literal">null</span>, txHash), <span class="hljs-number">2000</span>);
                     <span class="hljs-keyword">return</span>;
                 }
                 cb(err, res);
