@@ -46,6 +46,7 @@ if (cli.config || typeof(rc.path) === 'undefined') {
         console.log("No configuration found! Generating...");
         Workspace.writeDappleRC(homeRC, DappleRCPrompter.prompt());
     }
+    rc = Workspace.getDappleRC();
 }
 
 // If the user ran the `build` command, we're going to open the current directory
