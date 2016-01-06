@@ -1,4 +1,5 @@
 Usage:
+    dapple config
     dapple init
     dapple build [options]
     dapple chain
@@ -6,4 +7,5 @@ Usage:
     dapple test [options] [--skip-build]
 
 Options:
-    -e ENVIRONMENT, --env ENVIRONMENT
+    -e ENVIRONMENT, --environment ENVIRONMENT
+    -c DAPPLERC, --config DAPPLERC

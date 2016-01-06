@@ -49,5 +49,16 @@ describe("class Workspace", function() {
         var rc = Workspace.getDappleRC({paths: [fixtureRC]});
         var expectedRC = fs.readYamlSync(fixtureRC + '.expanded');
         assert.deepEqual(rc.data, expectedRC, "did not load " + fixtureRC);
-    })
+    });
+
+    it('knows how to make .dapplerc', function() {
+        var fixtureRC = path.join(__dirname, '_fixtures', 'dapplerc');
+        var expectedRC = fs.readYamlSync(fixtureRC + '.expanded');
+        var newRC = path.join(__dirname, '_fixtures', 'dapplerc_copy');
+        Workspace.writeDappleRC(newRC, expectedRC);
+        var rc = Workspace.getDappleRC({paths: [newRC]});
+        fs.removeSync(newRC); // Cleanup
+
+        assert.deepEqual(rc.data, expectedRC, "did not create dapplerc");
+    });
 });
