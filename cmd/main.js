@@ -88,6 +88,7 @@ if( cli.build ) {
     console.log("Testing...");
 
     var workspace = new Workspace();
+    var env = cli['--environment'] || workspace.getEnvironment();
     var initStream;
 
     if (cli['--skip-build']) {
@@ -104,5 +105,12 @@ if( cli.build ) {
         }).pipe(workspace.getBuildDest());
     }
 
-    initStream.pipe(pipelines.TestPipeline());
+    if (!(env in rc.data.environments)) {
+        console.error("Environment not defined: " + env);
+
+    } else {
+        initStream.pipe(pipelines.TestPipeline({
+            web3: rc.data.environments[env].ethereum || 'internal'
+        }));
+    }
 }
