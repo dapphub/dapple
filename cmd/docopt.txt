@@ -7,5 +7,5 @@ Usage:
     dapple test [options] [--skip-build]
 
 Options:
-    -e ENVIRONMENT, --environment ENVIRONMENT
+    -e ENVIRONMENT, --environment ENVIRONMENT [default: evm]
     -c DAPPLERC, --config DAPPLERC
