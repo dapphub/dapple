@@ -1,0 +1,53 @@
+<!DOCTYPE html><html lang="en"><head><title>lib/dapplerc_builder</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/dapplerc_builder"><meta name="groc-project-path" content="lib/dapplerc_builder.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/lib/dapplerc_builder.js">lib/dapplerc_builder.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
+
+<span class="hljs-keyword">var</span> deasync = <span class="hljs-built_in">require</span>(<span class="hljs-string">'deasync'</span>);
+<span class="hljs-keyword">var</span> inquirer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'inquirer'</span>);
+
+<span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DappleRCBuilder</span> </span>{
+    static build() {
+        <span class="hljs-keyword">var</span> questions = [
+            {
+                <span class="hljs-string">"type"</span>: <span class="hljs-string">"input"</span>,
+                <span class="hljs-string">"name"</span>: <span class="hljs-string">"ipfs_host"</span>,
+                <span class="hljs-string">"message"</span>: <span class="hljs-string">"What is the hostname you use to connect to IPFS?"</span>,
+                <span class="hljs-string">"default"</span>: <span class="hljs-string">"localhost"</span>
+            },
+            {
+                <span class="hljs-string">"type"</span>: <span class="hljs-string">"input"</span>,
+                <span class="hljs-string">"name"</span>: <span class="hljs-string">"ipfs_port"</span>,
+                <span class="hljs-string">"message"</span>: <span class="hljs-string">"What is the port you use to connect to IPFS?"</span>,
+                <span class="hljs-string">"default"</span>: <span class="hljs-string">"4001"</span>
+            },
+            {
+                <span class="hljs-string">"type"</span>: <span class="hljs-string">"input"</span>,
+                <span class="hljs-string">"name"</span>: <span class="hljs-string">"eth_host"</span>,
+                <span class="hljs-string">"message"</span>: <span class="hljs-string">"What hostname do you want web3 to use by default?"</span>,
+                <span class="hljs-string">"default"</span>: <span class="hljs-string">"localhost"</span>
+            },
+            {
+                <span class="hljs-string">"type"</span>: <span class="hljs-string">"input"</span>,
+                <span class="hljs-string">"name"</span>: <span class="hljs-string">"eth_port"</span>,
+                <span class="hljs-string">"message"</span>: <span class="hljs-string">"What port do you want web3 to use by default?"</span>,
+                <span class="hljs-string">"default"</span>: <span class="hljs-string">"8545"</span>
+            }
+        ];
+
+        <span class="hljs-keyword">var</span> rc;
+        <span class="hljs-keyword">var</span> done = <span class="hljs-literal">false</span>;
+        inquirer.prompt(questions, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{
+            rc = {
+                eth: {
+                    host: res.eth_host,
+                    port: res.eth_port
+                },
+                ipfs: {
+                    host: res.ipfs_host,
+                    port: res.ipfs_port
+                }
+            };
+            done = <span class="hljs-literal">true</span>;
+        });
+        deasync.loopWhile(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{<span class="hljs-keyword">return</span> !done;})
+        <span class="hljs-keyword">return</span> rc;
+    }
+};</div></div></div></div></body></html>

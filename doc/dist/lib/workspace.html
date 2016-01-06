@@ -11,6 +11,7 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
 
 <span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lodash'</span>);
 <span class="hljs-keyword">var</span> constants = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./constants"</span>);
+<span class="hljs-keyword">var</span> DappleRC = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../lib/dapplerc.js'</span>);
 <span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./file"</span>);
 <span class="hljs-keyword">var</span> glob = <span class="hljs-built_in">require</span>(<span class="hljs-string">"glob-fs"</span>);
 <span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">"path"</span>);
@@ -40,10 +41,6 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
         }
     }
 
-    getBuildDir() {
-        <span class="hljs-keyword">return</span> path.join(<span class="hljs-keyword">this</span>.package_root, <span class="hljs-keyword">this</span>.dappfile.layout.build_dir);
-    }
-
     static findWorkspaceRoot(command_dir) {
         <span class="hljs-keyword">var</span> location = command_dir;
         <span class="hljs-keyword">do</span> {
@@ -54,6 +51,18 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
             location = path.join(location, <span class="hljs-string">".."</span>);
         } <span class="hljs-keyword">while</span>( location != <span class="hljs-string">"/"</span> );
         <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
+    }
+
+    static getDappleRC(opts) {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> DappleRC(opts);
+    }
+
+    static writeDappleRC(path, data) {
+        <span class="hljs-keyword">return</span> DappleRC.writeSync(path, data);
+    }
+
+    getBuildDir() {
+        <span class="hljs-keyword">return</span> path.join(<span class="hljs-keyword">this</span>.package_root, <span class="hljs-keyword">this</span>.dappfile.layout.build_dir);
     }
 
     getBuildDest() {

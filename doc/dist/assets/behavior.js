@@ -137,6 +137,45 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
+            "sourcePath": "/home/dev/devenv/dapple/lib/dapplerc.js",
+            "projectPath": "lib/dapplerc.js",
+            "targetPath": "lib/dapplerc",
+            "pageTitle": "lib/dapplerc",
+            "title": "dapplerc"
+          },
+          "depth": 2,
+          "outline": []
+        }, {
+          "type": "file",
+          "data": {
+            "language": {
+              "nameMatchers": [".js"],
+              "pygmentsLexer": "javascript",
+              "multiLineComment": ["/*", "*", "*/"],
+              "singleLineComment": ["//"],
+              "ignorePrefix": "}",
+              "foldPrefix": "^",
+              "name": "JavaScript"
+            },
+            "sourcePath": "/home/dev/devenv/dapple/lib/dapplerc_prompter.js",
+            "projectPath": "lib/dapplerc_prompter.js",
+            "targetPath": "lib/dapplerc_prompter",
+            "pageTitle": "lib/dapplerc_prompter",
+            "title": "dapplerc_prompter"
+          },
+          "depth": 2
+        }, {
+          "type": "file",
+          "data": {
+            "language": {
+              "nameMatchers": [".js"],
+              "pygmentsLexer": "javascript",
+              "multiLineComment": ["/*", "*", "*/"],
+              "singleLineComment": ["//"],
+              "ignorePrefix": "}",
+              "foldPrefix": "^",
+              "name": "JavaScript"
+            },
             "sourcePath": "/home/dev/devenv/dapple/lib/file.js",
             "projectPath": "lib/file.js",
             "targetPath": "lib/file",

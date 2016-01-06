@@ -19,7 +19,8 @@ discreet &quot;pipelines&quot; which are ultimately themselves streams. This hel
         logger: <span class="hljs-built_in">console</span>,
         packageRoot: process.cwd(),
         preprocessorVars: {},
-        sourceRoot: process.cwd()
+        sourceRoot: process.cwd(),
+        web3: <span class="hljs-string">'internal'</span>
     };
 
     <span class="hljs-keyword">return</span> _.assign(defaults, opts);
@@ -48,7 +49,8 @@ should get filtered out during publishing.</p></div></div><div class="code"><div
         solidityFilter,
         streams.build(opts.logger),
         solidityFilter.restore);
-};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Builds JS-specific output.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> JSBuildPipeline = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">opts</span>) </span>{
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Builds JS-specific output.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> JSBuildPipeline = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">opts</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Defaults</p></div></div><div class="code"><div class="wrapper">    opts = _fillOptionDefaults(opts);
+
     <span class="hljs-keyword">if</span> (opts.environment &amp;&amp; opts.environments
         &amp;&amp; !(opts.environment <span class="hljs-keyword">in</span> opts.environments))
     {
@@ -61,9 +63,10 @@ should get filtered out during publishing.</p></div></div><div class="code"><div
     <span class="hljs-keyword">return</span> Combine(vinyl.src([buildDir + <span class="hljs-string">'/classes.json'</span>]), buffer());
 };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Takes built contracts and deploys and runs any test
 contracts among them, emitting the results to the CLI
-and passing them downstream as File objects.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> TestPipeline = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+and passing them downstream as File objects.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> TestPipeline = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">opts</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Defaults</p></div></div><div class="code"><div class="wrapper">    opts = _fillOptionDefaults(opts);
+
     <span class="hljs-keyword">return</span> Combine(
-            streams.test(), streams.cli_out(),
+            streams.test(opts), streams.cli_out(),
             streams.test_summarizer(), streams.cli_out());
 };
 
