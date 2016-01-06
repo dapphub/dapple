@@ -3,7 +3,7 @@ Usage:
     dapple build [options]
     dapple chain
     dapple step
-    dapple test [--skip-build]
+    dapple test [options] [--skip-build]
 
 Options:
     -e ENVIRONMENT, --env ENVIRONMENT
