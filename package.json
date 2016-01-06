@@ -60,7 +60,8 @@
     "user-home": "^2.0.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-fs": "^2.2.1",
-    "web3": "^0.15.1"
+    "web3": "^0.15.1",
+    "write-yaml": "^0.2.2"
   },
   "engines": {
     "node": ">=5.0.0"
