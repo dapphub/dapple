@@ -1,0 +1,12 @@
+default:
+    ipfs:
+        host: 'localhost'
+        port: '4001'
+    ethereum:
+        host: 'localhost'
+        port: '8545'
+
+evm:
+    ethereum: "internal"
+
+live: default
