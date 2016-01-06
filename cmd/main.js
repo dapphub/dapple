@@ -4,16 +4,50 @@
 // This is the file that gets executed when you run `dapple`. It uses `docopt`
 // to parse the arguments passed in.
 
+var Builder = require("../lib/build");
+var DappleRCPrompter = require("../lib/dapplerc_prompter.js");
+var deasync = require('deasync');
 var docopt = require('docopt');
-var fs = require('fs');
+var fs = require('../lib/file.js');
+var inquirer = require('inquirer');
 var path = require("path");
 var pipelines = require("../lib/pipelines");
-var Workspace = require("../lib/workspace");
-var Builder = require("../lib/build");
+var userHome = require('user-home');
 var VMTest = require("../lib/vmtest");
+var Workspace = require("../lib/workspace");
 
 var doc = fs.readFileSync(__dirname+"/docopt.txt").toString();
 var cli = docopt.docopt(doc);
+var rc = Workspace.getDappleRC();
+
+if (cli.config || typeof(rc.path) === 'undefined') {
+    var homeRC = path.join(userHome, '.dapplerc');
+
+    var confirmed;
+    var chosen = false;
+    if (rc.path !== undefined && rc.path === homeRC) {
+        console.log("You already have a .dapplerc in your home directory!");
+        inquirer.prompt([{
+            type: 'confirm',
+            message: "Proceeding will overwrite that file. Proceed?",
+            name: "confirmed",
+            default: false
+        }], function(res) {
+            chosen = true;
+            confirmed = res.confirmed;
+        })
+        deasync.loopWhile(function() {return !chosen;});
+
+        if (confirmed) {
+            Workspace.writeDappleRC(homeRC, DappleRCPrompter.prompt());
+        }
+
+    } else {
+        console.log("No configuration found! Generating...");
+        Workspace.writeDappleRC(homeRC, DappleRCPrompter.prompt());
+    }
+    rc = Workspace.getDappleRC();
+}
 
 // If the user ran the `build` command, we're going to open the current directory
 // as if it were a package and commence with building.
@@ -55,6 +89,7 @@ if( cli.build ) {
     console.log("Testing...");
 
     var workspace = new Workspace();
+    var env = cli['--environment'] || workspace.getEnvironment();
     var initStream;
 
     if (cli['--skip-build']) {
@@ -71,5 +106,12 @@ if( cli.build ) {
         }).pipe(workspace.getBuildDest());
     }
 
-    initStream.pipe(pipelines.TestPipeline());
+    if (!(env in rc.data.environments)) {
+        console.error("Environment not defined: " + env);
+
+    } else {
+        initStream.pipe(pipelines.TestPipeline({
+            web3: rc.data.environments[env].ethereum || 'internal'
+        }));
+    }
 }

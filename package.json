@@ -48,6 +48,7 @@
     "gulp-filter": "^3.0.1",
     "gulp-ignore": "^2.0.1",
     "gulp-smake": "^0.2.2",
+    "inquirer": "^0.11.1",
     "lodash": "^3.10.1",
     "mkdirp": "^0.5.1",
     "mocha": "^2.3.4",
@@ -56,9 +57,11 @@
     "stream-combiner": "^0.2.2",
     "through2": "^2.0.0",
     "tmp": "0.0.28",
+    "user-home": "^2.0.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-fs": "^2.2.1",
-    "web3": "^0.15.1"
+    "web3": "^0.15.1",
+    "write-yaml": "^0.2.2"
   },
   "engines": {
     "node": ">=5.0.0"

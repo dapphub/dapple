@@ -7,18 +7,41 @@
 <span class="hljs-keyword">const</span> DEFAULT_GAS = <span class="hljs-number">900000000</span>;
 
 <span class="hljs-built_in">module</span>.exports = {
-    JSONRPC: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">connection_string, cb</span>) </span>{
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span>(connection_string) == <span class="hljs-string">'function'</span> &amp;&amp; <span class="hljs-keyword">typeof</span>(cb) == <span class="hljs-string">'undefined'</span>) {
-            cb = connection_string;
-            connection_string = <span class="hljs-string">"http://localhost:8544"</span>;
+    JSONRPC: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">opts, cb</span>) </span>{
+        <span class="hljs-keyword">var</span> connection_string = <span class="hljs-string">"http://localhost:8545"</span>;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span>(opts) == <span class="hljs-string">'function'</span> &amp;&amp; <span class="hljs-keyword">typeof</span>(cb) == <span class="hljs-string">'undefined'</span>) {
+            cb = opts;
         }
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span>(opts) == <span class="hljs-string">"object"</span> &amp;&amp; <span class="hljs-string">"web3"</span> <span class="hljs-keyword">in</span> opts) {
+            <span class="hljs-keyword">if</span> (<span class="hljs-string">"connection_string"</span> <span class="hljs-keyword">in</span> opts.web3) {
+                connection_string = opts.web3.connection_string;
+            } <span class="hljs-keyword">else</span> {
+                <span class="hljs-keyword">var</span> host = opts.web3.host;
+                <span class="hljs-keyword">if</span> (!<span class="hljs-regexp">/^https?:\/\//</span>.test(host.toLowerCase())) {
+                    host = <span class="hljs-string">"http://"</span> + host;
+                }
+                connection_string = host + <span class="hljs-string">":"</span> + opts.web3.port;
+            }
+        }
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span>(opts) == <span class="hljs-string">"string"</span>) {
+            connection_string = opts;
+        }
+
         cb = utils.optionalCallback(cb);
 
         <span class="hljs-keyword">var</span> web3 = <span class="hljs-keyword">new</span> Web3(<span class="hljs-keyword">new</span> Web3.providers.HttpProvider(connection_string));
 
-        <span class="hljs-keyword">if</span>( web3.eth.coinbase === <span class="hljs-literal">undefined</span> ) {
+        <span class="hljs-keyword">try</span> {
+            <span class="hljs-keyword">if</span>( web3.eth.coinbase === <span class="hljs-literal">undefined</span> ) {
+                <span class="hljs-keyword">return</span> cb(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Couldn't connect to test web3 provider,"</span>
+                                    + <span class="hljs-string">" or it set no coinbase"</span>));
+            }
+        } <span class="hljs-keyword">catch</span> (e) {
             <span class="hljs-keyword">return</span> cb(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(
-                <span class="hljs-string">"Couldn't connect to test web3 provider, or it set no coinbase"</span>));
+                <span class="hljs-string">"Couldn't connect to Ethereum client at "</span> + connection_string));
         }
         web3.eth.defaultAccount = web3.eth.accounts[<span class="hljs-number">0</span>];
 
