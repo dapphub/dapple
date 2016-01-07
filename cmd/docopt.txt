@@ -1,6 +1,7 @@
 Usage:
     dapple config
     dapple init
+    dapple install [--save] [<package>]
     dapple build [options]
     dapple chain
     dapple step

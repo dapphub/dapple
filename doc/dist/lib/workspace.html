@@ -109,10 +109,29 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.dappfile.environments;
     }
 
+    getDappfilePath() {
+        <span class="hljs-keyword">return</span> path.join(<span class="hljs-keyword">this</span>.package_root, constants.DAPPFILE_FILENAME);
+    }
+
     loadDappfile(dappfile_path) {
         <span class="hljs-keyword">if</span>( dappfile_path === <span class="hljs-literal">undefined</span> ) {
-            dappfile_path = path.join(<span class="hljs-keyword">this</span>.package_root, constants.DAPPFILE_FILENAME);
+            dappfile_path = <span class="hljs-keyword">this</span>.getDappfilePath();
         }
         <span class="hljs-keyword">return</span> readyaml.sync(dappfile_path);
+    }
+
+    writeDappfile() {
+        <span class="hljs-keyword">return</span> fs.writeYamlSync(<span class="hljs-keyword">this</span>.getDappfilePath(), <span class="hljs-keyword">this</span>.dappfile);
+    }
+
+    addDependency(packagePath) {
+        <span class="hljs-keyword">if</span> ( !<span class="hljs-keyword">this</span>.dappfile.dependencies ) {
+            <span class="hljs-keyword">this</span>.dappfile.dependencies = {};
+        }
+        <span class="hljs-keyword">this</span>.dappfile.dependencies[path.basename(packagePath)] = packagePath;
+    }
+
+    getDependencies() {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.dappfile.dependencies || {};
     }
 }</div></div></div></div></body></html>
