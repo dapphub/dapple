@@ -48,6 +48,7 @@
     "gulp-filter": "^3.0.1",
     "gulp-ignore": "^2.0.1",
     "gulp-smake": "^0.2.2",
+    "gulp-util": "^3.0.7",
     "inquirer": "^0.11.1",
     "lodash": "^3.10.1",
     "mkdirp": "^0.5.1",
