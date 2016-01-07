@@ -3,6 +3,7 @@
 <span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lodash'</span>);
 <span class="hljs-keyword">var</span> child_process = <span class="hljs-built_in">require</span>(<span class="hljs-string">"child_process"</span>);
 <span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs-extra'</span>);
+<span class="hljs-keyword">var</span> gutil = <span class="hljs-built_in">require</span>(<span class="hljs-string">'gulp-util'</span>);
 <span class="hljs-keyword">var</span> os = <span class="hljs-built_in">require</span>(<span class="hljs-string">'os'</span>);
 <span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);
 
@@ -20,16 +21,24 @@
         <span class="hljs-keyword">var</span> sources = input.sources;
         <span class="hljs-keyword">var</span> tmpDir = path.join(os.tmpdir(), <span class="hljs-string">'dapple'</span>,
                                <span class="hljs-built_in">String</span>(<span class="hljs-built_in">Math</span>.random()).slice(<span class="hljs-number">2</span>));
-        fs.emptyDirSync(tmpDir); <span class="hljs-comment">// Create or empty the directory. </span>
+        fs.emptyDirSync(tmpDir); <span class="hljs-comment">// Create or empty the directory.</span>
 
         _.forIn(sources, (val, key) =&gt; {
             fs.outputFileSync(path.join(tmpDir, key), val);
         });
 
-        <span class="hljs-keyword">var</span> output = <span class="hljs-built_in">JSON</span>.parse(child_process.execSync(
-                <span class="hljs-string">"solc -o - --combined-json abi,bin,interface "</span>
-                + <span class="hljs-built_in">Object</span>.keys(sources).join(<span class="hljs-string">" "</span>), {cwd: tmpDir}));
+        <span class="hljs-keyword">var</span> output;
+        <span class="hljs-keyword">try</span> {
+            output = child_process.execSync(
+                    <span class="hljs-string">"solc -o - --combined-json abi,bin,interface "</span>
+                    + <span class="hljs-built_in">Object</span>.keys(sources).join(<span class="hljs-string">" "</span>), {cwd: tmpDir});
 
+        } <span class="hljs-keyword">catch</span> (e) {
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> gutil.PluginError(<span class="hljs-string">"Dapple Native Compiler"</span>,
+                                        <span class="hljs-built_in">String</span>(e.stderr));
+        }
+
+        output = <span class="hljs-built_in">JSON</span>.parse(output);
         fs.removeSync(tmpDir); <span class="hljs-comment">// Clean up.</span>
 
         output.contracts = _.mapValues(output.contracts, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">contract</span>) </span>{
