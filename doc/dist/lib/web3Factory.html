@@ -40,8 +40,7 @@
                                     + <span class="hljs-string">" or it set no coinbase"</span>));
             }
         } <span class="hljs-keyword">catch</span> (e) {
-            <span class="hljs-keyword">return</span> cb(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(
-                <span class="hljs-string">"Couldn't connect to Ethereum client at "</span> + connection_string));
+            <span class="hljs-keyword">return</span> cb(<span class="hljs-keyword">new</span> <span class="hljs-built_in">String</span>(e));
         }
         web3.eth.defaultAccount = web3.eth.accounts[<span class="hljs-number">0</span>];
 

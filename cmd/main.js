@@ -9,6 +9,7 @@ var DappleRCPrompter = require("../lib/dapplerc_prompter.js");
 var deasync = require('deasync');
 var docopt = require('docopt');
 var fs = require('../lib/file.js');
+var Installer = require('../lib/installer.js');
 var inquirer = require('inquirer');
 var path = require("path");
 var pipelines = require("../lib/pipelines");
@@ -49,10 +50,30 @@ if (cli.config || typeof(rc.path) === 'undefined') {
     rc = Workspace.getDappleRC();
 }
 
+// If the user ran the `install` command, we're going to walk the dependencies
+// in the dappfile and pull them in as git submodules, if the current package is
+// a git repository. Otherwise we'll just clone them.
+if( cli.install ) {
+    var workspace = new Workspace();
+
+    var packages;
+    if ( cli['<package>'] ) {
+        packages = [cli['<package>']];
+    } else {
+        packages = workspace.getDependencies();
+    }
+
+    Installer.install(packages, console);
+
+    if ( cli['--save'] && cli['<package>'] ) {
+        workspace.addDependency(cli['<package>']);
+        workspace.writeDappfile();
+    }
+
 // If the user ran the `build` command, we're going to open the current directory
 // as if it were a package and commence with building.
 //
-if( cli.build ) {
+} else if( cli.build ) {
     console.log("Building...");
 
     var workspace = new Workspace();
