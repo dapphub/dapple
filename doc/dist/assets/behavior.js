@@ -251,6 +251,26 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
+            "sourcePath": "/home/dev/devenv/dapple/lib/loggers.js",
+            "projectPath": "lib/loggers.js",
+            "targetPath": "lib/loggers",
+            "pageTitle": "lib/loggers",
+            "title": "loggers"
+          },
+          "depth": 2,
+          "outline": []
+        }, {
+          "type": "file",
+          "data": {
+            "language": {
+              "nameMatchers": [".js"],
+              "pygmentsLexer": "javascript",
+              "multiLineComment": ["/*", "*", "*/"],
+              "singleLineComment": ["//"],
+              "ignorePrefix": "}",
+              "foldPrefix": "^",
+              "name": "JavaScript"
+            },
             "sourcePath": "/home/dev/devenv/dapple/lib/logtranslator.js",
             "projectPath": "lib/logtranslator.js",
             "targetPath": "lib/logtranslator",
@@ -276,8 +296,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             "pageTitle": "lib/native_compiler",
             "title": "native_compiler"
           },
-          "depth": 2,
-          "outline": []
+          "depth": 2
         }, {
           "type": "file",
           "data": {

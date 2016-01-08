@@ -69,11 +69,10 @@ as if it were a package and commence with building.</p></div></div><div class="c
         .JSBuildPipeline({
             environment: cli[<span class="hljs-string">'--environment'</span>] || workspace.getEnvironment(),
             environments: workspace.getEnvironments(),
-            packageRoot: workspace.package_root,
-            sourceRoot: workspace.getSourceDir(),
             ignore: workspace.getIgnoreGlobs(),
+            packageRoot: workspace.package_root,
             preprocessorVars: workspace.getPreprocessorVars(),
-            logger: <span class="hljs-built_in">console</span>
+            sourceRoot: workspace.getSourceDir()
         });
 
     <span class="hljs-keyword">if</span> (!jsBuildPipeline) <span class="hljs-keyword">return</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Write output to filesystem.</p></div></div><div class="code"><div class="wrapper">    jsBuildPipeline.pipe(workspace.getBuildDest());</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If they ran the <code>init</code> command, we just set up the current directory as a
@@ -93,20 +92,21 @@ results to stdout and stderr (in case of failure).</p></div></div><div class="co
     } <span class="hljs-keyword">else</span> {
         initStream = pipelines
             .BuildPipeline({
-            packageRoot: workspace.package_root,
-            sourceRoot: workspace.getSourceDir(),
-            ignore: workspace.getIgnoreGlobs(),
-            preprocessorVars: workspace.getPreprocessorVars(),
-            logger: <span class="hljs-built_in">console</span>
-        }).pipe(workspace.getBuildDest());
+                ignore: workspace.getIgnoreGlobs(),
+                packageRoot: workspace.package_root,
+                preprocessorVars: workspace.getPreprocessorVars(),
+                sourceRoot: workspace.getSourceDir()
+            })
+            .pipe(workspace.getBuildDest());
     }
 
     <span class="hljs-keyword">if</span> (!(env <span class="hljs-keyword">in</span> rc.data.environments)) {
         <span class="hljs-built_in">console</span>.error(<span class="hljs-string">"Environment not defined: "</span> + env);
 
     } <span class="hljs-keyword">else</span> {
-        initStream.pipe(pipelines.TestPipeline({
-            web3: rc.data.environments[env].ethereum || <span class="hljs-string">'internal'</span>
-        }));
+        initStream
+            .pipe(pipelines.TestPipeline({
+                web3: rc.data.environments[env].ethereum || <span class="hljs-string">'internal'</span>
+            }));
     }
 }</div></div></div></div></body></html>
