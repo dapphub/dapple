@@ -9,22 +9,23 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
 <code>.git</code> folder)</p></div></div><div class="code"><div class="wrapper"><span class="hljs-pi">
 "use strict"</span>;
 
-<span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lodash'</span>);
+<span class="hljs-keyword">var</span> req = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lazreq'</span>)({
+    vinyl: <span class="hljs-string">'vinyl-fs'</span>
+})
+
 <span class="hljs-keyword">var</span> constants = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./constants"</span>);
 <span class="hljs-keyword">var</span> DappleRC = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../lib/dapplerc.js'</span>);
 <span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./file"</span>);
-<span class="hljs-keyword">var</span> glob = <span class="hljs-built_in">require</span>(<span class="hljs-string">"glob-fs"</span>);
 <span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">"path"</span>);
 <span class="hljs-keyword">var</span> readyaml = <span class="hljs-built_in">require</span>(<span class="hljs-string">"read-yaml"</span>);
-<span class="hljs-keyword">var</span> vinyl = <span class="hljs-built_in">require</span>(<span class="hljs-string">"vinyl-fs"</span>);
 
 <span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Workspace</span> </span>{
 
-    constructor(path) {
-        <span class="hljs-keyword">if</span>( path === <span class="hljs-literal">undefined</span> ) {
-            path = process.cwd();
+    constructor(wsPath) {
+        <span class="hljs-keyword">if</span>( wsPath === <span class="hljs-literal">undefined</span> ) {
+            wsPath = process.cwd();
         }
-        <span class="hljs-keyword">this</span>.package_root = Workspace.findWorkspaceRoot(path);
+        <span class="hljs-keyword">this</span>.package_root = Workspace.findWorkspaceRoot(wsPath);
         <span class="hljs-keyword">if</span>( <span class="hljs-keyword">this</span>.package_root === <span class="hljs-literal">undefined</span> ) {
             <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Couldn't find workspace. Use `dapple init`"</span>);
         }
@@ -56,8 +57,8 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> DappleRC(opts);
     }
 
-    static writeDappleRC(path, data) {
-        <span class="hljs-keyword">return</span> DappleRC.writeSync(path, data);
+    static writeDappleRC(rcPath, data) {
+        <span class="hljs-keyword">return</span> DappleRC.writeSync(rcPath, data);
     }
 
     getBuildDir() {
@@ -65,7 +66,7 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
     }
 
     getBuildDest() {
-        <span class="hljs-keyword">return</span> vinyl.dest(<span class="hljs-keyword">this</span>.getBuildDir());
+        <span class="hljs-keyword">return</span> req.vinyl.dest(<span class="hljs-keyword">this</span>.getBuildDir());
     }
 
     getSourceDir() {
@@ -91,10 +92,11 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
     }
 
     getIgnoreGlobs() {
-        <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
-        <span class="hljs-keyword">return</span> _.map(<span class="hljs-keyword">this</span>.dappfile.ignore, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">glob</span>) </span>{
-            <span class="hljs-keyword">return</span> path.join(that.getSourceDir(), glob);
-        });
+        <span class="hljs-keyword">var</span> globs = [];
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> glob <span class="hljs-keyword">of</span> <span class="hljs-keyword">this</span>.dappfile.ignore) {
+            globs.push(path.join(<span class="hljs-keyword">this</span>.getSourceDir(), glob));
+        }
+        <span class="hljs-keyword">return</span> globs;
     }
 
     getPreprocessorVars() {

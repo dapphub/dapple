@@ -3,27 +3,26 @@
 to parse the arguments passed in.</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Usage first.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>)
 <span class="hljs-keyword">var</span> docopt = <span class="hljs-built_in">require</span>(<span class="hljs-string">'docopt'</span>);
 <span class="hljs-keyword">var</span> doc = fs.readFileSync(__dirname+<span class="hljs-string">"/docopt.txt"</span>).toString();
-<span class="hljs-keyword">var</span> cli = docopt.docopt(doc);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>These requires take a lot of time to import.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> Builder = <span class="hljs-built_in">require</span>(<span class="hljs-string">"../lib/build"</span>);
-<span class="hljs-keyword">var</span> DappleRCPrompter = <span class="hljs-built_in">require</span>(<span class="hljs-string">"../lib/dapplerc_prompter.js"</span>);
-<span class="hljs-keyword">var</span> deasync = <span class="hljs-built_in">require</span>(<span class="hljs-string">'deasync'</span>);
-<span class="hljs-keyword">var</span> Installer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../lib/installer.js'</span>);
-<span class="hljs-keyword">var</span> inquirer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'inquirer'</span>);
-<span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">"path"</span>);
-<span class="hljs-keyword">var</span> pipelines = <span class="hljs-built_in">require</span>(<span class="hljs-string">"../lib/pipelines"</span>);
-<span class="hljs-keyword">var</span> userHome = <span class="hljs-built_in">require</span>(<span class="hljs-string">'user-home'</span>);
-<span class="hljs-keyword">var</span> VMTest = <span class="hljs-built_in">require</span>(<span class="hljs-string">"../lib/vmtest"</span>);
-<span class="hljs-keyword">var</span> Workspace = <span class="hljs-built_in">require</span>(<span class="hljs-string">"../lib/workspace"</span>);
+<span class="hljs-keyword">var</span> cli = docopt.docopt(doc);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>These requires take a lot of time to import.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> req = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lazreq'</span>)({
+    DappleRCPrompter: <span class="hljs-string">"../lib/dapplerc_prompter.js"</span>,
+    deasync: <span class="hljs-string">'deasync'</span>,
+    Installer: <span class="hljs-string">'../lib/installer.js'</span>,
+    inquirer: <span class="hljs-string">'inquirer'</span>,
+    path: <span class="hljs-string">'path'</span>,
+    pipelines: <span class="hljs-string">'../lib/pipelines.js'</span>
+});
 
+<span class="hljs-keyword">var</span> Workspace = <span class="hljs-built_in">require</span>(<span class="hljs-string">"../lib/workspace"</span>);
 <span class="hljs-keyword">var</span> rc = Workspace.getDappleRC();
 
 <span class="hljs-keyword">if</span> (cli.config || <span class="hljs-keyword">typeof</span>(rc.path) === <span class="hljs-string">'undefined'</span>) {
-    <span class="hljs-keyword">var</span> homeRC = path.join(userHome, <span class="hljs-string">'.dapplerc'</span>);
+    <span class="hljs-keyword">var</span> homeRC = req.path.join(userHome, <span class="hljs-string">'.dapplerc'</span>);
 
     <span class="hljs-keyword">var</span> confirmed;
     <span class="hljs-keyword">var</span> chosen = <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">if</span> (rc.path !== <span class="hljs-literal">undefined</span> &amp;&amp; rc.path === homeRC) {
         <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"You already have a .dapplerc in your home directory!"</span>);
-        inquirer.prompt([{
+        req.inquirer.prompt([{
             type: <span class="hljs-string">'confirm'</span>,
             message: <span class="hljs-string">"Proceeding will overwrite that file. Proceed?"</span>,
             name: <span class="hljs-string">"confirmed"</span>,
@@ -32,10 +31,10 @@ to parse the arguments passed in.</p></div></div></div><div class="segment"><div
             chosen = <span class="hljs-literal">true</span>;
             confirmed = res.confirmed;
         })
-        deasync.loopWhile(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{<span class="hljs-keyword">return</span> !chosen;});
+        req.deasync.loopWhile(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{<span class="hljs-keyword">return</span> !chosen;});
 
         <span class="hljs-keyword">if</span> (confirmed) {
-            Workspace.writeDappleRC(homeRC, DappleRCPrompter.prompt());
+            Workspace.writeDappleRC(homeRC, req.DappleRCPrompter.prompt());
         }
 
     } <span class="hljs-keyword">else</span> {
@@ -55,7 +54,7 @@ a git repository. Otherwise we&#39;ll just clone them.</p></div></div><div class
         packages = workspace.getDependencies();
     }
 
-    Installer.install(packages, <span class="hljs-built_in">console</span>);
+    req.Installer.install(packages, <span class="hljs-built_in">console</span>);
 
     <span class="hljs-keyword">if</span> ( cli[<span class="hljs-string">'--save'</span>] &amp;&amp; cli[<span class="hljs-string">'&lt;package&gt;'</span>] ) {
         workspace.addDependency(cli[<span class="hljs-string">'&lt;package&gt;'</span>]);
@@ -64,7 +63,7 @@ a git repository. Otherwise we&#39;ll just clone them.</p></div></div><div class
 as if it were a package and commence with building.</p></div></div><div class="code"><div class="wrapper">} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>( cli.build ) {
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Building..."</span>);
 
-    <span class="hljs-keyword">var</span> workspace = <span class="hljs-keyword">new</span> Workspace();</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Run our build pipeline.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">var</span> jsBuildPipeline = pipelines
+    <span class="hljs-keyword">var</span> workspace = <span class="hljs-keyword">new</span> Workspace();</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Run our build pipeline.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">var</span> jsBuildPipeline = req.pipelines
         .JSBuildPipeline({
             environment: cli[<span class="hljs-string">'--environment'</span>] || workspace.getEnvironment(),
             environments: workspace.getEnvironments(),
@@ -86,10 +85,11 @@ results to stdout and stderr (in case of failure).</p></div></div><div class="co
     <span class="hljs-keyword">var</span> initStream;
 
     <span class="hljs-keyword">if</span> (cli[<span class="hljs-string">'--skip-build'</span>]) {
-        initStream = pipelines.BuiltClassesPipeline(workspace.getBuildDir());
+        initStream = req.pipelines.BuiltClassesPipeline(
+            workspace.getBuildDir());
 
     } <span class="hljs-keyword">else</span> {
-        initStream = pipelines
+        initStream = req.pipelines
             .BuildPipeline({
                 ignore: workspace.getIgnoreGlobs(),
                 packageRoot: workspace.package_root,
@@ -104,7 +104,7 @@ results to stdout and stderr (in case of failure).</p></div></div><div class="co
 
     } <span class="hljs-keyword">else</span> {
         initStream
-            .pipe(pipelines.TestPipeline({
+            .pipe(req.pipelines.TestPipeline({
                 web3: rc.data.environments[env].ethereum || <span class="hljs-string">'internal'</span>
             }));
     }
