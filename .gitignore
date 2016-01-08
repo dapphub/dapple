@@ -2,6 +2,7 @@
 *.sw*
 *bower_components*
 build
-dist
+pydapple/dist
 *.egg-info
 node_modules
+*.vim

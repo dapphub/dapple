@@ -1,5 +1,12 @@
 Usage:
+    dapple config
     dapple init
-    dapple build
+    dapple install [--save] [<package>]
+    dapple build [options]
     dapple chain
     dapple step
+    dapple test [options] [--skip-build]
+
+Options:
+    -e ENVIRONMENT, --environment ENVIRONMENT [default: evm]
+    -c DAPPLERC, --config DAPPLERC
