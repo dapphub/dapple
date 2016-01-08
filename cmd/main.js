@@ -83,11 +83,10 @@ if( cli.install ) {
         .JSBuildPipeline({
             environment: cli['--environment'] || workspace.getEnvironment(),
             environments: workspace.getEnvironments(),
-            packageRoot: workspace.package_root,
-            sourceRoot: workspace.getSourceDir(),
             ignore: workspace.getIgnoreGlobs(),
+            packageRoot: workspace.package_root,
             preprocessorVars: workspace.getPreprocessorVars(),
-            logger: console
+            sourceRoot: workspace.getSourceDir()
         });
 
     if (!jsBuildPipeline) return;
@@ -119,20 +118,21 @@ if( cli.install ) {
     } else {
         initStream = pipelines
             .BuildPipeline({
-            packageRoot: workspace.package_root,
-            sourceRoot: workspace.getSourceDir(),
-            ignore: workspace.getIgnoreGlobs(),
-            preprocessorVars: workspace.getPreprocessorVars(),
-            logger: console
-        }).pipe(workspace.getBuildDest());
+                ignore: workspace.getIgnoreGlobs(),
+                packageRoot: workspace.package_root,
+                preprocessorVars: workspace.getPreprocessorVars(),
+                sourceRoot: workspace.getSourceDir()
+            })
+            .pipe(workspace.getBuildDest());
     }
 
     if (!(env in rc.data.environments)) {
         console.error("Environment not defined: " + env);
 
     } else {
-        initStream.pipe(pipelines.TestPipeline({
-            web3: rc.data.environments[env].ethereum || 'internal'
-        }));
+        initStream
+            .pipe(pipelines.TestPipeline({
+                web3: rc.data.environments[env].ethereum || 'internal'
+            }));
     }
 }
