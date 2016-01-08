@@ -9,10 +9,16 @@
     static install(dependencies, logger) {
         <span class="hljs-keyword">if</span> (!logger) logger = <span class="hljs-built_in">console</span>;
 
-        fs.accessSync(<span class="hljs-string">'dapple_packages'</span>, fs.W_OK, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{
-            <span class="hljs-keyword">if</span> (!err) <span class="hljs-keyword">return</span>;
-            fs.mkdirSync(<span class="hljs-string">'dapple_packages'</span>);
-        });
+        <span class="hljs-keyword">try</span> {
+            fs.accessSync(<span class="hljs-string">'dapple_packages'</span>, fs.W_OK);
+        } <span class="hljs-keyword">catch</span> (e) {
+            <span class="hljs-keyword">try</span> {
+                fs.mkdirSync(<span class="hljs-string">'dapple_packages'</span>);
+            } <span class="hljs-keyword">catch</span> (e) {
+                logger.error(
+                    <span class="hljs-string">"Could not access or create dapple_packages: "</span> + e);
+            }
+        }
 
         <span class="hljs-keyword">if</span> ( <span class="hljs-built_in">Array</span>.isArray(dependencies) ) {
             <span class="hljs-keyword">let</span> newDependencies = {};

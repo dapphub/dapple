@@ -50,6 +50,7 @@
     "gulp-smake": "^0.2.2",
     "gulp-util": "^3.0.7",
     "inquirer": "^0.11.1",
+    "lazreq": "^0.1.1",
     "lodash": "^3.10.1",
     "mkdirp": "^0.5.1",
     "mocha": "^2.3.4",

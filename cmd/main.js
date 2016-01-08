@@ -4,31 +4,33 @@
 // This is the file that gets executed when you run `dapple`. It uses `docopt`
 // to parse the arguments passed in.
 
-var Builder = require("../lib/build");
-var DappleRCPrompter = require("../lib/dapplerc_prompter.js");
-var deasync = require('deasync');
+// Usage first.
+var fs = require('fs')
 var docopt = require('docopt');
-var fs = require('../lib/file.js');
-var Installer = require('../lib/installer.js');
-var inquirer = require('inquirer');
-var path = require("path");
-var pipelines = require("../lib/pipelines");
-var userHome = require('user-home');
-var VMTest = require("../lib/vmtest");
-var Workspace = require("../lib/workspace");
-
 var doc = fs.readFileSync(__dirname+"/docopt.txt").toString();
 var cli = docopt.docopt(doc);
+
+// These requires take a lot of time to import.
+var req = require('lazreq')({
+    DappleRCPrompter: "../lib/dapplerc_prompter.js",
+    deasync: 'deasync',
+    Installer: '../lib/installer.js',
+    inquirer: 'inquirer',
+    path: 'path',
+    pipelines: '../lib/pipelines.js'
+});
+
+var Workspace = require("../lib/workspace");
 var rc = Workspace.getDappleRC();
 
 if (cli.config || typeof(rc.path) === 'undefined') {
-    var homeRC = path.join(userHome, '.dapplerc');
+    var homeRC = req.path.join(userHome, '.dapplerc');
 
     var confirmed;
     var chosen = false;
     if (rc.path !== undefined && rc.path === homeRC) {
         console.log("You already have a .dapplerc in your home directory!");
-        inquirer.prompt([{
+        req.inquirer.prompt([{
             type: 'confirm',
             message: "Proceeding will overwrite that file. Proceed?",
             name: "confirmed",
@@ -37,10 +39,10 @@ if (cli.config || typeof(rc.path) === 'undefined') {
             chosen = true;
             confirmed = res.confirmed;
         })
-        deasync.loopWhile(function() {return !chosen;});
+        req.deasync.loopWhile(function() {return !chosen;});
 
         if (confirmed) {
-            Workspace.writeDappleRC(homeRC, DappleRCPrompter.prompt());
+            Workspace.writeDappleRC(homeRC, req.DappleRCPrompter.prompt());
         }
 
     } else {
@@ -63,7 +65,7 @@ if( cli.install ) {
         packages = workspace.getDependencies();
     }
 
-    Installer.install(packages, console);
+    req.Installer.install(packages, console);
 
     if ( cli['--save'] && cli['<package>'] ) {
         workspace.addDependency(cli['<package>']);
@@ -79,7 +81,7 @@ if( cli.install ) {
     var workspace = new Workspace();
 
     // Run our build pipeline.
-    var jsBuildPipeline = pipelines
+    var jsBuildPipeline = req.pipelines
         .JSBuildPipeline({
             environment: cli['--environment'] || workspace.getEnvironment(),
             environments: workspace.getEnvironments(),
@@ -113,10 +115,11 @@ if( cli.install ) {
     var initStream;
 
     if (cli['--skip-build']) {
-        initStream = pipelines.BuiltClassesPipeline(workspace.getBuildDir());
+        initStream = req.pipelines.BuiltClassesPipeline(
+            workspace.getBuildDir());
 
     } else {
-        initStream = pipelines
+        initStream = req.pipelines
             .BuildPipeline({
                 ignore: workspace.getIgnoreGlobs(),
                 packageRoot: workspace.package_root,
@@ -131,7 +134,7 @@ if( cli.install ) {
 
     } else {
         initStream
-            .pipe(pipelines.TestPipeline({
+            .pipe(req.pipelines.TestPipeline({
                 web3: rc.data.environments[env].ethereum || 'internal'
             }));
     }
