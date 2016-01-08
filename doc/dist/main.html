@@ -1,10 +1,11 @@
 <!DOCTYPE html><html lang="en"><head><title>main</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="main"><meta name="groc-project-path" content="cmd/main.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/cmd/main.js">cmd/main.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">
 "use strict"</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This is the file that gets executed when you run <code>dapple</code>. It uses <code>docopt</code>
-to parse the arguments passed in.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> Builder = <span class="hljs-built_in">require</span>(<span class="hljs-string">"../lib/build"</span>);
+to parse the arguments passed in.</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Usage first.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>)
+<span class="hljs-keyword">var</span> docopt = <span class="hljs-built_in">require</span>(<span class="hljs-string">'docopt'</span>);
+<span class="hljs-keyword">var</span> doc = fs.readFileSync(__dirname+<span class="hljs-string">"/docopt.txt"</span>).toString();
+<span class="hljs-keyword">var</span> cli = docopt.docopt(doc);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>These requires take a lot of time to import.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> Builder = <span class="hljs-built_in">require</span>(<span class="hljs-string">"../lib/build"</span>);
 <span class="hljs-keyword">var</span> DappleRCPrompter = <span class="hljs-built_in">require</span>(<span class="hljs-string">"../lib/dapplerc_prompter.js"</span>);
 <span class="hljs-keyword">var</span> deasync = <span class="hljs-built_in">require</span>(<span class="hljs-string">'deasync'</span>);
-<span class="hljs-keyword">var</span> docopt = <span class="hljs-built_in">require</span>(<span class="hljs-string">'docopt'</span>);
-<span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../lib/file.js'</span>);
 <span class="hljs-keyword">var</span> Installer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../lib/installer.js'</span>);
 <span class="hljs-keyword">var</span> inquirer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'inquirer'</span>);
 <span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">"path"</span>);
@@ -13,8 +14,6 @@ to parse the arguments passed in.</p></div></div><div class="code"><div class="w
 <span class="hljs-keyword">var</span> VMTest = <span class="hljs-built_in">require</span>(<span class="hljs-string">"../lib/vmtest"</span>);
 <span class="hljs-keyword">var</span> Workspace = <span class="hljs-built_in">require</span>(<span class="hljs-string">"../lib/workspace"</span>);
 
-<span class="hljs-keyword">var</span> doc = fs.readFileSync(__dirname+<span class="hljs-string">"/docopt.txt"</span>).toString();
-<span class="hljs-keyword">var</span> cli = docopt.docopt(doc);
 <span class="hljs-keyword">var</span> rc = Workspace.getDappleRC();
 
 <span class="hljs-keyword">if</span> (cli.config || <span class="hljs-keyword">typeof</span>(rc.path) === <span class="hljs-string">'undefined'</span>) {

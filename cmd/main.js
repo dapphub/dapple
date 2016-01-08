@@ -4,11 +4,16 @@
 // This is the file that gets executed when you run `dapple`. It uses `docopt`
 // to parse the arguments passed in.
 
+// Usage first.
+var fs = require('fs')
+var docopt = require('docopt');
+var doc = fs.readFileSync(__dirname+"/docopt.txt").toString();
+var cli = docopt.docopt(doc);
+
+// These requires take a lot of time to import.
 var Builder = require("../lib/build");
 var DappleRCPrompter = require("../lib/dapplerc_prompter.js");
 var deasync = require('deasync');
-var docopt = require('docopt');
-var fs = require('../lib/file.js');
 var Installer = require('../lib/installer.js');
 var inquirer = require('inquirer');
 var path = require("path");
@@ -17,8 +22,6 @@ var userHome = require('user-home');
 var VMTest = require("../lib/vmtest");
 var Workspace = require("../lib/workspace");
 
-var doc = fs.readFileSync(__dirname+"/docopt.txt").toString();
-var cli = docopt.docopt(doc);
 var rc = Workspace.getDappleRC();
 
 if (cli.config || typeof(rc.path) === 'undefined') {
