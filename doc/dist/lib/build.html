@@ -26,19 +26,31 @@
     }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Compiles the passed-in mapping of Solidity source paths to
 Solidity source code. Prefers a native <code>solc</code> installation
 if one is available. Fails over to a Javascript <code>solc</code>
-implementation if one is not.</p></div></div><div class="code"><div class="wrapper">    static buildSources(sources, logger) {
+implementation if one is not.</p></div></div><div class="code"><div class="wrapper">    static buildSources(sources, opts) {
         <span class="hljs-keyword">var</span> compiler = solc;
+        <span class="hljs-keyword">var</span> opts = _.assign({
+            logger: <span class="hljs-built_in">console</span>,
+            errorHandler: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{
+                <span class="hljs-keyword">throw</span> gutil.PluginError(<span class="hljs-string">"Dapple Build"</span>, err);
+            }
+        }, opts);
+
         <span class="hljs-keyword">if</span> (NativeCompiler.isAvailable()) {
-            logger.info(<span class="hljs-string">"Using local solc installation..."</span>);
+            opts.logger.info(<span class="hljs-string">"Using local solc installation..."</span>);
             compiler = NativeCompiler;
 
         } <span class="hljs-keyword">else</span> {
-            logger.info(<span class="hljs-string">"No local solc found. Failing over to JS compiler..."</span>);
+            opts.logger.info(<span class="hljs-string">"No local solc found. Failing over to JS compiler..."</span>);
         }
 
-        <span class="hljs-keyword">var</span> solc_out = compiler.compile({sources:sources});
+        <span class="hljs-keyword">var</span> solc_out = compiler.compile({
+            sources: sources,
+            errorHandler: opts.errorHandler,
+            logger: opts.logger
+        });
+
         <span class="hljs-keyword">if</span>( solc_out.errors ) {
-            <span class="hljs-keyword">throw</span> solc_out.errors;
+            <span class="hljs-keyword">return</span> opts.errorHandler(solc_out.errors);
         }
         <span class="hljs-keyword">return</span> solc_out;
     }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Filters out useless solc output</p></div></div><div class="code"><div class="wrapper">    static removeSolcClutter(sources) {
