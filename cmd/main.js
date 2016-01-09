@@ -17,14 +17,15 @@ var req = require('lazreq')({
     Installer: '../lib/installer.js',
     inquirer: 'inquirer',
     path: 'path',
-    pipelines: '../lib/pipelines.js'
+    pipelines: '../lib/pipelines.js',
+    userHome: 'user-home'
 });
 
 var Workspace = require("../lib/workspace");
 var rc = Workspace.getDappleRC();
 
 if (cli.config || typeof(rc.path) === 'undefined') {
-    var homeRC = req.path.join(userHome, '.dapplerc');
+    var homeRC = req.path.join(req.userHome, '.dapplerc');
 
     var confirmed;
     var chosen = false;
@@ -47,7 +48,7 @@ if (cli.config || typeof(rc.path) === 'undefined') {
 
     } else {
         console.log("No configuration found! Generating...");
-        Workspace.writeDappleRC(homeRC, DappleRCPrompter.prompt());
+        Workspace.writeDappleRC(homeRC, req.DappleRCPrompter.prompt());
     }
     rc = Workspace.getDappleRC();
 }
