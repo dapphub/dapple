@@ -1,5 +1,6 @@
 'use strict';
 
+var _ = require('lodash');
 var DappleRC = require('../lib/dapplerc.js');
 var expect = require("chai").expect;
 var assert = require("chai").assert;
@@ -26,9 +27,8 @@ describe("class Workspace", function() {
         done();
     });
 
-    it("initializes successfully in golden package", function(done) {
+    it("initializes successfully in golden package", function() {
         var workspace = new Workspace(testenv.golden_package_dir);
-        done();
     });
 
     it("findWorkspaceRoot returns undefined if it hits root", function(done) {
@@ -61,4 +61,31 @@ describe("class Workspace", function() {
 
         assert.deepEqual(rc.data, expectedRC, "did not create dapplerc");
     });
+
+    it('does not throw an exception if the dappfile is empty', function() {
+        var workspace = new Workspace(testenv.empty_package_dir);
+    });
+
+    it('run its getters on an empty dappfile without throwing', function() {
+        var workspace = new Workspace(testenv.empty_package_dir);
+        var getters = [
+            "getBuildDest",
+            "getBuildDir",
+            "getDappfilePath",
+            "getDependencies",
+            "getEnvironment",
+            "getEnvironments",
+            "getIgnoreGlobs",
+            "getPackagesDir",
+            "getPackagesPath",
+            "getPreprocessorVars",
+            "getSourceDir",
+            "getSourcePath",
+        ];
+
+        for (let getter of getters) {
+            assert.doesNotThrow(workspace[getter].bind(workspace),
+                                Error, getter + ' threw!');
+        }
+    })
 });
