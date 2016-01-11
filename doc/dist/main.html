@@ -9,14 +9,15 @@ to parse the arguments passed in.</p></div></div></div><div class="segment"><div
     Installer: <span class="hljs-string">'../lib/installer.js'</span>,
     inquirer: <span class="hljs-string">'inquirer'</span>,
     path: <span class="hljs-string">'path'</span>,
-    pipelines: <span class="hljs-string">'../lib/pipelines.js'</span>
+    pipelines: <span class="hljs-string">'../lib/pipelines.js'</span>,
+    userHome: <span class="hljs-string">'user-home'</span>
 });
 
 <span class="hljs-keyword">var</span> Workspace = <span class="hljs-built_in">require</span>(<span class="hljs-string">"../lib/workspace"</span>);
 <span class="hljs-keyword">var</span> rc = Workspace.getDappleRC();
 
 <span class="hljs-keyword">if</span> (cli.config || <span class="hljs-keyword">typeof</span>(rc.path) === <span class="hljs-string">'undefined'</span>) {
-    <span class="hljs-keyword">var</span> homeRC = req.path.join(userHome, <span class="hljs-string">'.dapplerc'</span>);
+    <span class="hljs-keyword">var</span> homeRC = req.path.join(req.userHome, <span class="hljs-string">'.dapplerc'</span>);
 
     <span class="hljs-keyword">var</span> confirmed;
     <span class="hljs-keyword">var</span> chosen = <span class="hljs-literal">false</span>;
@@ -39,7 +40,7 @@ to parse the arguments passed in.</p></div></div></div><div class="segment"><div
 
     } <span class="hljs-keyword">else</span> {
         <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"No configuration found! Generating..."</span>);
-        Workspace.writeDappleRC(homeRC, DappleRCPrompter.prompt());
+        Workspace.writeDappleRC(homeRC, req.DappleRCPrompter.prompt());
     }
     rc = Workspace.getDappleRC();
 }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If the user ran the <code>install</code> command, we&#39;re going to walk the dependencies
