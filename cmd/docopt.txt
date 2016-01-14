@@ -6,6 +6,7 @@ Usage:
     dapple chain
     dapple step
     dapple test [options] [--skip-build]
+    dapple new-test <class>
 
 Options:
     -e ENVIRONMENT, --environment ENVIRONMENT [default: evm]

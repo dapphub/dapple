@@ -22,6 +22,7 @@ var req = require('lazreq')({
 });
 
 var Workspace = require("../lib/workspace");
+var VMTest = require("../lib/vmtest");
 var rc = Workspace.getDappleRC();
 
 if (cli.config || typeof(rc.path) === 'undefined') {
@@ -139,4 +140,6 @@ if( cli.install ) {
                 web3: rc.data.environments[env].ethereum || 'internal'
             }));
     }
+} else if (cli['new-test']) {
+    VMTest.writeTestTemplate(cli['<class>']);
 }
