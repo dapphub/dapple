@@ -123,8 +123,6 @@ if( cli.install ) {
     }
     
     var initStream;
-    
-    console.log(nameFilter);
 
     if (cli['--skip-build']) {
         initStream = req.pipelines.BuiltClassesPipeline(
