@@ -113,8 +113,18 @@ if( cli.install ) {
 
     var workspace = new Workspace();
     var env = cli['--environment'] || workspace.getEnvironment();
-    var nameFilter = ( cli['-r'] && new RegExp( cli['<RegExp>'].toLowerCase() ) ) || undefined;
+    var nameFilter = undefined;
+    
+    if( cli['-r'] ) {
+        // if filter String contains upper case letters special regex chars,
+        // assume the filtering is case sensitive, otherwise its insensitive
+        nameFilter = new RegExp( cli['<RegExp>'],
+          /[A-Z\\\.\[\]\^\$\*\+\{\}\(\)\?\|]/.test(cli['<RegExp>'])?'':'i' );
+    }
+    
     var initStream;
+    
+    console.log(nameFilter);
 
     if (cli['--skip-build']) {
         initStream = req.pipelines.BuiltClassesPipeline(
