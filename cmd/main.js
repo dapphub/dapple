@@ -113,6 +113,7 @@ if( cli.install ) {
 
     var workspace = new Workspace();
     var env = cli['--environment'] || workspace.getEnvironment();
+    var nameFilter = ( cli['--name'] && new RegExp( cli['--name'].toLowerCase() ) ) || undefined;
     var initStream;
 
     if (cli['--skip-build']) {
@@ -136,7 +137,8 @@ if( cli.install ) {
     } else {
         initStream
             .pipe(req.pipelines.TestPipeline({
-                web3: rc.data.environments[env].ethereum || 'internal'
+                web3: rc.data.environments[env].ethereum || 'internal',
+                nameFilter: nameFilter 
             }));
     }
 }
