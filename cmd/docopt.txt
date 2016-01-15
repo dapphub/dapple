@@ -5,7 +5,7 @@ Usage:
     dapple build [options]
     dapple chain
     dapple step
-    dapple test [--name=<RegExp>] [options] [--skip-build]
+    dapple test [-r <RegExp>] [options] [--skip-build]
 
 Options:
     -e ENVIRONMENT, --environment ENVIRONMENT [default: evm]
