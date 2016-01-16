@@ -1,4 +1,5 @@
 import 'dapple/test.sol';
+import 'example.sol';
 
 contract ExampleTest is Test {
     Example e;
