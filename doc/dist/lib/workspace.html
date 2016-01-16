@@ -203,12 +203,12 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getDappfile(filePath).preprocessor_vars || {};
     }
 
-    getEnvironment() {
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.dappfile.environment || <span class="hljs-string">'default'</span>;
+    getEnvironment(filePath) {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getDappfile(filePath).environment || <span class="hljs-string">'default'</span>;
     }
 
-    getEnvironments() {
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.dappfile.environments;
+    getEnvironments(filePath) {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getDappfile(filePath).environments;
     }
 
     writeDappfile() {

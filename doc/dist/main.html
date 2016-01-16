@@ -66,8 +66,14 @@ as if it were a package and commence with building.</p></div></div><div class="c
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Building..."</span>);
 
     <span class="hljs-keyword">var</span> workspace = Workspace.atPackageRoot();
-    <span class="hljs-keyword">var</span> env = cli[<span class="hljs-string">'--environment'</span>] || workspace.getEnvironment();</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Run our build pipeline.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">var</span> jsBuildPipeline = req.pipelines
-        .JSBuildPipeline({environment: env});
+    <span class="hljs-keyword">var</span> env = cli[<span class="hljs-string">'--environment'</span>] || workspace.getEnvironment();
+    <span class="hljs-keyword">var</span> environments = workspace.getEnvironments();
+
+    <span class="hljs-keyword">if</span> (env &amp;&amp; environments &amp;&amp; !(env <span class="hljs-keyword">in</span> environments)) {
+        <span class="hljs-built_in">console</span>.error(<span class="hljs-string">"Could not find environment in dappfile: "</span> + env);
+        <span class="hljs-keyword">return</span>;
+    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Run our build pipeline.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">var</span> jsBuildPipeline = req.pipelines
+        .JSBuildPipeline({environment: env, environments: environments});
 
     <span class="hljs-keyword">if</span> (!jsBuildPipeline) <span class="hljs-keyword">return</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Write output to filesystem.</p></div></div><div class="code"><div class="wrapper">    jsBuildPipeline.pipe(req.vinyl.dest(Workspace.findBuildPath()));</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If they ran the <code>init</code> command, we just set up the current directory as a
 Dapple package and exit.</p></div></div><div class="code"><div class="wrapper">} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cli.init) {
@@ -78,6 +84,12 @@ results to stdout and stderr (in case of failure).</p></div></div><div class="co
 
     <span class="hljs-keyword">var</span> workspace = Workspace.atPackageRoot();
     <span class="hljs-keyword">var</span> env = cli[<span class="hljs-string">'--environment'</span>] || workspace.getEnvironment();
+    <span class="hljs-keyword">var</span> nameFilter = <span class="hljs-literal">undefined</span>;
+
+    <span class="hljs-keyword">if</span>( cli[<span class="hljs-string">'-r'</span>] ) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>if filter String contains upper case letters special regex chars,
+assume the filtering is case sensitive, otherwise its insensitive</p></div></div><div class="code"><div class="wrapper">        nameFilter = <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>( cli[<span class="hljs-string">'&lt;RegExp&gt;'</span>],
+          <span class="hljs-regexp">/[A-Z\\\.\[\]\^\$\*\+\{\}\(\)\?\|]/</span>.test(cli[<span class="hljs-string">'&lt;RegExp&gt;'</span>])?<span class="hljs-string">''</span>:<span class="hljs-string">'i'</span> );
+    }
 
     <span class="hljs-keyword">var</span> initStream;
     <span class="hljs-keyword">if</span> (cli[<span class="hljs-string">'--skip-build'</span>]) {
@@ -98,7 +110,8 @@ results to stdout and stderr (in case of failure).</p></div></div><div class="co
     } <span class="hljs-keyword">else</span> {
         initStream
             .pipe(req.pipelines.TestPipeline({
-                web3: rc.data.environments[env].ethereum || <span class="hljs-string">'internal'</span>
+                web3: rc.data.environments[env].ethereum || <span class="hljs-string">'internal'</span>,
+                nameFilter: nameFilter
             }));
     }
 }</div></div></div></div></body></html>

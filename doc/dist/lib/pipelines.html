@@ -11,11 +11,10 @@
 <span class="hljs-keyword">var</span> Workspace = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../lib/workspace.js'</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This file contains collections of streams that have been packaged up into
 discreet &quot;pipelines&quot; which are ultimately themselves streams. This helps keep
 <code>main.js</code> clean and easy to read.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> _fillOptionDefaults = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">opts</span>) </span>{
-    <span class="hljs-keyword">if</span> (!opts) opts = {};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>TODO: re-institute CLI overrides
-var defaults = {
-    environment: workspace.getEnvironment(),
-    environments: workspace.getEnvironments(),
-};</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">var</span> mapAwareLogger = <span class="hljs-keyword">new</span> loggers.MapAwareLogger();
+    <span class="hljs-keyword">if</span> (!opts) opts = {};
+
+    <span class="hljs-keyword">var</span> mapAwareLogger = <span class="hljs-keyword">new</span> loggers.MapAwareLogger();
+
     <span class="hljs-keyword">var</span> defaults = {
         errorHandler: mapAwareLogger.getErrorHandler(),
         logger: <span class="hljs-keyword">new</span> loggers.Logger(),
@@ -52,14 +51,6 @@ given package.</p></div></div><div class="code"><div class="wrapper"><span class
         streams.build(opts),
         solidityFilter.restore);
 };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Builds JS-specific output.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> JSBuildPipeline = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">opts</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Defaults</p></div></div><div class="code"><div class="wrapper">    opts = _fillOptionDefaults(opts);
-
-    <span class="hljs-keyword">if</span> (opts.environment &amp;&amp; opts.environments
-        &amp;&amp; !(opts.environment <span class="hljs-keyword">in</span> opts.environments))
-    {
-        opts.logger.error(<span class="hljs-string">"Could not find specified environment in dappfile: "</span>
-                          + opts.environment);
-        <span class="hljs-keyword">return</span>;
-    }
     <span class="hljs-keyword">return</span> Combine(BuildPipeline(opts), streams.js_postprocess(opts));
 };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Grabs pre-built contracts from build directory.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> BuiltClassesPipeline = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">buildDir</span>) </span>{
     <span class="hljs-keyword">return</span> Combine(req.vinyl.src([buildDir + <span class="hljs-string">'/classes.json'</span>]), req.buffer());
