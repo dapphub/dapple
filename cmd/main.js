@@ -82,10 +82,16 @@ if( cli.install ) {
 
     var workspace = Workspace.atPackageRoot();
     var env = cli['--environment'] || workspace.getEnvironment();
+    var environments = workspace.getEnvironments();
+
+    if (env && environments && !(env in environments)) {
+        console.error("Could not find environment in dappfile: " + env);
+        return;
+    }
 
     // Run our build pipeline.
     var jsBuildPipeline = req.pipelines
-        .JSBuildPipeline({environment: env});
+        .JSBuildPipeline({environment: env, environments: environments});
 
     if (!jsBuildPipeline) return;
 
