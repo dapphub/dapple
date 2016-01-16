@@ -11,53 +11,35 @@
 <span class="hljs-keyword">const</span> CONTRACTMAP_KEY = <span class="hljs-string">'__dapplecontractmap__'</span>;
 
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Linker</span> </span>{
-    static link(sources) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>TODO: Link contracts. We&#39;re mostly there, but it needs a little work
+    static link(workspace, sources) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>TODO: Link contracts. We&#39;re mostly there, but it needs a little work
 when it comes to handling collisions upon converting back to legible
-names.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.linkContracts(<span class="hljs-keyword">this</span>.linkImports(sources));
+names.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.linkContracts(<span class="hljs-keyword">this</span>.linkImports(workspace, sources));
     }
 
-    static linkImports(_sources) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Prevent accidental mutation.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">var</span> sources = _.cloneDeep(_sources);
+    static linkImports(workspace, _sources) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Prevent accidental mutation.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">var</span> sources = _.cloneDeep(_sources);
 
         <span class="hljs-keyword">var</span> linked = {};
-        linked[SOURCEMAP_KEY] = {};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Find all Dapple packages and wrap them in Workspace objects.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">var</span> workspaces = <span class="hljs-keyword">this</span>.findWorkspaces(sources);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Sort package root paths from deepest to shallowest. This will allow
-us to efficiently find the appropriate package root given any file
-path by simply walking the array and taking the first package root
-that matches the beginning of the file path.
-This works because package roots are always separated by the same
-depth. (I.e.,
-package1/dapple_packages/package2/dapple_packages/package...)
-If this were not true, we&#39;d have to create a tree and actually
-calculate depths.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">var</span> sortedWorkspacePaths = _.sortBy(_.keys(workspaces), <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">p</span>) </span>{
-            <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span> * p.split(<span class="hljs-string">'/'</span>).length;
-        });</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Make a map of file paths to package root paths that can later
-be used to look up the relevant regexes and workspace objects
-for any given file.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">var</span> workspacePaths = _.zipObject(_.map(_.keys(sources), <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">p</span>) </span>{
-            <span class="hljs-keyword">return</span> [p, _.find(sortedWorkspacePaths, (wp) =&gt; p.startsWith(wp))];
-        }));</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Create a function that can resolve import paths for each source file.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">var</span> resolveImport = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> sourcePath, importPath </span>) </span>{
+        linked[SOURCEMAP_KEY] = {};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Create a function that can resolve import paths for each source file.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">var</span> resolveImport = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> sourcePath, importPath </span>) </span>{
             <span class="hljs-keyword">if</span> (importPath <span class="hljs-keyword">in</span> sources) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Fully qualified import path.</p></div></div><div class="code"><div class="wrapper">                <span class="hljs-keyword">return</span> importPath;
             }
 
-            <span class="hljs-keyword">var</span> workspace = workspaces[workspacePaths[sourcePath]];
-
             <span class="hljs-keyword">if</span> (!importPath.startsWith(<span class="hljs-string">'./'</span>)) {
                 <span class="hljs-keyword">var</span> importParts = importPath.split(path.sep);
-                <span class="hljs-keyword">var</span> packageRootPath = path.join(
-                    workspace.getPackagesPath(), importParts[<span class="hljs-number">0</span>]);
+                <span class="hljs-keyword">var</span> packagePath = path.join(
+                    workspace.getPackageRoot(sourcePath),
+                    workspace.getPackagesDir(sourcePath),
+                    importParts[<span class="hljs-number">0</span>]);
+                <span class="hljs-keyword">var</span> resolvedPath = path.join.apply(path,
+                    [workspace.getSourcePath(packagePath)]
+                    .concat(importParts.slice(<span class="hljs-number">1</span>)));
 
-                <span class="hljs-keyword">if</span> (packageRootPath <span class="hljs-keyword">in</span> workspaces) {
-                    <span class="hljs-keyword">var</span> packageWorkspace = workspaces[packageRootPath];
-                    <span class="hljs-keyword">var</span> packagePath = path.join.apply(
-                        path, [packageWorkspace.getSourcePath()]
-                                .concat(importParts.slice(<span class="hljs-number">1</span>)));
-
-                    <span class="hljs-keyword">if</span> (packagePath <span class="hljs-keyword">in</span> sources) {
-                        <span class="hljs-keyword">return</span> packagePath;
-                    }
+                <span class="hljs-keyword">if</span> (resolvedPath <span class="hljs-keyword">in</span> sources) {
+                    <span class="hljs-keyword">return</span> resolvedPath;
                 }
             }
 
             <span class="hljs-keyword">var</span> localPath = path.normalize(
-                path.join(workspace.getSourcePath(), importPath));
+                path.join(workspace.getSourcePath(sourcePath), importPath));
 
             <span class="hljs-keyword">if</span> (localPath <span class="hljs-keyword">in</span> sources) {
                 <span class="hljs-keyword">return</span> localPath;
@@ -93,7 +75,7 @@ being imported.</p></div></div><div class="code"><div class="wrapper">          
         <span class="hljs-keyword">return</span> linked;
     }
 
-    static linkContracts(sources) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Link contract names.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">var</span> linked = _.clone(sources);
+    static linkContracts(sources) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Link contract names.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">var</span> linked = _.cloneDeep(sources);
         linked[CONTRACTMAP_KEY] = {};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If we were given a sourcemap, we&#39;re going to want to use it.
 In particular, we&#39;re going to want to have a concept of each contract
 file&#39;s package depth. This will let us provide a mapping of which
@@ -187,15 +169,6 @@ occluded by a naming collision will retain its hashed name.</p></div></div><div 
         }
 
         <span class="hljs-keyword">return</span> linked;
-    }
-
-    static findWorkspaces(sources) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Iterate over the paths given and create a Workspace for every Dapple
-package found, as indicated by the presence of a dappfile.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">var</span> dappfilePaths = _.filter(
-            _.keys(sources), (p) =&gt; path.basename(p) == <span class="hljs-string">'dappfile'</span>)
-
-        <span class="hljs-keyword">return</span> _.zipObject(_.map(dappfilePaths, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">p</span>) </span>{
-            <span class="hljs-keyword">return</span> [path.dirname(p), <span class="hljs-keyword">new</span> Workspace(path.dirname(p))];
-        }));
     }
 
     static uniquifyContractName(filepath, name) {

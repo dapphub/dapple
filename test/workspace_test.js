@@ -14,7 +14,7 @@ var dircompare = require("dir-compare");
 
 
 describe("class Workspace", function() {
-    it(" .initialize(emptydir) matches golden version", function() {
+    it(".initialize(emptydir) matches golden version", function() {
         var dir = fs.tmpdir();
         Workspace.initialize(dir)
         //fs.copySync(dir, testenv.golden.INIT_EMPTY_DIR); //  Create a new golden record
@@ -22,26 +22,66 @@ describe("class Workspace", function() {
         assert( diff.same );
     });
 
-    it("finds dappfile in subdirectory", function(done) {
-        assert( Workspace.findWorkspaceRoot(path.join(testenv.golden_package_dir, "subdirectory")) );
-        done();
+    it("initializes successfully in golden package", function(done) {
+        testenv.get_source_files(
+            testenv.golden_package_dir, function (files) {
+                var workspace = new Workspace(_.values(files));
+                done();
+            });
     });
 
-    it("initializes successfully in golden package", function() {
-        var workspace = new Workspace(testenv.golden_package_dir);
+    it("can initialize around a single dappfile, as opposed to having to" +
+        " take in all the dappfiles at once", function() {
+            var workspace = Workspace.atPackageRoot(testenv.golden_package_dir);
+            var expectedDappfile = fs.readYamlSync(path.join(
+                    testenv.golden_package_dir, 'dappfile'));
+            assert.deepEqual(workspace.dappfile, expectedDappfile);
     });
 
-    it("findWorkspaceRoot returns undefined if it hits root", function(done) {
-        var dir = fs.tmpdir();
-        assert.equal(undefined, Workspace.findWorkspaceRoot(dir));
-        done();
+    describe("findPackageRoot", function() {
+        it("may take an argument instead of assuming the" +
+           " search should start in the current working directory",
+            function () {
+                let subdir = path.join(
+                    testenv.golden_package_dir, "subdirectory");
+                assert.equal(Workspace.findPackageRoot(subdir),
+                             testenv.golden_package_dir);
+           });
+
+        it("recognizes the lowest parent directory with a dappfile" +
+           " as the package root",
+            function() {
+                let pkgdir = path.join(
+                    testenv.golden_package_dir, "dapple_packages", "pkg");
+                let subdir = path.join(pkgdir, "src", "sol");
+                assert.equal(Workspace.findPackageRoot(subdir), pkgdir);
+        });
+
+        it("returns undefined if it hits root", function() {
+            var dir = fs.tmpdir();
+            assert.equal(undefined, Workspace.findPackageRoot(dir));
+        });
+
+        it.skip("returns undefined if it hits .dapplerc", function() {
+            var dir = "TODO";
+            var workspace = new Workspace(testenv.golden_package_dir);
+            assert.equal( undefined, workspace.findPackageRoot(dir) );
+        });
     });
 
-    it.skip("findWorkspaceRoot returns undefined if it hits .dapplerc", function(done) {
-        var dir = "TODO";
-        var workspace = new Workspace(testenv.golden_package_dir);
-        assert.equal( undefined, workspace.findWorkspaceRoot(dir) );
-        done();
+    describe("findBuildPath", function() {
+        it("may take an argument instead of assuming the" +
+           " search should start in the current working directory",
+           function () {
+               assert.equal(
+                   Workspace.findBuildPath(testenv.golden_package_dir),
+                   path.join(testenv.golden_package_dir, 'build'));
+           });
+
+        it("returns undefined if it hits root", function() {
+            var dir = fs.tmpdir();
+            assert.equal(undefined, Workspace.findBuildPath(dir));
+        });
     });
 
     it('knows how to load .dapplerc', function() {
@@ -69,7 +109,6 @@ describe("class Workspace", function() {
     it('run its getters on an empty dappfile without throwing', function() {
         var workspace = new Workspace(testenv.empty_package_dir);
         var getters = [
-            "getBuildDest",
             "getBuildDir",
             "getDappfilePath",
             "getDependencies",
@@ -87,5 +126,21 @@ describe("class Workspace", function() {
             assert.doesNotThrow(workspace[getter].bind(workspace),
                                 Error, getter + ' threw!');
         }
-    })
+    });
+
+    it('allows setting subordinate dappfiles, even empty ones', function() {
+        var workspace = new Workspace(testenv.golden_package_dir);
+        workspace.addSubDappfile(process.cwd(), {});
+    });
+
+    it('allows setting sub-dappfiles with ignore patterns', function() {
+        var cwd = process.cwd();
+        var workspace = new Workspace(testenv.golden_package_dir);
+        var prevIgnores = workspace.getIgnoreGlobs();
+        workspace.addSubDappfile(cwd, {ignore: ['foo/bar.sol']});
+        assert.deepEqual(
+            _.difference(workspace.getIgnoreGlobs(), prevIgnores), [
+                path.join(cwd, 'foo/bar.sol')
+            ]);
+    });
 });

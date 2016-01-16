@@ -18,7 +18,8 @@ var req = require('lazreq')({
     inquirer: 'inquirer',
     path: 'path',
     pipelines: '../lib/pipelines.js',
-    userHome: 'user-home'
+    userHome: 'user-home',
+    vinyl: 'vinyl-fs'
 });
 
 var Workspace = require("../lib/workspace");
@@ -33,7 +34,7 @@ if (cli.config || typeof(rc.path) === 'undefined') {
         console.log("You already have a .dapplerc in your home directory!");
         req.inquirer.prompt([{
             type: 'confirm',
-            message: "Proceeding will overwrite that file. Proceed?",
+            message: "Proceeding will overwrite ~/.dapplerc. Proceed?",
             name: "confirmed",
             default: false
         }], function(res) {
@@ -57,7 +58,7 @@ if (cli.config || typeof(rc.path) === 'undefined') {
 // in the dappfile and pull them in as git submodules, if the current package is
 // a git repository. Otherwise we'll just clone them.
 if( cli.install ) {
-    var workspace = new Workspace();
+    var workspace = Workspace.atPackageRoot();
 
     var packages;
     if ( cli['<package>'] ) {
@@ -79,23 +80,23 @@ if( cli.install ) {
 } else if( cli.build ) {
     console.log("Building...");
 
-    var workspace = new Workspace();
+    var workspace = Workspace.atPackageRoot();
+    var env = cli['--environment'] || workspace.getEnvironment();
+    var environments = workspace.getEnvironments();
+
+    if (env && environments && !(env in environments)) {
+        console.error("Could not find environment in dappfile: " + env);
+        return;
+    }
 
     // Run our build pipeline.
     var jsBuildPipeline = req.pipelines
-        .JSBuildPipeline({
-            environment: cli['--environment'] || workspace.getEnvironment(),
-            environments: workspace.getEnvironments(),
-            ignore: workspace.getIgnoreGlobs(),
-            packageRoot: workspace.package_root,
-            preprocessorVars: workspace.getPreprocessorVars(),
-            sourceRoot: workspace.getSourceDir()
-        });
+        .JSBuildPipeline({environment: env, environments: environments});
 
     if (!jsBuildPipeline) return;
 
     // Write output to filesystem.
-    jsBuildPipeline.pipe(workspace.getBuildDest());
+    jsBuildPipeline.pipe(req.vinyl.dest(Workspace.findBuildPath()));
 
 
 // If they ran the `init` command, we just set up the current directory as a
@@ -111,32 +112,28 @@ if( cli.install ) {
 } else if (cli.test) {
     console.log("Testing...");
 
-    var workspace = new Workspace();
+    var workspace = Workspace.atPackageRoot();
     var env = cli['--environment'] || workspace.getEnvironment();
     var nameFilter = undefined;
-    
+
     if( cli['-r'] ) {
         // if filter String contains upper case letters special regex chars,
         // assume the filtering is case sensitive, otherwise its insensitive
         nameFilter = new RegExp( cli['<RegExp>'],
           /[A-Z\\\.\[\]\^\$\*\+\{\}\(\)\?\|]/.test(cli['<RegExp>'])?'':'i' );
     }
-    
-    var initStream;
 
+    var initStream;
     if (cli['--skip-build']) {
         initStream = req.pipelines.BuiltClassesPipeline(
-            workspace.getBuildDir());
+            req.vinyl.dest(Workspace.findBuildPath()));
 
     } else {
         initStream = req.pipelines
             .BuildPipeline({
-                ignore: workspace.getIgnoreGlobs(),
-                packageRoot: workspace.package_root,
-                preprocessorVars: workspace.getPreprocessorVars(),
-                sourceRoot: workspace.getSourceDir()
+                packageRoot: Workspace.findPackageRoot()
             })
-            .pipe(workspace.getBuildDest());
+            .pipe(req.vinyl.dest(Workspace.findBuildPath()));
     }
 
     if (!(env in rc.data.environments)) {
@@ -146,7 +143,7 @@ if( cli.install ) {
         initStream
             .pipe(req.pipelines.TestPipeline({
                 web3: rc.data.environments[env].ethereum || 'internal',
-                nameFilter: nameFilter 
+                nameFilter: nameFilter
             }));
     }
 }

@@ -7,7 +7,6 @@ var Linker = require('../lib/linker.js');
 var testenv = require('./testenv');
 var path = require('path');
 var SourcePipeline = require('../lib/pipelines.js').SourcePipeline;
-var through = require('through2');
 var Web3 = require('web3');
 var Web3Factory = require('../lib/workspace.js');
 var Workspace = require('../lib/workspace.js');
@@ -15,38 +14,20 @@ var Workspace = require('../lib/workspace.js');
 describe("Linker", function() {
     var web3 = new Web3();
     var sources = {};
-    var workspace = new Workspace(testenv.linker_package_dir);
+    var workspace;
 
-    var source_path = workspace.getSourcePath();
-    var pkg_contract_hash = Linker.uniquifyContractName(
-        path.join(source_path, "contract.sol"), "Contract");
-
-    var dapple_packages = workspace.getPackagesPath();
-    var pkg_workspace = new Workspace(path.join(dapple_packages, "pkg"));
-    var dapple_pkg_contract_hash = Linker.uniquifyContractName(
-        path.join(pkg_workspace.getSourcePath(), "contract.sol"), "Contract");
-
-    // Grab all the source files first.
     before(function (done) {
-        var workspace = new Workspace(testenv.linker_package_dir);
-        SourcePipeline({
-            packageRoot: workspace.package_root,
-            sourceRoot: workspace.getSourcePath(),
-            ignore: ['**/src.linked/**']
-        })
-            .pipe(through.obj(function(file, enc, cb) {
-                sources[file.path] = String(file.contents);
-                cb();
-
-            }, function (cb) {
-                done();
-                cb();
-            }));
+        testenv.get_source_files(testenv.linker_package_dir, function (files) {
+            sources = _.object(_.map(
+                    files, (file) => [file.path, String(file.contents)]));
+            workspace = new Workspace(_.values(files));
+            done();
+        });
     });
 
     it("converts all source paths to hashes based on file contents",
        function() {
-           var linkedSources = Linker.linkImports(sources);
+           var linkedSources = Linker.linkImports(workspace, sources);
            var sourcefileCount = 0;
 
            for (let path of _.keys(linkedSources)) {
@@ -63,7 +44,7 @@ describe("Linker", function() {
        });
 
     it("changes all import statements to point to hashpaths", function() {
-       var linkedSources = Linker.linkImports(sources);
+       var linkedSources = Linker.linkImports(workspace, sources);
        var importRE = /import ['|"]([^'|"]+)['|"]/g;
        var importsChecked = 0;
 
@@ -79,12 +60,12 @@ describe("Linker", function() {
     });
 
     it("includes a source map for linked imports", function() {
-       var linkedSources = Linker.linkImports(sources);
+       var linkedSources = Linker.linkImports(workspace, sources);
        assert(Linker.SOURCEMAP_KEY in linkedSources);
     });
 
     it("replaces contract names with hashes", function() {
-        var linkedSources = Linker.link(sources);
+        var linkedSources = Linker.link(workspace, sources);
         linkedSources[Linker.SOURCEMAP_KEY] = JSON.parse(
             linkedSources[Linker.SOURCEMAP_KEY]);
 
@@ -105,7 +86,7 @@ describe("Linker", function() {
             'linker_test_package/src/sol/pkg/contract.sol');
 
         var template = _.template(fs.readFileSync(path.join(
-            workspace.package_root, "src.linked",
+            workspace.getPackageRoot(), "src.linked",
             "sol", "linker_example.sol"), {encoding: 'utf8'}))
 
         var expectedOutput = template({
@@ -122,12 +103,4 @@ describe("Linker", function() {
         var example_hash = getHashpath('/linker_example.sol');
         assert.equal(linkedSources[example_hash], expectedOutput);
     });
-
-    it("finds workspaces and their root paths", function() {
-        assert.deepEqual(
-            _.keys(Linker.findWorkspaces(sources)),
-            ['/home/dev/devenv/dapple/test/_fixtures/linker_test_package',
-             '/home/dev/devenv/dapple/test/_fixtures/linker_test_package/dapple_packages/pkg'
-            ]);
-    })
 });
