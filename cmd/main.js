@@ -108,6 +108,14 @@ if( cli.install ) {
 
     var workspace = Workspace.atPackageRoot();
     var env = cli['--environment'] || workspace.getEnvironment();
+    var nameFilter = undefined;
+
+    if( cli['-r'] ) {
+        // if filter String contains upper case letters special regex chars,
+        // assume the filtering is case sensitive, otherwise its insensitive
+        nameFilter = new RegExp( cli['<RegExp>'],
+          /[A-Z\\\.\[\]\^\$\*\+\{\}\(\)\?\|]/.test(cli['<RegExp>'])?'':'i' );
+    }
 
     var initStream;
     if (cli['--skip-build']) {
@@ -128,7 +136,8 @@ if( cli.install ) {
     } else {
         initStream
             .pipe(req.pipelines.TestPipeline({
-                web3: rc.data.environments[env].ethereum || 'internal'
+                web3: rc.data.environments[env].ethereum || 'internal',
+                nameFilter: nameFilter
             }));
     }
 }
