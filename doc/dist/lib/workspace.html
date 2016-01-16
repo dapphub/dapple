@@ -10,6 +10,8 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
 "use strict"</span>;
 
 <span class="hljs-keyword">var</span> req = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lazreq'</span>)({
+    _: <span class="hljs-string">'lodash'</span>,
+    File: <span class="hljs-string">'vinyl'</span>,
     vinyl: <span class="hljs-string">'vinyl-fs'</span>
 })
 
@@ -17,19 +19,31 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
 <span class="hljs-keyword">var</span> DappleRC = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../lib/dapplerc.js'</span>);
 <span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./file"</span>);
 <span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">"path"</span>);
-<span class="hljs-keyword">var</span> readyaml = <span class="hljs-built_in">require</span>(<span class="hljs-string">"read-yaml"</span>);
+<span class="hljs-keyword">var</span> yaml = <span class="hljs-built_in">require</span>(<span class="hljs-string">"js-yaml"</span>);
 
 <span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Workspace</span> </span>{
 
-    constructor(wsPath) {
-        <span class="hljs-keyword">if</span>( wsPath === <span class="hljs-literal">undefined</span> ) {
-            wsPath = process.cwd();
+    constructor(sources) {
+        <span class="hljs-keyword">var</span> _ = req._;
+        <span class="hljs-keyword">var</span> dappfiles = _.filter(
+            sources, (file) =&gt; path.basename(file.path) == <span class="hljs-string">'dappfile'</span>);
+
+        <span class="hljs-keyword">this</span>.sorted_dappfiles = _.sortBy(dappfiles, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">file</span>) </span>{
+            <span class="hljs-keyword">return</span> file.path.split(<span class="hljs-string">'/'</span>).length;
+        });
+
+        <span class="hljs-keyword">this</span>._dappfile = {};
+        <span class="hljs-keyword">this</span>.package_root = process.cwd();
+        <span class="hljs-keyword">if</span> (dappfiles.length &gt; <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">this</span>._dappfile = yaml.safeLoad(
+                    <span class="hljs-built_in">String</span>(<span class="hljs-keyword">this</span>.sorted_dappfiles[<span class="hljs-number">0</span>].contents));
+            <span class="hljs-keyword">this</span>.package_root = path.dirname(<span class="hljs-keyword">this</span>.sorted_dappfiles[<span class="hljs-number">0</span>].path);
         }
-        <span class="hljs-keyword">this</span>.package_root = Workspace.findWorkspaceRoot(wsPath);
         <span class="hljs-keyword">if</span>( <span class="hljs-keyword">this</span>.package_root === <span class="hljs-literal">undefined</span> ) {
             <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Couldn't find workspace. Use `dapple init`"</span>);
         }
-        <span class="hljs-keyword">this</span>._dappfile = <span class="hljs-keyword">this</span>.loadDappfile();
+        <span class="hljs-keyword">this</span>.subDappfiles = _.object(_.map(<span class="hljs-keyword">this</span>.sorted_dappfiles,
+            (file) =&gt; [file.path, yaml.safeLoad(<span class="hljs-built_in">String</span>(file.contents))]));
     }
 
     static initialize(root_dir) {
@@ -42,7 +56,24 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
         }
     }
 
-    static findWorkspaceRoot(command_dir) {
+    static atPackageRoot(root) {
+        <span class="hljs-keyword">if</span> (!root) {
+            root = <span class="hljs-keyword">this</span>.findPackageRoot();
+        }
+
+        <span class="hljs-keyword">let</span> file = <span class="hljs-keyword">new</span> req.File({
+            path: <span class="hljs-string">'dappfile'</span>,
+            base: root,
+            contents: fs.readFileSync(path.join(root, <span class="hljs-string">'dappfile'</span>))
+        });
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Workspace([file]);
+    }
+
+    static findPackageRoot(command_dir) {
+        <span class="hljs-keyword">if</span>( command_dir === <span class="hljs-literal">undefined</span> ) {
+            command_dir = process.cwd();
+        }
+
         <span class="hljs-keyword">var</span> location = command_dir;
         <span class="hljs-keyword">do</span> {
             <span class="hljs-keyword">var</span> dappfile_path = path.join(location, constants.DAPPFILE_FILENAME );
@@ -52,6 +83,17 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
             location = path.join(location, <span class="hljs-string">".."</span>);
         } <span class="hljs-keyword">while</span>( location != <span class="hljs-string">"/"</span> );
         <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
+    }
+
+    static findBuildPath(command_dir) {
+        <span class="hljs-keyword">let</span> root = <span class="hljs-keyword">this</span>.findPackageRoot(command_dir);
+        <span class="hljs-keyword">if</span> (!root) {
+            <span class="hljs-keyword">return</span> root;
+        }
+
+        <span class="hljs-keyword">let</span> dappfile = fs.readYamlSync(path.join(root, <span class="hljs-string">'dappfile'</span>)) || {};
+        <span class="hljs-keyword">let</span> layout = dappfile.layout || {};
+        <span class="hljs-keyword">return</span> path.join(root, layout.build_dir);
     }
 
     static getDappleRC(opts) {
@@ -66,8 +108,41 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._dappfile || {};
     }
 
-    getLayout() {
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.dappfile.layout || {};
+    getDappfile(filePath) {
+        <span class="hljs-keyword">var</span> dappfile;
+        <span class="hljs-keyword">if</span> (filePath) {
+            dappfile = <span class="hljs-keyword">this</span>.subDappfiles[<span class="hljs-keyword">this</span>.getDappfilePath(filePath)];
+        }
+        <span class="hljs-keyword">if</span> (!dappfile) {
+             dappfile = <span class="hljs-keyword">this</span>.dappfile;
+        }
+        <span class="hljs-keyword">return</span> dappfile;
+    }
+
+    getDappfilePath(filePath) {
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.sorted_dappfiles || <span class="hljs-keyword">this</span>.sorted_dappfiles.length == <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">return</span>;
+        }
+
+        <span class="hljs-keyword">if</span> (!filePath) {
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.sorted_dappfiles[<span class="hljs-number">0</span>].path;
+        }
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i=<span class="hljs-keyword">this</span>.sorted_dappfiles.length-<span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i -= <span class="hljs-number">1</span>) {
+            <span class="hljs-keyword">if</span> (filePath.startsWith(path.dirname(
+                            <span class="hljs-keyword">this</span>.sorted_dappfiles[i].path))) {
+                <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.sorted_dappfiles[i].path;
+            }
+        }
+    }
+
+    getPackageRoot(filePath) {
+        <span class="hljs-keyword">var</span> dappfilePath = <span class="hljs-keyword">this</span>.getDappfilePath(filePath);
+        <span class="hljs-keyword">return</span> dappfilePath ? path.dirname(dappfilePath) : process.cwd();
+    }
+
+    getLayout(filePath) {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getDappfile(filePath).layout || {};
     }
 
     getBuildDir() {
@@ -75,42 +150,57 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
                          <span class="hljs-keyword">this</span>.getLayout().build_dir || <span class="hljs-string">'build'</span>);
     }
 
-    getBuildDest() {
-        <span class="hljs-keyword">return</span> req.vinyl.dest(<span class="hljs-keyword">this</span>.getBuildDir());
+    getSourceDir(filePath) {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getLayout(filePath).sol_sources;
     }
 
-    getSourceDir() {
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getLayout().sol_sources;
-    }
+    getSourcePath(filePath) {
+        <span class="hljs-keyword">var</span> sourceRoot = <span class="hljs-keyword">this</span>.getPackageRoot(filePath);
 
-    getSourcePath() {
-        <span class="hljs-keyword">var</span> sourceRoot = <span class="hljs-keyword">this</span>.package_root;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.getLayout().sol_sources) {
-            sourceRoot = path.join(sourceRoot, <span class="hljs-keyword">this</span>.getSourceDir());
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.getSourceDir(filePath)) {
+            sourceRoot = path.join(sourceRoot, <span class="hljs-keyword">this</span>.getSourceDir(filePath));
         }
 
         <span class="hljs-keyword">return</span> sourceRoot;
     }
 
-    getPackagesDir() {
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getLayout().packages_director || <span class="hljs-string">"dapple_packages"</span>;
+    getPackagesDir(filePath) {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getLayout(filePath).packages_directory || <span class="hljs-string">"dapple_packages"</span>;
     }
 
-    getPackagesPath() {
-        <span class="hljs-keyword">return</span> path.join(<span class="hljs-keyword">this</span>.package_root, <span class="hljs-keyword">this</span>.getPackagesDir());
+    getPackagesPath(filePath) {
+        <span class="hljs-keyword">return</span> path.join(
+                <span class="hljs-keyword">this</span>.getPackageRoot(filePath),
+                <span class="hljs-keyword">this</span>.getPackagesDir(filePath));
     }
 
     getIgnoreGlobs() {
         <span class="hljs-keyword">var</span> globs = [];
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> dappfilePath <span class="hljs-keyword">in</span> <span class="hljs-keyword">this</span>.subDappfiles) {
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> glob <span class="hljs-keyword">of</span> (<span class="hljs-keyword">this</span>.subDappfiles[dappfilePath].ignore || [])) {
+                globs.push(path.join(<span class="hljs-keyword">this</span>.getSourcePath(dappfilePath), glob));
+            }
+        }
+
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> glob <span class="hljs-keyword">of</span> (<span class="hljs-keyword">this</span>.dappfile.ignore || [])) {
             globs.push(path.join(<span class="hljs-keyword">this</span>.getSourceDir(), glob));
         }
         <span class="hljs-keyword">return</span> globs;
     }
 
-    getPreprocessorVars() {
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.dappfile.preprocessor_vars;
+    getSourcePaths() {
+        <span class="hljs-keyword">var</span> paths = [];
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> dappfilePath <span class="hljs-keyword">in</span> <span class="hljs-keyword">this</span>.subDappfiles) {
+            <span class="hljs-keyword">let</span> layout = <span class="hljs-keyword">this</span>.getLayout(dappfilePath);
+            paths.push(path.resolve(path.join(
+                            path.dirname(dappfilePath),
+                            layout.sol_source || <span class="hljs-string">'.'</span>)))
+        }
+        <span class="hljs-keyword">return</span> paths;
+    }
+
+    getPreprocessorVars(filePath) {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getDappfile(filePath).preprocessor_vars || {};
     }
 
     getEnvironment() {
@@ -119,17 +209,6 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
 
     getEnvironments() {
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.dappfile.environments;
-    }
-
-    getDappfilePath() {
-        <span class="hljs-keyword">return</span> path.join(<span class="hljs-keyword">this</span>.package_root, constants.DAPPFILE_FILENAME);
-    }
-
-    loadDappfile(dappfile_path) {
-        <span class="hljs-keyword">if</span>( dappfile_path === <span class="hljs-literal">undefined</span> ) {
-            dappfile_path = <span class="hljs-keyword">this</span>.getDappfilePath();
-        }
-        <span class="hljs-keyword">return</span> readyaml.sync(dappfile_path);
     }
 
     writeDappfile() {
@@ -141,6 +220,13 @@ will look for the <code>dappfile</code> in all parents in order (like <code>git<
             <span class="hljs-keyword">this</span>.dappfile.dependencies = {};
         }
         <span class="hljs-keyword">this</span>.dappfile.dependencies[path.basename(packagePath)] = packagePath;
+    }
+
+    addSubDappfile(packagePath, dappfile) {
+        <span class="hljs-keyword">if</span> (!fs.statSync(packagePath).isDirectory()) {
+            packagePath = path.dirname(packagePath);
+        }
+        <span class="hljs-keyword">this</span>.subDappfiles[packagePath] = dappfile;
     }
 
     getDependencies() {
