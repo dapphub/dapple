@@ -3,9 +3,7 @@ Usage:
     dapple init
     dapple install [--save] [<package>]
     dapple build [options]
-    dapple chain
-    dapple step
-    dapple test [options] [--skip-build]
+    dapple test [-r <RegExp>] [options] [--skip-build]
     dapple new-test <class>
 
 Options:

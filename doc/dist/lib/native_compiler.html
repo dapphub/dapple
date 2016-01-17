@@ -16,7 +16,16 @@
         <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
     }
 
+    static setDefaults(opts) {
+        <span class="hljs-keyword">return</span> _.assign({
+            errorHandler: <span class="hljs-built_in">console</span>.error,
+            sources: {}
+        }, opts);
+    }
+
     static compile(opts) {
+        opts = NativeCompiler.setDefaults(opts);
+
         <span class="hljs-keyword">var</span> sources = opts.sources;
         <span class="hljs-keyword">var</span> tmpDir = path.join(os.tmpdir(), <span class="hljs-string">'dapple'</span>,
                                <span class="hljs-built_in">String</span>(<span class="hljs-built_in">Math</span>.random()).slice(<span class="hljs-number">2</span>));
