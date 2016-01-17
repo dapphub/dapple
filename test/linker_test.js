@@ -25,6 +25,26 @@ describe("Linker", function() {
         });
     });
 
+    it("can infer local imports based on the absence of packages", function() {
+        var sources = {
+            '/package/src/test/contract.sol': '',
+            '/package/src/test/contract2.sol': '',
+            '/package/src/contract.sol': ''
+        };
+        var mockWorkspace = {
+            getPackageRoot: (f) => '/package',
+            getPackagesDir: (f) => 'dapple_packages',
+            getSourcePath: (f) => '/package/src'
+        };
+        var importer = '/package/test/contract2.sol';
+        var imported = 'test/contract.sol';
+        var resolvedPath = Linker.resolveImport(
+            sources, importer, imported, mockWorkspace );
+
+        assert.equal(resolvedPath, '/package/src/test/contract.sol',
+            'Linker got confused by identical contract names');
+    });
+
     it("converts all source paths to hashes based on file contents",
        function() {
            var linkedSources = Linker.linkImports(workspace, sources);
