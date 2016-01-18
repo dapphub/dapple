@@ -1,6 +1,5 @@
 'use strict';
 
-var _ = require('lodash');
 var assert = require('chai').assert;
 var LogTranslator = require('../lib/logtranslator.js');
 
@@ -14,6 +13,11 @@ describe("LogTranslator", function() {
         "anonymous":false,
         "inputs": [{"indexed": false, "name":"val", "type":"bool"}],
         "name": "log_bool",
+        "type":"event"
+    }, {
+        "anonymous":false,
+        "inputs": [{"indexed": false, "name":"val", "type":"address"}],
+        "name": "log_address",
         "type":"event"
     }];
     var translator = new LogTranslator(abi);
@@ -37,6 +41,21 @@ describe("LogTranslator", function() {
                 '0xe7950ede0394b9f2ce4a5a1bf5a7e18524'
                 + '11f7e6661b4308c913c4bfd11027e4'
             ],
+            type: 'mined'
+        },
+        'log_address': {
+            logIndex: 0,
+            transactionIndex: 0,
+            transactionHash: '0xc1e39bafd3de1c37ea2c4e82548fbe77'
+                             + 'e1fa412938457a9d46e2ec23ba55101b',
+            blockHash: '0x188df4ea75f5ce9ad4a9475c0ad4168fd44e3a'
+                       + '372adebd4a7a678751c3fdf7a7',
+            blockNumber: 3,
+            address: '0x1e2d829c0a3007f785a41699a6b392c31f045c7f',
+            data: '0x0000000000000000000000001e2d829c0'
+                  + 'a3007f785a41699a6b392c31f045c7f',
+            topics: [ '0x7ae74c527414ae135fd97047b12921a5e'
+                      + 'c3911b804197855d67e25c7b75ee6f3' ],
             type: 'mined'
         },
         'log_bool_true': {
@@ -87,6 +106,19 @@ describe("LogTranslator", function() {
                 val: 'assertTrue was false'
             }
         },
+        'log_address': {
+            logIndex: 0,
+            transactionIndex: 0,
+            transactionHash: '0xc1e39bafd3de1c37ea2c4e82548'
+                             + 'fbe77e1fa412938457a9d46e2ec23ba55101b',
+            blockHash: '0x188df4ea75f5ce9ad4a9475c0ad4168fd44e3a'
+                       + '372adebd4a7a678751c3fdf7a7',
+            blockNumber: 3,
+            address: '0x1e2d829c0a3007f785a41699a6b392c31f045c7f',
+            type: 'mined',
+            event: 'log_address',
+            args: { val: '0x1e2d829c0a3007f785a41699a6b392c31f045c7f' }
+        },
         'log_bool_true': {
             logIndex: 0,
             transactionIndex: 0,
@@ -125,8 +157,13 @@ describe("LogTranslator", function() {
     });
 
     it("can translate an array of log entry objects", function() {
-        assert.deepEqual(translator.translateAll(
-            _.values(log_entries)), _.values(log_translations),
+        let entries = [];
+        let translations = [];
+        for (let key in log_entries) {
+            entries.push(log_entries[key]);
+            translations.push(log_translations[key]);
+        }
+        assert.deepEqual(translator.translateAll(entries), translations,
             "failed to translate log entries");
     });
 
