@@ -15,7 +15,7 @@
 
       "patternProperties": {
         "^((?!evm)\\w)+$": { 
-          "title": "named set of environments"
+          "title": "named set of environments",
           "$ref": "definitions#/definitions/environmentSpec"
         }
       },

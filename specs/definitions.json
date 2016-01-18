@@ -3,8 +3,6 @@
   "type": "object",
   "definitions": {
     
-
-    
     "class": {
       "type": "string",
       "title": "Class Definition",
