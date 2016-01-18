@@ -7,14 +7,14 @@
 
 <span class="hljs-keyword">const</span> web3 = <span class="hljs-keyword">new</span> Web3();
 <span class="hljs-keyword">const</span> hexTranslators = {
-    <span class="hljs-string">"address"</span>: (hex) =&gt; hex,
     <span class="hljs-string">"bool"</span>: (hex) =&gt; hex,
     <span class="hljs-comment">//"bytes": (hex) =&gt; hex, // <span class="hljs-doctag">TODO:</span> string-like event values should be</span>
                              <span class="hljs-comment">//"string" types, not "bytes".</span>
     <span class="hljs-string">"bytes"</span>: (hex) =&gt; web3.toAscii(hex).replace(<span class="hljs-regexp">/\u0000/g</span>, <span class="hljs-string">''</span>),
     <span class="hljs-string">"string"</span>: (hex) =&gt; web3.toAscii(hex).replace(<span class="hljs-regexp">/\u0000/g</span>, <span class="hljs-string">''</span>),
     <span class="hljs-string">"int"</span>: (hex) =&gt; web3.toBigNumber(hex).toString(),
-    <span class="hljs-string">"uint"</span>: (hex) =&gt; web3.toBigNumber(hex).toString()
+    <span class="hljs-string">"uint"</span>: (hex) =&gt; web3.toBigNumber(hex).toString(),
+    <span class="hljs-string">"address"</span>: (hex) =&gt; hex
 };
 
 <span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LogTranslator</span> </span>{

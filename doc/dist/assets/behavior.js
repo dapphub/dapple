@@ -276,8 +276,7 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             "pageTitle": "lib/logtranslator",
             "title": "logtranslator"
           },
-          "depth": 2,
-          "outline": []
+          "depth": 2
         }, {
           "type": "file",
           "data": {
@@ -295,6 +294,25 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             "targetPath": "lib/native_compiler",
             "pageTitle": "lib/native_compiler",
             "title": "native_compiler"
+          },
+          "depth": 2
+        }, {
+          "type": "file",
+          "data": {
+            "language": {
+              "nameMatchers": [".js"],
+              "pygmentsLexer": "javascript",
+              "multiLineComment": ["/*", "*", "*/"],
+              "singleLineComment": ["//"],
+              "ignorePrefix": "}",
+              "foldPrefix": "^",
+              "name": "JavaScript"
+            },
+            "sourcePath": "/home/dev/devenv/dapple/lib/package_build_filter.js",
+            "projectPath": "lib/package_build_filter.js",
+            "targetPath": "lib/package_build_filter",
+            "pageTitle": "lib/package_build_filter",
+            "title": "package_build_filter"
           },
           "depth": 2
         }, {

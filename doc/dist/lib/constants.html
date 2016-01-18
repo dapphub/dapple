@@ -18,6 +18,7 @@ TODO this class is a disaster</p></div></div><div class="code"><div class="wrapp
             <span class="hljs-string">'dapple/test.sol'</span>: path.join(constants_directory, <span class="hljs-string">"/test.sol"</span>),
             <span class="hljs-string">'dapple/debug.sol'</span>: path.join(constants_directory, <span class="hljs-string">"/debug.sol"</span>)
         }
+        <span class="hljs-keyword">this</span>.DAPPLE_HEADERS = [<span class="hljs-string">"Test"</span>, <span class="hljs-string">"Debug"</span>, <span class="hljs-string">"Tester"</span>];
     }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Source object you can feed into solc module
 TODO dapple-buildpack should be a proper package</p></div></div><div class="code"><div class="wrapper">    get DEFAULT_DAPPFILE_CONTENTS() {
         <span class="hljs-keyword">return</span> fs.readFileStringSync(path.join(<span class="hljs-keyword">this</span>.CONSTANTS_DIRECTORY, <span class="hljs-string">"init_dappfile"</span>));

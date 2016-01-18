@@ -11,16 +11,11 @@
 <span class="hljs-keyword">const</span> CONTRACTMAP_KEY = <span class="hljs-string">'__dapplecontractmap__'</span>;
 
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Linker</span> </span>{
-    static link(workspace, sources) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>TODO: Link contracts. We&#39;re mostly there, but it needs a little work
-when it comes to handling collisions upon converting back to legible
-names.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.linkContracts(<span class="hljs-keyword">this</span>.linkImports(workspace, sources));
+    static link(workspace, sources) {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.linkContracts(<span class="hljs-keyword">this</span>.linkImports(workspace, sources));
     }
 
     static resolveImport( sources, sourcePath, importPath, workspace ) {
-        <span class="hljs-keyword">if</span> (!workspace) {
-            workspace = <span class="hljs-keyword">new</span> Workspace(sources);
-        }
-
         <span class="hljs-keyword">if</span> (importPath <span class="hljs-keyword">in</span> sources) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Fully qualified import path.</p></div></div><div class="code"><div class="wrapper">            <span class="hljs-keyword">return</span> importPath;
         }
 
@@ -140,7 +135,8 @@ through the source files and replace contract names with hashes.
 TODO: Clean this up. Three nested for loops is turrible.
 TODO: We could also be somewhat more intelligent about this. As
 written, this will totally overwrite contract names in strings and
-comments.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">var</span> contractDecRegex = <span class="hljs-regexp">/(^\s*contract\s*)([^\{\s]+)/gm</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>We&#39;re going to keep track of the hashes we assign to the shallowest
+comments.
+TODO: Find a clean way to share this regex with PackageBuildFilter.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">var</span> contractDecRegex = <span class="hljs-regexp">/(^\s*contract\s*)([^\{\s]+)/gm</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>We&#39;re going to keep track of the hashes we assign to the shallowest
 contract names so we can give them back their original names before
 returning. This is how we resolve naming collisions. Anything
 occluded by a naming collision will retain its hashed name.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">let</span> contractDepths = {};
