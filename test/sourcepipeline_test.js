@@ -7,9 +7,9 @@ var Workspace = require("../lib/workspace");
 
 describe("SourcePipeline", function() {
     it('does not throw an exception given an empty ignore array', function () {
-        var workspace = new Workspace(testenv.golden_package_dir);
+        var package_dir = testenv.golden_package_dir;
         SourcePipeline({
-            packageRoot: workspace.package_root,
+            packageRoot: Workspace.findPackageRoot(package_dir),
             ignore: []
         })
     });

@@ -7,7 +7,8 @@
 
 <span class="hljs-keyword">const</span> web3 = <span class="hljs-keyword">new</span> Web3();
 <span class="hljs-keyword">const</span> hexTranslators = {
-    <span class="hljs-string">"bool"</span>: (hex) =&gt; <span class="hljs-built_in">Boolean</span>(that.opts.web3.toDecimal(hex)),
+    <span class="hljs-string">"address"</span>: (hex) =&gt; hex,
+    <span class="hljs-string">"bool"</span>: (hex) =&gt; hex,
     <span class="hljs-comment">//"bytes": (hex) =&gt; hex, // <span class="hljs-doctag">TODO:</span> string-like event values should be</span>
                              <span class="hljs-comment">//"string" types, not "bytes".</span>
     <span class="hljs-string">"bytes"</span>: (hex) =&gt; web3.toAscii(hex).replace(<span class="hljs-regexp">/\u0000/g</span>, <span class="hljs-string">''</span>),
