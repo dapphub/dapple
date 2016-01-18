@@ -3,6 +3,8 @@
   "type": "object",
   "definitions": {
     
+
+    
     "class": {
       "type": "string",
       "title": "Class Definition",
@@ -86,6 +88,42 @@
       "description": "A set of object headers.",
       "type": "array",
       "items": { "$ref": "#/definitions/object_header" }
+    },
+    
+    "environmentSpec": {
+      "type": "object",
+      "title": "environment specification",
+      "properties": {
+        "ethereum": {
+          "oneOf": [
+            {
+              "title": "internal evm",
+              "type": "string",
+              "pattern": "^internal$",
+              "description": "if set to internal, dapple will use its build in evm to simulate the chain"
+            },
+            {
+              "title": "HttpProvider",
+              "type": "object",
+              "properties": {
+                "host": {
+                  "tittle": "host",
+                  "type": "string"
+                },
+                "port": {
+                  "title": "port",
+                  "type": "string"
+                }
+              },
+              "required": ["host","port"],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "ipfs": {}
+      },
+      "required": ["ethereum"],
+      "additionalProperties": false
     },
 
     "environment": {
