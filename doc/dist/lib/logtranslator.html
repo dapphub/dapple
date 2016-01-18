@@ -7,7 +7,7 @@
 
 <span class="hljs-keyword">const</span> web3 = <span class="hljs-keyword">new</span> Web3();
 <span class="hljs-keyword">const</span> hexTranslators = {
-    <span class="hljs-string">"bool"</span>: (hex) =&gt; <span class="hljs-built_in">Boolean</span>(that.opts.web3.toDecimal(hex)),
+    <span class="hljs-string">"bool"</span>: (hex) =&gt; hex,
     <span class="hljs-comment">//"bytes": (hex) =&gt; hex, // <span class="hljs-doctag">TODO:</span> string-like event values should be</span>
                              <span class="hljs-comment">//"string" types, not "bytes".</span>
     <span class="hljs-string">"bytes"</span>: (hex) =&gt; web3.toAscii(hex).replace(<span class="hljs-regexp">/\u0000/g</span>, <span class="hljs-string">''</span>),
@@ -35,7 +35,8 @@ that can be used to translate them.</p></div></div><div class="code"><div class=
     }
 
     translate(_entry) {
-        <span class="hljs-keyword">var</span> eventObj;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Clone the entry object. Otherwise it gets mutated.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">var</span> entry = <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-built_in">JSON</span>.stringify(_entry));
+        <span class="hljs-keyword">var</span> eventObj;
+        <span class="hljs-built_in">console</span>.log(_entry);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Clone the entry object. Otherwise it gets mutated.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">var</span> entry = <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-built_in">JSON</span>.stringify(_entry));
 
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> topic <span class="hljs-keyword">of</span> entry.topics) {
             eventObj = <span class="hljs-keyword">this</span>.events[web3.toHex(topic)];
@@ -47,6 +48,7 @@ that can be used to translate them.</p></div></div><div class="code"><div class=
         decoded.args = _.mapValues(decoded.args, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">hex, key</span>) </span>{
             <span class="hljs-keyword">return</span> eventObj.hexTranslators[key](hex);
         });
+        <span class="hljs-built_in">console</span>.log(decoded);
         <span class="hljs-keyword">return</span> decoded;
     }
 
