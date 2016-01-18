@@ -90,7 +90,12 @@
       "items": { "$ref": "#/definitions/object_header" }
     },
     
-    "environmentSpec": {
+    "environmentRef": {
+      "title": "environment refference",
+      "type": "string"
+    },
+    
+    "environmentDescription": {
       "type": "object",
       "title": "environment specification",
       "properties": {
@@ -120,7 +125,7 @@
             }
           ]
         },
-        
+
         "ipfs": {
           "title": "ipfs access point",
           "type": "object",
@@ -136,7 +141,7 @@
             }
           }
         },
-        
+
         "objects": {
           "title": "named object description",
           "type": "object",
@@ -148,6 +153,14 @@
         }
       },
       "additionalProperties": false
+     
+    },
+    
+    "environmentSpec": {
+      "anyOf": [
+        { "$ref": "#/definitions/environmentRef" },
+        { "$ref": "#/definitions/environmentDescription" }
+      ]
     },
 
     "environment": {

@@ -4,6 +4,7 @@
   "properties": {
     "environments": {
       "title": "global environment specifications",
+      "description": "named set of environments",
       "type": "object",
       
       "default": {
@@ -14,16 +15,8 @@
       },
 
       "patternProperties": {
-        "^((?!evm)\\w)+$": { 
-          "title": "named set of environments",
+        "^\\w+$": { 
           "$ref": "definitions#/definitions/environmentSpec"
-        }
-      },
-      "properties": {
-        "evm": {
-          "title": "ethereum virtual machine",
-          "type": "string",
-          "default": "default"
         }
       }
     }
