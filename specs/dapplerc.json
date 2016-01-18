@@ -1,0 +1,15 @@
+{
+  "title": "dapplerc data model", 
+  "type": "object",
+  "properties": {
+    "environments": {
+      "title": "global environment specifications",
+      "type": "object",
+      "patternProperties": {
+        "^\w+$": {}
+      },
+    }
+  },
+  "additionalProperties": false,
+  "required": [ "environments" ]
+}
