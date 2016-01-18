@@ -5,6 +5,12 @@
     "environments": {
       "title": "global environment specifications",
       "type": "object",
+      "default": {
+        "default": {
+          "ethereum": "internal"
+        },
+        "evm": "default"
+      },
       "patternProperties": {
         "^((?!evm)\\w)+$": {
           "type": "object",
@@ -44,7 +50,8 @@
       },
       "properties": {
         "evm": {
-          "type": "string"
+          "type": "string",
+          "default": "default"
         }
       }
     }
