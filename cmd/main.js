@@ -131,12 +131,14 @@ if( cli.install ) {
     var initStream;
     if (cli['--skip-build']) {
         initStream = req.pipelines.BuiltClassesPipeline(
-            req.vinyl.dest(Workspace.findBuildPath()));
+            req.vinyl.dest(Workspace.findBuildPath()),
+            cli['--subpackages'] || cli['-s']);
 
     } else {
         initStream = req.pipelines
             .BuildPipeline({
-                packageRoot: Workspace.findPackageRoot()
+                packageRoot: Workspace.findPackageRoot(),
+                subpackages: cli['--subpackages'] || cli['-s']
             })
             .pipe(req.vinyl.dest(Workspace.findBuildPath()));
     }
