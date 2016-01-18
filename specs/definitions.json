@@ -69,14 +69,16 @@
       "title": "Object",
       "description": "Object reference and header.",
       "type": "object",
-      "required": [ "reference", "header" ],
       "additionalProperties": false,
+      "required": [ "class" ],
       "properties": {
-        "reference": {
-          "$ref": "#/definitions/object_reference"
+        "class": {
+          "title": "class reference",
+          "description": "name of the class, which this contract is istance of",
+          "type": "string"
         },
-        "header": {
-          "$ref": "#/definitions/object_header"
+        "address": {
+          "type": "string"
         }
       }
     },
@@ -118,9 +120,33 @@
             }
           ]
         },
-        "ipfs": {}
+        
+        "ipfs": {
+          "title": "ipfs access point",
+          "type": "object",
+          "required": [ "host", "port" ],
+          "properties": {
+            "host": {
+              "tittle": "host",
+              "type": "string"
+            },
+            "port": {
+              "title": "port",
+              "type": "string"
+            }
+          }
+        },
+        
+        "objects": {
+          "title": "named object description",
+          "type": "object",
+          "pattermProperties": {
+            "\\w+$": {
+              "$ref": "#/definitions/object"
+            }
+          }
+        }
       },
-      "required": ["ethereum"],
       "additionalProperties": false
     },
 
