@@ -337,6 +337,12 @@ After that, your frontend developer can interact with your deployed contract
 pretty easily:
 
 ```
-var myBitcoinEth = require('js_module.js').objects.myBitcoinEth;
+var myBitcoinEth = (new require('js_module.js')()).objects.myBitcoinEth;
 myBitcoinEth.transfer( '0xdeadbeef', 10 ); // Send 10 tokens to 0xdeadbeef.
 ```
+
+All the environments defined in your package's dappfile also get output as JSON
+files to the `environments` subdirectory of your package's build directory.
+The contents of these JSON files can optionally be passed to your `js_module`
+class when you instantiate it. Doing so will override the default environment
+your `js_module` class was built with.

@@ -27,9 +27,9 @@ var rc = Workspace.getDappleRC();
 
 if (cli.config || typeof(rc.path) === 'undefined') {
     var homeRC = req.path.join(req.userHome, '.dapplerc');
-
     var confirmed;
     var chosen = false;
+
     if (rc.path !== undefined && rc.path === homeRC) {
         console.log("You already have a .dapplerc in your home directory!");
         req.inquirer.prompt([{
@@ -116,6 +116,11 @@ if( cli.install ) {
     var env = cli['--environment'] || workspace.getEnvironment();
     var nameFilter = undefined;
 
+    if (!(env in rc.data.environments)) {
+        console.error("Environment not defined: " + env);
+        process.exit(1);
+    }
+
     if( cli['-r'] ) {
         // if filter String contains upper case letters special regex chars,
         // assume the filtering is case sensitive, otherwise its insensitive
@@ -126,24 +131,21 @@ if( cli.install ) {
     var initStream;
     if (cli['--skip-build']) {
         initStream = req.pipelines.BuiltClassesPipeline(
-            req.vinyl.dest(Workspace.findBuildPath()));
+            req.vinyl.dest(Workspace.findBuildPath()),
+            cli['--subpackages'] || cli['-s']);
 
     } else {
         initStream = req.pipelines
             .BuildPipeline({
-                packageRoot: Workspace.findPackageRoot()
+                packageRoot: Workspace.findPackageRoot(),
+                subpackages: cli['--subpackages'] || cli['-s']
             })
             .pipe(req.vinyl.dest(Workspace.findBuildPath()));
     }
 
-    if (!(env in rc.data.environments)) {
-        console.error("Environment not defined: " + env);
-
-    } else {
-        initStream
-            .pipe(req.pipelines.TestPipeline({
-                web3: rc.data.environments[env].ethereum || 'internal',
-                nameFilter: nameFilter
-            }));
-    }
+    initStream
+        .pipe(req.pipelines.TestPipeline({
+            web3: rc.data.environments[env].ethereum || 'internal',
+            nameFilter: nameFilter
+        }));
 }

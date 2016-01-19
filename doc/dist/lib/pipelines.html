@@ -1,5 +1,6 @@
 <!DOCTYPE html><html lang="en"><head><title>lib/pipelines</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/pipelines"><meta name="groc-project-path" content="lib/pipelines.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/lib/pipelines.js">lib/pipelines.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">"use strict"</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Lazy load things we might not need this run.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> req = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lazreq'</span>)({
     buffer: <span class="hljs-string">'vinyl-buffer'</span>,
+    gutil: <span class="hljs-string">'gulp-util'</span>,
     vinyl: <span class="hljs-string">'vinyl-fs'</span>
 });
 
@@ -31,29 +32,32 @@ given package.</p></div></div><div class="code"><div class="wrapper"><span class
     <span class="hljs-keyword">var</span> solidityFilter = filter([<span class="hljs-string">'*.sol'</span>, <span class="hljs-string">'**/*.sol'</span>], {restore: <span class="hljs-literal">true</span>});</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Grab all the files relevant to the package.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">return</span> Combine(
         streams.package_stream(opts.packageRoot),</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Only preprocess Solidity source files.</p></div></div><div class="code"><div class="wrapper">        solidityFilter,</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Inject a couple built-in contracts.</p></div></div><div class="code"><div class="wrapper">        streams.inject_virtual_contracts(),</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Lodash.template is the default preprocessor.</p></div></div><div class="code"><div class="wrapper">        streams.preprocess(opts.preprocessorVars),</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Return filtered-out files to the stream.</p></div></div><div class="code"><div class="wrapper">        solidityFilter.restore</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: Add any missing steps.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-comment">//...</span>
     );
-};
-
-<span class="hljs-keyword">var</span> PackagePipeline = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">opts</span>) </span>{
-    <span class="hljs-keyword">return</span> Combine(
-        SourcePipeline(opts),
-        streams.linker(),
-        streams.linker_filter.exclude()
-    );
 };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Returns raw output of <code>solc</code>.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> BuildPipeline = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">opts</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Defaults</p></div></div><div class="code"><div class="wrapper">    opts = _fillOptionDefaults(opts);
 
     <span class="hljs-keyword">var</span> logger = <span class="hljs-keyword">new</span> loggers.MapAwareLogger();
     <span class="hljs-keyword">var</span> solidityFilter = filter([<span class="hljs-string">'*.sol'</span>, <span class="hljs-string">'**/*.sol'</span>], {restore: <span class="hljs-literal">true</span>});
+    <span class="hljs-keyword">var</span> buildFilter = <span class="hljs-keyword">new</span> streams.package_build_filter();
 
     <span class="hljs-keyword">return</span> Combine(
-        PackagePipeline(opts),
+        SourcePipeline(opts),
+        opts.subpackages ? req.gutil.noop() : buildFilter.seed(),
+        streams.linker(),
+        streams.linker_filter.exclude(),
         opts.mapAwareLogger.seedStream(),
         solidityFilter,
         streams.build(opts),
-        solidityFilter.restore);
+        solidityFilter.restore,
+        opts.subpackages ? req.gutil.noop() : buildFilter.filter());
 };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Builds JS-specific output.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> JSBuildPipeline = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">opts</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Defaults</p></div></div><div class="code"><div class="wrapper">    opts = _fillOptionDefaults(opts);
     <span class="hljs-keyword">return</span> Combine(BuildPipeline(opts), streams.js_postprocess(opts));
-};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Grabs pre-built contracts from build directory.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> BuiltClassesPipeline = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">buildDir</span>) </span>{
-    <span class="hljs-keyword">return</span> Combine(req.vinyl.src([buildDir + <span class="hljs-string">'/classes.json'</span>]), req.buffer());
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Grabs pre-built contracts from build directory.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> BuiltClassesPipeline = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">buildDir, includeSubpackages</span>) </span>{
+    <span class="hljs-keyword">var</span> buildFilter = <span class="hljs-keyword">new</span> streams.package_build_filter();
+    SourcePipeline(opts).pipe(buildFilter.seed());
+
+    <span class="hljs-keyword">return</span> Combine(
+        req.vinyl.src([buildDir + <span class="hljs-string">'/classes.json'</span>]),
+        includeSubpackages ? req.gutil.noop() : buildFilter.filter(),
+        req.buffer());
 };</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Takes built contracts and deploys and runs any test
 contracts among them, emitting the results to the CLI
 and passing them downstream as File objects.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> TestPipeline = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">opts</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Defaults</p></div></div><div class="code"><div class="wrapper">    opts = _fillOptionDefaults(opts);
@@ -68,7 +72,6 @@ and passing them downstream as File objects.</p></div></div><div class="code"><d
     BuildPipeline: BuildPipeline,
     BuiltClassesPipeline: BuiltClassesPipeline,
     JSBuildPipeline: JSBuildPipeline,
-    PackagePipeline: PackagePipeline,
     SourcePipeline: SourcePipeline,
     TestPipeline: TestPipeline
 };</div></div></div></div></body></html>
