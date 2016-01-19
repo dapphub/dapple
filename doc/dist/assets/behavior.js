@@ -308,6 +308,25 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "foldPrefix": "^",
               "name": "JavaScript"
             },
+            "sourcePath": "/home/dev/devenv/dapple/lib/package_build_filter.js",
+            "projectPath": "lib/package_build_filter.js",
+            "targetPath": "lib/package_build_filter",
+            "pageTitle": "lib/package_build_filter",
+            "title": "package_build_filter"
+          },
+          "depth": 2
+        }, {
+          "type": "file",
+          "data": {
+            "language": {
+              "nameMatchers": [".js"],
+              "pygmentsLexer": "javascript",
+              "multiLineComment": ["/*", "*", "*/"],
+              "singleLineComment": ["//"],
+              "ignorePrefix": "}",
+              "foldPrefix": "^",
+              "name": "JavaScript"
+            },
             "sourcePath": "/home/dev/devenv/dapple/lib/pipelines.js",
             "projectPath": "lib/pipelines.js",
             "targetPath": "lib/pipelines",

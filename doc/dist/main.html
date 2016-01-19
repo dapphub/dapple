@@ -19,9 +19,9 @@ to parse the arguments passed in.</p></div></div></div><div class="segment"><div
 
 <span class="hljs-keyword">if</span> (cli.config || <span class="hljs-keyword">typeof</span>(rc.path) === <span class="hljs-string">'undefined'</span>) {
     <span class="hljs-keyword">var</span> homeRC = req.path.join(req.userHome, <span class="hljs-string">'.dapplerc'</span>);
-
     <span class="hljs-keyword">var</span> confirmed;
     <span class="hljs-keyword">var</span> chosen = <span class="hljs-literal">false</span>;
+
     <span class="hljs-keyword">if</span> (rc.path !== <span class="hljs-literal">undefined</span> &amp;&amp; rc.path === homeRC) {
         <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"You already have a .dapplerc in your home directory!"</span>);
         req.inquirer.prompt([{
@@ -86,6 +86,11 @@ results to stdout and stderr (in case of failure).</p></div></div><div class="co
     <span class="hljs-keyword">var</span> env = cli[<span class="hljs-string">'--environment'</span>] || workspace.getEnvironment();
     <span class="hljs-keyword">var</span> nameFilter = <span class="hljs-literal">undefined</span>;
 
+    <span class="hljs-keyword">if</span> (!(env <span class="hljs-keyword">in</span> rc.data.environments)) {
+        <span class="hljs-built_in">console</span>.error(<span class="hljs-string">"Environment not defined: "</span> + env);
+        process.exit(<span class="hljs-number">1</span>);
+    }
+
     <span class="hljs-keyword">if</span>( cli[<span class="hljs-string">'-r'</span>] ) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>if filter String contains upper case letters special regex chars,
 assume the filtering is case sensitive, otherwise its insensitive</p></div></div><div class="code"><div class="wrapper">        nameFilter = <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>( cli[<span class="hljs-string">'&lt;RegExp&gt;'</span>],
           <span class="hljs-regexp">/[A-Z\\\.\[\]\^\$\*\+\{\}\(\)\?\|]/</span>.test(cli[<span class="hljs-string">'&lt;RegExp&gt;'</span>])?<span class="hljs-string">''</span>:<span class="hljs-string">'i'</span> );
@@ -94,24 +99,21 @@ assume the filtering is case sensitive, otherwise its insensitive</p></div></div
     <span class="hljs-keyword">var</span> initStream;
     <span class="hljs-keyword">if</span> (cli[<span class="hljs-string">'--skip-build'</span>]) {
         initStream = req.pipelines.BuiltClassesPipeline(
-            req.vinyl.dest(Workspace.findBuildPath()));
+            req.vinyl.dest(Workspace.findBuildPath()),
+            cli[<span class="hljs-string">'--subpackages'</span>] || cli[<span class="hljs-string">'-s'</span>]);
 
     } <span class="hljs-keyword">else</span> {
         initStream = req.pipelines
             .BuildPipeline({
-                packageRoot: Workspace.findPackageRoot()
+                packageRoot: Workspace.findPackageRoot(),
+                subpackages: cli[<span class="hljs-string">'--subpackages'</span>] || cli[<span class="hljs-string">'-s'</span>]
             })
             .pipe(req.vinyl.dest(Workspace.findBuildPath()));
     }
 
-    <span class="hljs-keyword">if</span> (!(env <span class="hljs-keyword">in</span> rc.data.environments)) {
-        <span class="hljs-built_in">console</span>.error(<span class="hljs-string">"Environment not defined: "</span> + env);
-
-    } <span class="hljs-keyword">else</span> {
-        initStream
-            .pipe(req.pipelines.TestPipeline({
-                web3: rc.data.environments[env].ethereum || <span class="hljs-string">'internal'</span>,
-                nameFilter: nameFilter
-            }));
-    }
+    initStream
+        .pipe(req.pipelines.TestPipeline({
+            web3: rc.data.environments[env].ethereum || <span class="hljs-string">'internal'</span>,
+            nameFilter: nameFilter
+        }));
 }</div></div></div></div></body></html>

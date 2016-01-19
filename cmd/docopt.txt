@@ -3,7 +3,7 @@ Usage:
     dapple init
     dapple install [--save] [<package>]
     dapple build [options]
-    dapple test [-r <RegExp>] [options] [--skip-build]
+    dapple test [-s, --subpackages] [-r <RegExp>] [options] [--skip-build]
     dapple new-test <class>
 
 Options:
