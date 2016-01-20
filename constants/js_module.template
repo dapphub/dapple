@@ -43,7 +43,8 @@ module.exports = function(env, web3) {
 
     this.classes = {}
     for (var key in header) {
-         this.classes[key] = new ContractWrapper(header[key], web3)
+        this.headers[key].interface = JSON.parse(this.headers[key].interface)
+        this.classes[key] = new ContractWrapper(header[key], web3)
     }
 
     this.objects = {}
