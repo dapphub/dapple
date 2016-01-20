@@ -1,10 +1,10 @@
 // Example_Test is Test {
-contract __DAPPLE_TEMPLATE__TYPENAME___Test is Test {
+contract <%= testClassName %> is Test {
     // Example target;
-    __DAPPLE_TEMPLATE__TYPENAME__ target;
+    <%= className %> target;
     function setUp() {
         // target = new Example();
-        target = new __DAPPLE_TEMPLATE__TYPENAME__();
+        target = new <%= className %>();
     }
     function testSomething() {
     }

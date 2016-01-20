@@ -4,6 +4,7 @@ Usage:
     dapple install [--save] [<package>]
     dapple build [options]
     dapple test  [-r <RegExp>] [options] [--skip-build]
+    dapple new test <class>
 
 Options:
     -e ENVIRONMENT, --environment ENVIRONMENT [default: evm]

@@ -23,6 +23,7 @@ var req = require('lazreq')({
 });
 
 var Workspace = require("../lib/workspace");
+var VMTest = require("../lib/vmtest");
 var rc = Workspace.getDappleRC();
 
 if (cli.config || typeof(rc.path) === 'undefined') {
@@ -109,6 +110,13 @@ if( cli.install ) {
 } else if (cli.init) {
     Workspace.initialize(process.cwd());
 
+// If they ran the `new test` command, we're going to generate the boilerplate
+// sol files. This command is checked for before the `test` command otherwise
+// that test would be triggered instead.
+//
+} else if (cli.new && cli.test) {
+    VMTest.writeTestTemplate(cli['<class>']);
+
 // If they ran the `test` command, we're going to run our build pipeline and
 // then pass the output on to our test pipeline, finally spitting out the
 // results to stdout and stderr (in case of failure).
@@ -152,4 +160,5 @@ if( cli.install ) {
             web3: rc.data.environments[env].ethereum || 'internal',
             nameFilter: nameFilter
         }));
+
 }
