@@ -27,9 +27,16 @@ for (var i=0; i < passthroughs.length; i+=1) {
     }
 }
 
-module.exports = function(web3, env) {
+module.exports = function(env, web3) {
     if (typeof(env) === 'undefined') {
         env = <%= env %>
+    }
+
+    if (typeof(web3) === 'undefined') {
+        if (!env.rpcURL) {
+            throw new Error("Need either a Web3 instance or an RPC URL!")
+        }
+        web3 = new Web3(new Web3.providers.HttpProvider(env.rpcURL))
     }
 
     var header = <%= header %>
