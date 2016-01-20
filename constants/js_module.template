@@ -4,16 +4,15 @@ var Web3 = require('web3')
 
 var ContractWrapper = function(headers, web3) {
     if (!web3) {
-        throw new Error("Must supply a Web3 connection!");
+        throw new Error("Must supply a Web3 connection!")
     }
 
     this.headers = headers
-    this._web3 = web3;
     this._class = web3.eth.contract(headers.abi)
 }
 
 ContractWrapper.prototype.deploy = function() {
-    var args = new Array(arguments);
+    var args = new Array(arguments)
     args[args.length - 1] = Object.assign({
         data: this.headers.bytecode
     }, args[args.length - 1])
@@ -28,7 +27,7 @@ for (var i=0; i < passthroughs.length; i+=1) {
     }
 }
 
-module.exports = function(env) {
+module.exports = function(web3, env) {
     if (typeof(env) === 'undefined') {
         env = <%= env %>
     }
@@ -37,12 +36,12 @@ module.exports = function(env) {
 
     this.classes = {}
     for (var key in header) {
-         this.classes[key] = new ContractWrapper(header[key])
+         this.classes[key] = new ContractWrapper(header[key], web3)
     }
 
     this.objects = {}
     for (var i in env.objects) {
-        var obj = env.objects[i];
+        var obj = env.objects[i]
         this.objects[i] = this.classes[obj['class']].at(obj.address)
     }
 }
