@@ -8,7 +8,7 @@ var ContractWrapper = function(headers, web3) {
     }
 
     this.headers = headers
-    this._class = web3.eth.contract(headers.abi)
+    this._class = web3.eth.contract(headers.interface)
 }
 
 ContractWrapper.prototype.deploy = function() {
