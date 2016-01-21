@@ -92,7 +92,11 @@ if( cli.install ) {
 
     // Run our build pipeline.
     var jsBuildPipeline = req.pipelines
-        .JSBuildPipeline({environment: env, environments: environments});
+        .JSBuildPipeline({
+            environment: env,
+            environments: environments,
+            subpackages: cli['--subpackages'] || cli['-s']
+        });
 
     if (!jsBuildPipeline) return;
 

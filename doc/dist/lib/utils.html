@@ -7,5 +7,16 @@
             };
         }
         <span class="hljs-keyword">return</span> cb;
+    },
+
+    classToFilename: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">className</span>) </span>{
+      <span class="hljs-keyword">var</span> filename = <span class="hljs-string">""</span>;
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; className.length; i++) {
+        <span class="hljs-keyword">if</span> (i != <span class="hljs-number">0</span> &amp;&amp; className[i] != className[i].toLowerCase()) {
+          filename += <span class="hljs-string">"_"</span>;
+        }
+        filename += className[i].toLowerCase();
+      }
+      <span class="hljs-keyword">return</span> filename + <span class="hljs-string">".sol"</span>;
     }
 }</div></div></div></div></body></html>

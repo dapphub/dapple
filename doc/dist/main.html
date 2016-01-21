@@ -15,6 +15,7 @@ to parse the arguments passed in.</p></div></div></div><div class="segment"><div
 });
 
 <span class="hljs-keyword">var</span> Workspace = <span class="hljs-built_in">require</span>(<span class="hljs-string">"../lib/workspace"</span>);
+<span class="hljs-keyword">var</span> VMTest = <span class="hljs-built_in">require</span>(<span class="hljs-string">"../lib/vmtest"</span>);
 <span class="hljs-keyword">var</span> rc = Workspace.getDappleRC();
 
 <span class="hljs-keyword">if</span> (cli.config || <span class="hljs-keyword">typeof</span>(rc.path) === <span class="hljs-string">'undefined'</span>) {
@@ -73,11 +74,18 @@ as if it were a package and commence with building.</p></div></div><div class="c
         <span class="hljs-built_in">console</span>.error(<span class="hljs-string">"Could not find environment in dappfile: "</span> + env);
         <span class="hljs-keyword">return</span>;
     }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Run our build pipeline.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">var</span> jsBuildPipeline = req.pipelines
-        .JSBuildPipeline({environment: env, environments: environments});
+        .JSBuildPipeline({
+            environment: env,
+            environments: environments,
+            subpackages: cli[<span class="hljs-string">'--subpackages'</span>] || cli[<span class="hljs-string">'-s'</span>]
+        });
 
     <span class="hljs-keyword">if</span> (!jsBuildPipeline) <span class="hljs-keyword">return</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Write output to filesystem.</p></div></div><div class="code"><div class="wrapper">    jsBuildPipeline.pipe(req.vinyl.dest(Workspace.findBuildPath()));</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If they ran the <code>init</code> command, we just set up the current directory as a
 Dapple package and exit.</p></div></div><div class="code"><div class="wrapper">} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cli.init) {
-    Workspace.initialize(process.cwd());</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If they ran the <code>test</code> command, we&#39;re going to run our build pipeline and
+    Workspace.initialize(process.cwd());</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If they ran the <code>new test</code> command, we&#39;re going to generate the boilerplate
+sol files. This command is checked for before the <code>test</code> command otherwise
+that test would be triggered instead.</p></div></div><div class="code"><div class="wrapper">} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cli.new &amp;&amp; cli.test) {
+    VMTest.writeTestTemplate(cli[<span class="hljs-string">'&lt;class&gt;'</span>]);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If they ran the <code>test</code> command, we&#39;re going to run our build pipeline and
 then pass the output on to our test pipeline, finally spitting out the
 results to stdout and stderr (in case of failure).</p></div></div><div class="code"><div class="wrapper">} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cli.test) {
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Testing..."</span>);
@@ -116,4 +124,5 @@ assume the filtering is case sensitive, otherwise its insensitive</p></div></div
             web3: rc.data.environments[env].ethereum || <span class="hljs-string">'internal'</span>,
             nameFilter: nameFilter
         }));
+
 }</div></div></div></div></body></html>

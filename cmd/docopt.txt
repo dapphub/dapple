@@ -3,9 +3,10 @@ Usage:
     dapple init
     dapple install [--save] [<package>]
     dapple build [options]
-    dapple test [-s, --subpackages] [-r <RegExp>] [options] [--skip-build]
+    dapple test  [-r <RegExp>] [options] [--skip-build]
     dapple new test <class>
 
 Options:
     -e ENVIRONMENT, --environment ENVIRONMENT [default: evm]
     -c DAPPLERC, --config DAPPLERC
+    -s, --subpackages   Include subpackages in output

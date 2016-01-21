@@ -14,6 +14,16 @@ TODO this class is a disaster</p></div></div><div class="code"><div class="wrapp
                 path.join(<span class="hljs-keyword">this</span>.CONSTANTS_DIRECTORY, <span class="hljs-string">"js_module.template"</span>));
         }
 
+        <span class="hljs-keyword">this</span>.SOL_CONTRACT_TEMPLATE = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <span class="hljs-keyword">return</span> fs.readFileStringSync(
+                path.join(<span class="hljs-keyword">this</span>.CONSTANTS_DIRECTORY, <span class="hljs-string">"template.sol"</span>));
+        }
+
+        <span class="hljs-keyword">this</span>.SOL_CONTRACT_TEST_TEMPLATE = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <span class="hljs-keyword">return</span> fs.readFileStringSync(
+                path.join(<span class="hljs-keyword">this</span>.CONSTANTS_DIRECTORY, <span class="hljs-string">"template_test.sol"</span>));
+        }
+
         <span class="hljs-keyword">this</span>.DAPPLE_VMTEST_CLASSES = {
             <span class="hljs-string">'dapple/test.sol'</span>: path.join(constants_directory, <span class="hljs-string">"/test.sol"</span>),
             <span class="hljs-string">'dapple/debug.sol'</span>: path.join(constants_directory, <span class="hljs-string">"/debug.sol"</span>)

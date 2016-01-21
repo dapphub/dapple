@@ -1,9 +1,12 @@
 <!DOCTYPE html><html lang="en"><head><title>lib/vmtest</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/vmtest"><meta name="groc-project-path" content="lib/vmtest.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/lib/vmtest.js">lib/vmtest.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">"use strict"</span>
 
+<span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">"lodash"</span>);
 <span class="hljs-keyword">var</span> deasync = <span class="hljs-built_in">require</span>(<span class="hljs-string">"deasync"</span>);
 <span class="hljs-keyword">var</span> EVM = <span class="hljs-built_in">require</span>(<span class="hljs-string">'ethereumjs-lib'</span>).VM;
 <span class="hljs-keyword">var</span> LogTranslator = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./logtranslator'</span>);
 <span class="hljs-keyword">var</span> utils = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./utils'</span>);
+<span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>)
+<span class="hljs-keyword">var</span> constants = <span class="hljs-built_in">require</span>(<span class="hljs-string">"../lib/constants"</span>);
 
 <span class="hljs-keyword">const</span> DEFAULT_GAS = <span class="hljs-number">900000000</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>TODO use chain manager
 TODO Use transaction manager. Retrying transactions like we do at present
@@ -26,6 +29,25 @@ these values to run the tests defined in the given contract.</p></div></div><div
                 <span class="hljs-keyword">this</span>.tests.push(item.name);
             }
         }
+    }
+
+    static writeTestTemplate(className) {
+
+      <span class="hljs-keyword">var</span> template = _.template(constants.SOL_CONTRACT_TEMPLATE());
+      <span class="hljs-keyword">var</span> replaced = template({
+        className: className
+      });
+
+      fs.writeFileSync(utils.classToFilename(className), replaced);
+
+      <span class="hljs-keyword">var</span> testClassName = className + <span class="hljs-string">"Test"</span>;
+      <span class="hljs-keyword">var</span> template = _.template(constants.SOL_CONTRACT_TEST_TEMPLATE());
+      <span class="hljs-keyword">var</span> replaced = template({
+        className: className,
+        testClassName: testClassName
+      });
+
+      fs.writeFileSync(utils.classToFilename(testClassName), replaced);
     }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><strong>TODO</strong>: Chain snapshotting
 Takes the array index of a test in <code>this.tests</code> and runs it.
 Passes the result to the callback function once it&#39;s done.</p></div></div><div class="code"><div class="wrapper">    runTest(testIndex, cb) {

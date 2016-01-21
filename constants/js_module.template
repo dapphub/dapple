@@ -13,9 +13,7 @@ var ContractWrapper = function(headers, web3) {
 
 ContractWrapper.prototype.deploy = function() {
     var args = new Array(arguments)
-    args[args.length - 1] = Object.assign({
-        data: this.headers.bytecode
-    }, args[args.length - 1])
+    args[args.length - 1].data = this.headers.bytecode
     return this._class.new.apply(this._class, args)
 }
 
@@ -43,7 +41,8 @@ module.exports = function(env, web3) {
 
     this.classes = {}
     for (var key in header) {
-         this.classes[key] = new ContractWrapper(header[key], web3)
+        this.headers[key].interface = JSON.parse(this.headers[key].interface)
+        this.classes[key] = new ContractWrapper(header[key], web3)
     }
 
     this.objects = {}

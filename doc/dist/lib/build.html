@@ -14,7 +14,7 @@
         <span class="hljs-comment">//TODO constants</span>
         <span class="hljs-keyword">var</span> template = _.template(constants.JS_HEADER_TEMPLATE());
         <span class="hljs-keyword">return</span> template({
-            env:  env || {},
+            env: <span class="hljs-built_in">JSON</span>.stringify( env || {} ),
             header: <span class="hljs-built_in">JSON</span>.stringify(header)
         });
     }
