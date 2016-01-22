@@ -38,6 +38,7 @@ module.exports = function(env, web3) {
     }
 
     var header = <%= header %>
+    this.headers = header;
 
     this.classes = {}
     for (var key in header) {
