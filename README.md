@@ -10,12 +10,6 @@
 
 #### Installation
 
-Pre 0.2, it is best to install directly from source:
-
-`git clone https://github.com/NexusDevelopment/dapple && cd dapple && npm install -g`
-
-Any stable releases (once they exist) will be available on npm:
-
 `npm install -g dapple`
 
 #### Basic Usage
