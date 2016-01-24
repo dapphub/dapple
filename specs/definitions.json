@@ -69,14 +69,16 @@
       "title": "Object",
       "description": "Object reference and header.",
       "type": "object",
-      "required": [ "reference", "header" ],
       "additionalProperties": false,
+      "required": [ "class" ],
       "properties": {
-        "reference": {
-          "$ref": "#/definitions/object_reference"
+        "class": {
+          "title": "class reference",
+          "description": "name of the class, which this contract is istance of",
+          "type": "string"
         },
-        "header": {
-          "$ref": "#/definitions/object_header"
+        "address": {
+          "type": "string"
         }
       }
     },
@@ -86,6 +88,79 @@
       "description": "A set of object headers.",
       "type": "array",
       "items": { "$ref": "#/definitions/object_header" }
+    },
+    
+    "environmentRef": {
+      "title": "environment refference",
+      "type": "string"
+    },
+    
+    "environmentDescription": {
+      "type": "object",
+      "title": "environment specification",
+      "properties": {
+        "ethereum": {
+          "oneOf": [
+            {
+              "title": "internal evm",
+              "type": "string",
+              "pattern": "^internal$",
+              "description": "if set to internal, dapple will use its build in evm to simulate the chain"
+            },
+            {
+              "title": "HttpProvider",
+              "type": "object",
+              "properties": {
+                "host": {
+                  "tittle": "host",
+                  "type": "string"
+                },
+                "port": {
+                  "title": "port",
+                  "type": "string"
+                }
+              },
+              "required": ["host","port"],
+              "additionalProperties": false
+            }
+          ]
+        },
+
+        "ipfs": {
+          "title": "ipfs access point",
+          "type": "object",
+          "required": [ "host", "port" ],
+          "properties": {
+            "host": {
+              "tittle": "host",
+              "type": "string"
+            },
+            "port": {
+              "title": "port",
+              "type": "string"
+            }
+          }
+        },
+
+        "objects": {
+          "title": "named object description",
+          "type": "object",
+          "pattermProperties": {
+            "\\w+$": {
+              "$ref": "#/definitions/object"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+     
+    },
+    
+    "environmentSpec": {
+      "anyOf": [
+        { "$ref": "#/definitions/environmentRef" },
+        { "$ref": "#/definitions/environmentDescription" }
+      ]
     },
 
     "environment": {

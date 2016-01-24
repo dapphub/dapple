@@ -11,6 +11,12 @@ var constants = require("../lib/constants");
 var testenv = require("./testenv");
 var path = require("path");
 var dircompare = require("dir-compare");
+var tv4 = require('tv4');
+
+var definitions = require('../specs/definitions.json');
+var dappfileSchema = require('../specs/dappfile.json');
+
+tv4.addSchema('definitions', definitions);
 
 
 describe("class Workspace", function() {
@@ -36,6 +42,8 @@ describe("class Workspace", function() {
             var expectedDappfile = fs.readYamlSync(path.join(
                     testenv.golden_package_dir, 'dappfile'));
             assert.deepEqual(workspace.dappfile, expectedDappfile);
+            
+            assert( tv4.validate(expectedDappfile, dappfileSchema), "dappfile is not valid by schema" );
     });
 
     describe("findPackageRoot", function() {

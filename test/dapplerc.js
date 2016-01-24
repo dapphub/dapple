@@ -4,6 +4,12 @@ var assert = require('chai').assert;
 var fs = require('../lib/file.js');
 var DappleRC = require('../lib/dapplerc.js');
 var path = require('path');
+var tv4 = require('tv4');
+
+var definitions = require('../specs/definitions.json');
+var dapplercSchema = require('../specs/dapplerc.json');
+
+tv4.addSchema('definitions', definitions);
 
 describe('DappleRC', function() {
     var fixtureRC = path.join(__dirname, '_fixtures', 'dapplerc');
@@ -25,6 +31,9 @@ describe('DappleRC', function() {
         var expected = fs.readYamlSync(fixtureRCExpanded);
         var rc = new DappleRC({paths: [fixtureRC]});
         assert.deepEqual(rc.data, expected);
+        
+        assert( tv4.validate(rc.data, dapplercSchema), "dapplerc is not valid by schema"+tv4.error );
+        
     });
 
     it('fills in unspecified properties with defaults', function() {

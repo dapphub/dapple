@@ -1,0 +1,60 @@
+{
+  "title": "dappfile definition",
+  "description": "dappfile definition",
+  "type": "object",
+  "required": [ "layout" ],
+  "additionalProperties": false,
+  "properties": {
+    "layout": {
+      "title": "Directory Structure",
+      "description": "Specifies where relevant files are located",
+      "type": "object",
+      "required": [ "sol_sources", "build_dir" ],
+      "additionalProperties": false,
+      "properties": {
+        "sol_sources": {
+          "title": "sol sources",
+          "description": "Root directory of the solidity source files.",
+          "type": "string"
+        },
+        "build_dir": {
+          "title": "Build Directory",
+          "description": "Directory, where all the build files should be stored.",
+          "type": "string"
+        }
+      }
+    },
+    
+    "dependencies": {
+      "title": "Dependencies",
+      "description": "Direct dependency list",
+      "type": "array",
+      "items": {
+        "title": "Name",
+        "description": "Dependency name.",
+        "type": "string"
+      }
+    },
+
+    "ignore": {
+      "title": "Ignore",
+      "description": "Ignore files and directories",
+      "type": "array",
+      "items": {
+        "title": "Name of file/directory",
+        "type": "string"
+      }
+    },
+    
+    "environments": {
+      "title": "Environments",
+      "description": "Local environments options",
+      "patternProperties": {
+        "^\\w+$": {
+          "title": "named environment specification",
+          "$ref": "definitions#/definitions/environmentSpec"
+        }
+      }
+    }
+  }
+}
