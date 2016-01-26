@@ -87,7 +87,7 @@ if( cli.install ) {
 
     if (env && environments && !(env in environments)) {
         console.error("Could not find environment in dappfile: " + env);
-        return;
+        process.exit(1);
     }
 
     // Run our build pipeline.
@@ -98,7 +98,7 @@ if( cli.install ) {
             subpackages: cli['--subpackages'] || cli['-s']
         });
 
-    if (!jsBuildPipeline) return;
+    if (!jsBuildPipeline) process.exit(1);
 
     // Write output to filesystem.
     jsBuildPipeline.pipe(req.vinyl.dest(Workspace.findBuildPath()));
