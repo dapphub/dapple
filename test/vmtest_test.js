@@ -1,3 +1,4 @@
+/* global it, describe */
 'use strict';
 
 var assert = require('chai').assert;
@@ -51,7 +52,7 @@ describe("VMTest", function() {
         done();
       });
     });
-    
+
     it("passes if an expected exception is thrown", function( done ) {
       var contract = new Contract(mock.contracts.Throw);
       var vmtest = new VMTest(Web3Factory.EVM(), contract);
@@ -61,7 +62,7 @@ describe("VMTest", function() {
         done();
       });
     });
-    
+
     it("fails if an expected exception is not thrown", function( done ) {
       var contract = new Contract(mock.contracts.NotThrow);
       var vmtest = new VMTest(Web3Factory.EVM(), contract);
@@ -71,7 +72,7 @@ describe("VMTest", function() {
         done();
       });
     });
-    
+
     it("catches exactly expected event", function( done ) {
       var contract = new Contract(mock.contracts.Event);
       var vmtest = new VMTest(Web3Factory.EVM(), contract);
@@ -82,7 +83,7 @@ describe("VMTest", function() {
         done();
       });
     });
-    
+
     it("catches exactly expected events", function( done ) {
       var contract = new Contract(mock.contracts.Event2);
       var vmtest = new VMTest(Web3Factory.EVM(), contract);
@@ -93,7 +94,7 @@ describe("VMTest", function() {
         done();
       });
     });
-    
+
 
     it("fails if expected event don't match exactly", function( done ) {
       var contract = new Contract(mock.contracts.EventFail);
@@ -105,7 +106,7 @@ describe("VMTest", function() {
         done();
       });
     });
-    
+
 
     it("fails if expected events don't match exactly", function( done ) {
       var contract = new Contract(mock.contracts.EventFail2);
@@ -117,5 +118,5 @@ describe("VMTest", function() {
         done();
       });
     });
-    
+
 });

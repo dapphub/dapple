@@ -27,7 +27,7 @@ for (var i = 0; i < passthroughs.length; i += 1) {
 
 module.exports = function (env, web3) {
   if (typeof env === 'undefined') {
-    env = <%= env %>;
+    env = {};
   }
 
   if (typeof web3 === 'undefined') {
@@ -37,7 +37,10 @@ module.exports = function (env, web3) {
     web3 = new Web3(new Web3.providers.HttpProvider(env.rpcURL));
   }
 
-  var header = <%= header %>;
+  var header = {
+    'contracts': {},
+    'version': {}
+  };
   this.headers = header;
 
   this.classes = {};

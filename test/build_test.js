@@ -1,46 +1,50 @@
+/* global it, describe */
 'use strict';
-var _ = require("lodash");
+var _ = require('lodash');
 var assert = require('chai').assert;
-var fs = require("../lib/file");
-var path = require("path");
-var testenv = require("./testenv");
-var Workspace = require("../lib/workspace");
+var fs = require('../lib/file');
+var path = require('path');
+var testenv = require('./testenv');
+var Workspace = require('../lib/workspace');
 
-describe('class Builder', function() {
-    var workspace = new Workspace(testenv.golden_package_dir);
-    var Builder = require('../lib/build');
-    var b = new Builder(workspace);
+describe('class Builder', function () {
+  var workspace = new Workspace(testenv.golden_package_dir);
+  var Builder = require('../lib/build');
+  var b = new Builder(workspace);
 
-    // TODO this fails with timeout even though `done()` is called
-    it.skip("[SLOW] .build recreates golden solc_out from blank init dir", function(done) {
-        this.timeout(15000);
+  // TODO this fails with timeout even though `done()` is called
+  it.skip('[SLOW] .build recreates golden solc_out from blank init dir', function (done) {
+    this.timeout(15000);
 
-        var tmpdir = fs.tmpdir();
-        var returned = b.build(tmpdir);
-        // Uncomment to make new golden record
-        //fs.writeJsonSync(testenv.GOLDEN_SOLC_OUT_PATH, returned);
-        var written = fs.readJsonSync(path.join(tmpdir, "classes.json"));
-        var golden = testenv.golden.SOLC_OUT();
+    var tmpdir = fs.tmpdir();
+    var returned = b.build(tmpdir);
+    // Uncomment to make new golden record
+    // fs.writeJsonSync(testenv.golden.SOLC_OUT_PATH(), returned);
+    var written = fs.readJsonSync(path.join(tmpdir, 'classes.json'));
+    var golden = testenv.golden.SOLC_OUT();
 
-        //assert.deepEqual( returned, golden );
-        //assert.deepEqual( written, golden );
-        done();
+    assert.deepEqual(returned, golden);
+    assert.deepEqual(written, golden);
+    done();
+  });
+  it('filterSolcOut does not exclude output we need', function (done) {
+    var golden_sources = testenv.golden.SOLC_OUT();
+    var filtered_sources = Builder.removeSolcClutter(golden_sources);
+    var tester_class = filtered_sources.contracts.Tester;
+    var required_outputs = ['bytecode', 'interface', 'solidity_interface'];
+    _.forEach(required_outputs, function (key) {
+      assert(_.has(tester_class, key), 'missing a required key: ' + key);
     });
-    it("filterSolcOut doesn't exclude output we need", function(done) {
-        var golden_sources = testenv.golden.SOLC_OUT();
-        var filtered_sources = Builder.removeSolcClutter(golden_sources);
-        var tester_class = filtered_sources.contracts.Tester;
-        var required_outputs = ["bytecode", "interface", "solidity_interface"];
-        _.forEach(required_outputs, function(key) {
-            assert( _.has(tester_class, key), "missing a required key: " + key );
-        });
-        done();
-    });
-    it("writeJsHeader produces the golden output", function(done) {
-        var classes = testenv.golden.SOLC_OUT();
-        var headers = Builder.extractClassHeaders(classes);
-        var compiled = Builder.compileJsModule(headers);
-        done();
-    });
-    it.skip("has helpful error when directory layout misconfigured");
+    done();
+  });
+  it('writeJsHeader produces the golden output', function (done) {
+    var classes = testenv.golden.SOLC_OUT();
+    var headers = Builder.extractClassHeaders(classes);
+    var compiled = Builder.compileJsModule(headers);
+    // Uncomment to make new golden record
+    fs.writeFileSync(testenv.golden.JS_OUT_PATH(), compiled);
+    assert.deepEqual(testenv.golden.JS_OUT(), compiled);
+    done();
+  });
+  it.skip('has helpful error when directory layout misconfigured');
 });

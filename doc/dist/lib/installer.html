@@ -6,46 +6,46 @@
 <span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);
 
 <span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Installer</span> </span>{
-    static install(dependencies, logger) {
-        <span class="hljs-keyword">if</span> (!logger) logger = <span class="hljs-built_in">console</span>;
+  static install (dependencies, logger) {
+    <span class="hljs-keyword">if</span> (!logger) logger = <span class="hljs-built_in">console</span>;
 
-        <span class="hljs-keyword">try</span> {
-            fs.accessSync(<span class="hljs-string">'dapple_packages'</span>, fs.W_OK);
-        } <span class="hljs-keyword">catch</span> (e) {
-            <span class="hljs-keyword">try</span> {
-                fs.mkdirSync(<span class="hljs-string">'dapple_packages'</span>);
-            } <span class="hljs-keyword">catch</span> (e) {
-                logger.error(
-                    <span class="hljs-string">"Could not access or create dapple_packages: "</span> + e);
-            }
-        }
-
-        <span class="hljs-keyword">if</span> ( <span class="hljs-built_in">Array</span>.isArray(dependencies) ) {
-            <span class="hljs-keyword">let</span> newDependencies = {};
-            <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">let</span> dependency <span class="hljs-keyword">of</span> dependencies ) {
-                newDependencies[path.basename(dependency)] = dependency;
-            }
-            dependencies = newDependencies;
-        }
-
-        <span class="hljs-keyword">for</span>( <span class="hljs-keyword">let</span> pair <span class="hljs-keyword">of</span> _.pairs(dependencies) ) {
-            <span class="hljs-keyword">let</span> packageName = pair[<span class="hljs-number">0</span>];
-            <span class="hljs-keyword">let</span> packagePath = pair[<span class="hljs-number">1</span>];
-            <span class="hljs-keyword">let</span> installPath = path.join(<span class="hljs-string">'dapple_packages'</span>, packageName);
-
-            <span class="hljs-keyword">if</span> ( <span class="hljs-regexp">/^[a-zA-Z_0-9\-]+\/[a-zA-Z_0-9\-]+$/</span>.test(packagePath) ) {
-                packagePath = <span class="hljs-string">'http://github.com/'</span> + packagePath + <span class="hljs-string">'.git'</span>;
-            }
-
-            fs.access(installPath, fs.R_OK, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{
-                <span class="hljs-keyword">if</span> (!err) {
-                    logger.log(packageName + <span class="hljs-string">' is already installed.'</span>);
-                    <span class="hljs-keyword">return</span>;
-                }
-                child_process.execSync(
-                    <span class="hljs-string">'git clone '</span> + packagePath + <span class="hljs-string">' '</span> + installPath
-                );
-            });
-        }
+    <span class="hljs-keyword">try</span> {
+      fs.accessSync(<span class="hljs-string">'dapple_packages'</span>, fs.W_OK);
+    } <span class="hljs-keyword">catch</span> (e) {
+      <span class="hljs-keyword">try</span> {
+        fs.mkdirSync(<span class="hljs-string">'dapple_packages'</span>);
+      } <span class="hljs-keyword">catch</span> (e) {
+        logger.error(
+          <span class="hljs-string">'Could not access or create dapple_packages: '</span> + e);
+      }
     }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(dependencies)) {
+      <span class="hljs-keyword">let</span> newDependencies = {};
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> dependency <span class="hljs-keyword">of</span> dependencies) {
+        newDependencies[path.basename(dependency)] = dependency;
+      }
+      dependencies = newDependencies;
+    }
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> pair <span class="hljs-keyword">of</span> _.pairs(dependencies)) {
+      <span class="hljs-keyword">let</span> packageName = pair[<span class="hljs-number">0</span>];
+      <span class="hljs-keyword">let</span> packagePath = pair[<span class="hljs-number">1</span>];
+      <span class="hljs-keyword">let</span> installPath = path.join(<span class="hljs-string">'dapple_packages'</span>, packageName);
+
+      <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/^[a-zA-Z_0-9\-]+\/[a-zA-Z_0-9\-]+$/</span>.test(packagePath)) {
+        packagePath = <span class="hljs-string">'http://github.com/'</span> + packagePath + <span class="hljs-string">'.git'</span>;
+      }
+
+      fs.access(installPath, fs.R_OK, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err</span>) </span>{
+        <span class="hljs-keyword">if</span> (!err) {
+          logger.log(packageName + <span class="hljs-string">' is already installed.'</span>);
+          <span class="hljs-keyword">return</span>;
+        }
+        child_process.execSync(
+          <span class="hljs-string">'git clone '</span> + packagePath + <span class="hljs-string">' '</span> + installPath
+        );
+      });
+    }
+  }
 };</div></div></div></div></body></html>
