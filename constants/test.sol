@@ -33,10 +33,15 @@ contract Test is Debug {
     }
     
     
-    event eventListener(bytes32 name);
+    event eventListener(bytes32 name, bytes args);
     
     modifier expectEvent(bytes32 name) {
-      eventListener( name );
+      eventListener( name, "" );
+      _
+    }
+    
+    modifier expectEventArgs(bytes32 name, bytes args) {
+      eventListener( name, args );
       _
     }
     function fail() {
