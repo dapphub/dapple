@@ -31,6 +31,14 @@ contract Test is Debug {
         var __endgas = msg.gas;
         log_named_uint("gas", (__startgas - __endgas) - __GAS_OVERHEAD);
     }
+    
+    
+    event eventListener(bytes32 name);
+    
+    modifier expectEvent(bytes32 name) {
+      eventListener( name );
+      _
+    }
     function fail() {
         failed = true;
     }
