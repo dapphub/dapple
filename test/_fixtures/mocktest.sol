@@ -3,18 +3,13 @@ contract Test {
 
     event logs(bytes val);
     
-    event eventListener(bytes32 name, bytes args);
+    event eventListener(address _target, bool exact);
     
-    modifier expectEvent(bytes32 name) {
-      eventListener( name, "" );
-      _
-    }
-    
-    modifier expectEventArgs(bytes32 name, bytes args) {
-      eventListener( name, args );
-      _
+    function expectEventsExact(address _target) {
+      eventListener(_target, true);
     }
 
+    
     function fail() {
         failed = true;
     }
@@ -51,89 +46,81 @@ contract NotThrow is Test {
     }
 }
 
-contract Event is Test {
-  
-    event foo(bytes val);
-
-    function testEvent() expectEvent("foo") {
-      foo("uiuiui");
-      assertTrue(true);
-    }
+contract EventDefinitions {
+    event foo(bytes what);
+    event bar(bytes what);
 }
 
-
-contract EventArgs is Test {
-  
-    event foo(bytes val);
-
-    function testEvent() expectEventArgs("foo", "bar") {
+contract MyContract is EventDefinitions {
+    
+    function throwFoo() {
       foo("bar");
-      assertTrue(true);
+    }
+    
+    function throwFooBar() {
+      foo("bar");
+      bar("bar");
+    }
+    
+    function noevent() {
+        // nothing!
     }
 }
 
-contract EventNoArgs is Test {
-  
-    event foo(bytes val);
+contract Event is Test, EventDefinitions {
+    MyContract _target;
+    
+    function setUp() {
+        _target = new MyContract();
+    }
 
-    function testEvent() expectEventArgs("foo", "bar") {
+    function testEvent() {
+      expectEventsExact( _target );
+      foo("bar");
+      _target.throwFoo();
+    }
+}
+
+contract Event2 is Test, EventDefinitions {
+    MyContract _target;
+    
+    function setUp() {
+        _target = new MyContract();
+    }
+
+    function testEvent() {
+      expectEventsExact( _target );
+      foo("bar");
+      bar("bar");
+      _target.throwFooBar();
+    }
+}
+
+contract EventFail is Test, EventDefinitions {
+    MyContract _target;
+    
+    function setUp() {
+        _target = new MyContract();
+    }
+
+    function testEvent() {
+      expectEventsExact( _target );
       foo("baz");
-      assertTrue(true);
+      _target.throwFoo();
     }
 }
 
-
-contract EventArgsRegex is Test {
-  
-    event foo(bytes val);
-
-    function testEvent() expectEventArgs("foo", "^bar+$") {
-      foo("barrrr");
-      assertTrue(true);
+contract EventFail2 is Test, EventDefinitions {
+    MyContract _target;
+    
+    function setUp() {
+        _target = new MyContract();
     }
-}
 
-contract EventNoArgsRegex is Test {
-  
-    event foo(bytes val);
-
-    function testEvent() expectEventArgs("foo", "^bar+$") {
-      foo("no barrrr");
-      assertTrue(true);
-    }
-}
-
-
-contract TwoEvent is Test {
-  
-    event foo(bytes val);
-    event bar(bytes val);
-
-    function testEvent() expectEvent("foo") expectEvent("bar") {
-      foo("uiuiui");
-      bar("uiuiui");
-      assertTrue(true);
-    }
-}
-
-
-contract NoEvent is Test {
-  
-    event foo(bytes val);
-
-    function testWhatever() expectEvent("foo") expectEvent("bar") {
-      assertTrue(true);
-    }
-}
-
-
-contract NoSecondEvent is Test {
-  
-    event foo(bytes val);
-    event bar(bytes val);
-
-    function testWhatever() expectEvent("foo") expectEvent("bar") {
-      foo("uiuiui");
-      assertTrue(true);
+    function testEvent() {
+      expectEventsExact( _target );
+      bar("bar");
+      foo("bar");
+      _target.throwFooBar();
     }
 }
