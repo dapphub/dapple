@@ -10,6 +10,6 @@
 // Note that every stream and pipeline can be used directly as a Gulp plugin.
 
 module.exports = require('lazreq')({
-    pipelines: 'lib/pipelines.js',
-    streams: 'lib/streams.js'
+  pipelines: 'lib/pipelines.js',
+  streams: 'lib/streams.js'
 });
