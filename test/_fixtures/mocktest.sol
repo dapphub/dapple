@@ -26,3 +26,15 @@ contract Fail is Test {
         assertTrue(false);
     }
 }
+
+contract Throw is Test {
+    function testThrow() {
+      throw;
+    }
+}
+
+contract NotThrow is Test {
+    function testThrow() {
+      assertTrue(true);
+    }
+}
