@@ -94,6 +94,50 @@ describe("VMTest", function() {
       });
     });
     
+    it("catches expected events arguments", function( done ) {
+      var contract = new Contract(mock.contracts.EventArgs);
+      var vmtest = new VMTest(Web3Factory.EVM(), contract);
+      vmtest.runTest(0, function(err, result) {
+        assert.notOk(err);
+        assert.notOk(result.failed, "test failed, should have passed");
+        assert.equal(1, result.logs.length);
+        done();
+      });
+    });
+    
+    it("catches expected events arguments by regex", function( done ) {
+      var contract = new Contract(mock.contracts.EventArgsRegex);
+      var vmtest = new VMTest(Web3Factory.EVM(), contract);
+      vmtest.runTest(0, function(err, result) {
+        assert.notOk(err);
+        assert.notOk(result.failed, "test failed, should have passed");
+        assert.equal(1, result.logs.length);
+        done();
+      });
+    });
+    
+    it("fails if expected events arguments dont match", function( done ) {
+      var contract = new Contract(mock.contracts.EventNoArgs);
+      var vmtest = new VMTest(Web3Factory.EVM(), contract);
+      vmtest.runTest(0, function(err, result) {
+        assert.notOk(err);
+        assert.ok(result.failed, "test passed, should have failed");
+        assert.equal(1, result.logs.length);
+        done();
+      });
+    });
+    
+    it("fails if expected events arguments dont match by regex", function( done ) {
+      var contract = new Contract( mock.contracts.EventNoArgsRegex );
+      var vmtest = new VMTest(Web3Factory.EVM(), contract);
+      vmtest.runTest(0, function(err, result) {
+        assert.notOk(err);
+        assert.ok(result.failed, "test passed, should have failed");
+        assert.equal(1, result.logs.length);
+        done();
+      });
+    });
+    
     it("fails if expected event is not thrown", function( done ) {
       var contract = new Contract(mock.contracts.NoEvent);
       var vmtest = new VMTest(Web3Factory.EVM(), contract);

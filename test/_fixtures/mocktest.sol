@@ -3,10 +3,15 @@ contract Test {
 
     event logs(bytes val);
     
-    event eventListener(bytes32 name);
+    event eventListener(bytes32 name, bytes args);
     
     modifier expectEvent(bytes32 name) {
-      eventListener( name );
+      eventListener( name, "" );
+      _
+    }
+    
+    modifier expectEventArgs(bytes32 name, bytes args) {
+      eventListener( name, args );
       _
     }
 
@@ -52,6 +57,48 @@ contract Event is Test {
 
     function testEvent() expectEvent("foo") {
       foo("uiuiui");
+      assertTrue(true);
+    }
+}
+
+
+contract EventArgs is Test {
+  
+    event foo(bytes val);
+
+    function testEvent() expectEventArgs("foo", "bar") {
+      foo("bar");
+      assertTrue(true);
+    }
+}
+
+contract EventNoArgs is Test {
+  
+    event foo(bytes val);
+
+    function testEvent() expectEventArgs("foo", "bar") {
+      foo("baz");
+      assertTrue(true);
+    }
+}
+
+
+contract EventArgsRegex is Test {
+  
+    event foo(bytes val);
+
+    function testEvent() expectEventArgs("foo", "^bar+$") {
+      foo("barrrr");
+      assertTrue(true);
+    }
+}
+
+contract EventNoArgsRegex is Test {
+  
+    event foo(bytes val);
+
+    function testEvent() expectEventArgs("foo", "^bar+$") {
+      foo("no barrrr");
       assertTrue(true);
     }
 }
