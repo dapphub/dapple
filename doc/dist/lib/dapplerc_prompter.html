@@ -3,61 +3,57 @@
 <span class="hljs-keyword">var</span> DappleRC = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../lib/dapplerc.js'</span>);
 <span class="hljs-keyword">var</span> deasync = <span class="hljs-built_in">require</span>(<span class="hljs-string">'deasync'</span>);
 <span class="hljs-keyword">var</span> inquirer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'inquirer'</span>);
+<span class="hljs-keyword">var</span> defaults = <span class="hljs-built_in">require</span>(<span class="hljs-string">'json-schema-defaults'</span>);
+<span class="hljs-keyword">var</span> dapplercSchema = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../specs/dapplerc.json'</span>);
 
 <span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DappleRCPrompter</span> </span>{
-    static prompt() {
-        <span class="hljs-keyword">var</span> questions = [
-            {
-                <span class="hljs-string">"type"</span>: <span class="hljs-string">"input"</span>,
-                <span class="hljs-string">"name"</span>: <span class="hljs-string">"ipfs_host"</span>,
-                <span class="hljs-string">"message"</span>: <span class="hljs-string">"IPFS hostname:"</span>,
-                <span class="hljs-string">"default"</span>: <span class="hljs-string">"localhost"</span>
-            },
-            {
-                <span class="hljs-string">"type"</span>: <span class="hljs-string">"input"</span>,
-                <span class="hljs-string">"name"</span>: <span class="hljs-string">"ipfs_port"</span>,
-                <span class="hljs-string">"message"</span>: <span class="hljs-string">"IPFS port:"</span>,
-                <span class="hljs-string">"default"</span>: <span class="hljs-string">"4001"</span>
-            },
-            {
-                <span class="hljs-string">"type"</span>: <span class="hljs-string">"input"</span>,
-                <span class="hljs-string">"name"</span>: <span class="hljs-string">"eth_host"</span>,
-                <span class="hljs-string">"message"</span>: <span class="hljs-string">"Ethereum JSON-RPC hostname:"</span>,
-                <span class="hljs-string">"default"</span>: <span class="hljs-string">"localhost"</span>
-            },
-            {
-                <span class="hljs-string">"type"</span>: <span class="hljs-string">"input"</span>,
-                <span class="hljs-string">"name"</span>: <span class="hljs-string">"eth_port"</span>,
-                <span class="hljs-string">"message"</span>: <span class="hljs-string">"Ethereum JSON-RPC port:"</span>,
-                <span class="hljs-string">"default"</span>: <span class="hljs-string">"8545"</span>
-            }
-        ];
-
-        <span class="hljs-keyword">var</span> rc;
-        <span class="hljs-keyword">var</span> done = <span class="hljs-literal">false</span>;
-        inquirer.prompt(questions, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{
-            rc = {
-                environments: {
-                    <span class="hljs-keyword">default</span>: {
-                        ethereum: <span class="hljs-string">"internal"</span>,
-                        ipfs: {
-                            host: res.ipfs_host,
-                            port: res.ipfs_port
-                        }
-                    },
-                    live: {
-                        ethereum: {
-                            host: res.eth_host,
-                            port: res.eth_port
-                        },
-                    },
-                    evm: <span class="hljs-string">"default"</span>
-                }
-            };
-            done = <span class="hljs-literal">true</span>;
-        });
-        deasync.loopWhile(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{<span class="hljs-keyword">return</span> !done;})
-        DappleRC.validate(rc);
-        <span class="hljs-keyword">return</span> rc;
+static prompt () {
+  <span class="hljs-keyword">var</span> questions = [
+    {
+      <span class="hljs-string">'type'</span>: <span class="hljs-string">'input'</span>,
+      <span class="hljs-string">'name'</span>: <span class="hljs-string">'ipfs_host'</span>,
+      <span class="hljs-string">'message'</span>: <span class="hljs-string">'IPFS hostname:'</span>,
+      <span class="hljs-string">'default'</span>: <span class="hljs-string">'localhost'</span>
+    },
+    {
+      <span class="hljs-string">'type'</span>: <span class="hljs-string">'input'</span>,
+      <span class="hljs-string">'name'</span>: <span class="hljs-string">'ipfs_port'</span>,
+      <span class="hljs-string">'message'</span>: <span class="hljs-string">'IPFS port:'</span>,
+      <span class="hljs-string">'default'</span>: <span class="hljs-string">'4001'</span>
+    },
+    {
+      <span class="hljs-string">'type'</span>: <span class="hljs-string">'input'</span>,
+      <span class="hljs-string">'name'</span>: <span class="hljs-string">'eth_host'</span>,
+      <span class="hljs-string">'message'</span>: <span class="hljs-string">'Ethereum JSON-RPC hostname:'</span>,
+      <span class="hljs-string">'default'</span>: <span class="hljs-string">'localhost'</span>
+    },
+    {
+      <span class="hljs-string">'type'</span>: <span class="hljs-string">'input'</span>,
+      <span class="hljs-string">'name'</span>: <span class="hljs-string">'eth_port'</span>,
+      <span class="hljs-string">'message'</span>: <span class="hljs-string">'Ethereum JSON-RPC port:'</span>,
+      <span class="hljs-string">'default'</span>: <span class="hljs-string">'8545'</span>
     }
+  ];
+
+  <span class="hljs-keyword">var</span> rc;
+  <span class="hljs-keyword">var</span> done = <span class="hljs-literal">false</span>;
+  inquirer.prompt(questions, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">res</span>) </span>{
+    rc = defaults(dapplercSchema);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>TODO - add ipfs to default environment?
+why is ipfs bound to an environment anyway?</p></div></div><div class="code"><div class="wrapper">    rc.environments.live = {
+      ethereum: {
+        host: res.eth_host,
+        port: res.eth_port
+      },
+      ipfs: {
+        host: res.ipfs_host,
+        port: res.ipfs_port
+      }
+    };
+
+    done = <span class="hljs-literal">true</span>;
+  });
+  deasync.loopWhile(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> !done; });
+  DappleRC.validate(rc);
+  <span class="hljs-keyword">return</span> rc;
+}
 };</div></div></div></div></body></html>

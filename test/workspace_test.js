@@ -27,7 +27,7 @@ describe('class Workspace', function () {
   it('initializes successfully in golden package', function (done) {
     testenv.get_source_files(
       testenv.golden_package_dir, function (files) {
-        Workspace(_.values(files));
+        Workspace.create(_.values(files));
         done();
       });
   });
