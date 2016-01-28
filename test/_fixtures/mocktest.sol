@@ -40,13 +40,13 @@ contract Fail is Test {
 }
 
 contract Throw is Test {
-    function testThrow() {
+    function testThrowSomething() {
       throw;
     }
 }
 
 contract NotThrow is Test {
-    function testThrow() {
+    function testThrowSomething() {
       assertTrue(true);
     }
 }
