@@ -26,7 +26,7 @@ describe.skip('NativeCompiler', function () {
     this.timeout(15000);
     var returned = NativeCompiler.compile({sources: sources});
     // Uncomment to make new golden record
-    fs.writeJsonSync(testenv.GOLDEN_SOLC_OUT_PATH, returned);
+    fs.writeJsonSync(testenv.golden.SOLC_OUT_PATH(), returned);
     var golden = testenv.golden.SOLC_OUT();
 
     assert.deepEqual(returned, golden);

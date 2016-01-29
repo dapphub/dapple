@@ -170,7 +170,11 @@ to the callback function.</p></div></div><div class="code"><div class="wrapper">
             message = <span class="hljs-string">'Failed! Exception thrown.'</span>;
           } <span class="hljs-keyword">else</span> {
             failed = failed || <span class="hljs-built_in">Boolean</span>(err);
-            message = err || <span class="hljs-string">'Failed!'</span>;
+
+            <span class="hljs-keyword">if</span> (failed) {
+              message = err || <span class="hljs-string">'Failed!'</span>;
+            }
+
             logs = that.logTranslator.translateAll(receipt.logs);
           }
 
