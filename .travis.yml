@@ -1,1 +1,3 @@
-install: npm install
+install:
+    - npm install -g npm
+    - npm install
