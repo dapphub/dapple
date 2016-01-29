@@ -31,6 +31,13 @@ contract Test is Debug {
         var __endgas = msg.gas;
         log_named_uint("gas", (__startgas - __endgas) - __GAS_OVERHEAD);
     }
+    
+    event eventListener(address _target, bool exact);
+    
+    function expectEventsExact(address _target) {
+      eventListener(_target, true);
+    }
+    
     function fail() {
         failed = true;
     }
