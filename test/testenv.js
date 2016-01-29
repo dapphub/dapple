@@ -37,6 +37,8 @@ module.exports = {
 
   linker_package_dir: path.join(__dirname, '_fixtures', 'linker_test_package'),
 
+  stream_test_dir: path.join(__dirname, '_fixtures', 'streams_test'),
+
   get_source_files: function (packagePath, callback) {
     var sources = {};
     var packageRoot = Workspace.findPackageRoot(packagePath);
