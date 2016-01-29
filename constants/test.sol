@@ -32,18 +32,12 @@ contract Test is Debug {
         log_named_uint("gas", (__startgas - __endgas) - __GAS_OVERHEAD);
     }
     
+    event eventListener(address _target, bool exact);
     
-    event eventListener(bytes32 name, bytes args);
-    
-    modifier expectEvent(bytes32 name) {
-      eventListener( name, "" );
-      _
+    function expectEventsExact(address _target) {
+      eventListener(_target, true);
     }
     
-    modifier expectEventArgs(bytes32 name, bytes args) {
-      eventListener( name, args );
-      _
-    }
     function fail() {
         failed = true;
     }
