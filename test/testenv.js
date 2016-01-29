@@ -9,10 +9,8 @@ var Workspace = require('../lib/workspace.js');
 module.exports = {
   golden_package_dir: path.join(
     __dirname, '_fixtures', 'testenv', 'golden_package'),
-  GOLDEN_SOLC_OUT_PATH: path.join(
-    __dirname, '_fixtures', 'golden', 'solc_out.json'),
   golden_solc_output: function () {
-    return fs.readJsonSync(this.GOLDEN_SOLC_OUT_PATH);
+    return fs.readJsonSync(this.golden.SOLC_OUT_PATH());
   },
   golden: {
     ROOT: path.join(__dirname, '_fixtures', 'testenv', 'golden'),
