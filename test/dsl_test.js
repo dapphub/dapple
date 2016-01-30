@@ -5,13 +5,20 @@ var parser = require('../lib/DSL.js');
 describe('DSL', function() {
   
   
-  it("should parse a simple statement", function(done){
+  it("should recognize strings", function(done){
     
+    var output = parser.parse('"abc"');
     
-    var output = parser.parse('var addr = new Contract()');
+    assert(output === "abc");
+    
+    done();
+  });
+  
+  it.only("should recognize an assignment", function(done){
+    
+    var output = parser.parse('var abc = "abc"');
     
     console.log(output);
-    
     
     done();
   });

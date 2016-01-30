@@ -9,6 +9,7 @@
 "="                   {return '='}
 "("                   {return '('}
 ")"                   {return ')'}
+\"[^\"]*\"            {return 'STRING';}
 \w+                   {return 'WORD';}
 <<EOF>>               {return 'EOF';}
 
@@ -28,6 +29,7 @@ seq : EXPR EOF
 
 EXPR: DECLARATION
     | DEPLOYMENT
+    | STRING
     ;
 
 
