@@ -8,7 +8,7 @@ var testenv = require('../testenv');
 var through = require('through2');
 var vinyl = require('vinyl-fs');
 
-describe.only('streams.test', function () {
+describe('streams.test', function () {
   var classesPath = path.join(testenv.stream_test_dir, 'build', 'classes.json');
 
   it('emits one file for every failing test', function (done) {
