@@ -20,8 +20,15 @@ describe('class Workspace', function () {
     var dir = fs.tmpdir();
     Workspace.initialize(dir);
     // fs.copySync(dir, testenv.golden.INIT_EMPTY_DIR); //  Create a new golden record
-    var diff = dircompare.compareSync(dir, testenv.golden.INIT_EMPTY_DIR);
-    assert(diff.same);
+    var emptyDirs = ['build', 'src'];
+    var ls = fs.readdirSync(dir);
+    assert.deepEqual(_.intersection(ls, emptyDirs), emptyDirs,
+      'Workspace does not initialize with expected empty directories.');
+
+    var diff = dircompare.compareSync(dir, testenv.golden.INIT_EMPTY_DIR, {
+      excludeFilter: emptyDirs.join(',')
+    });
+    assert(diff.same, 'Workspace does not initialize with expected files.');
   });
 
   it('initializes successfully in golden package', function (done) {
