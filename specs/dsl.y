@@ -20,12 +20,30 @@
 
 %% /* language grammar */
 
-seq : s EOF
-      {return $1;}
-    | s s EOF
+seq : EXPR EOF
+      { return $1; }
+    | EXPR seq
       {return $1 + '\n' + $2 }
     ;
 
-s   : VAR WORD "=" NEW WORD '(' ')'  
-      { return `creating new contract ${$5}`;  }
+EXPR: DECLARATION
+    | DEPLOYMENT
     ;
+
+
+DECLARATION: VAR WORD "=" EXPR
+           { $$ = yy.assign( $WORD, $EXPR ); }
+           ;
+
+DEPLOYMENT: NEW WORD "(" ")"
+           { $$ = yy.deploy( $WORD, [], 0, undefined ); }
+          | NEW WORD "(" ARGS ")"
+           { $$ = yy.deploy( $WORD, $ARGS, 0, undefined ); }
+          ;
+
+ARGS: WORD
+    { $$ = [$WORD]; }
+    | WORD ',' ARGS
+    { $$ = [$WORD].concat($ARGS) }
+    ;
+
