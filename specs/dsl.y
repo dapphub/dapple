@@ -9,7 +9,8 @@
 "="                   {return '='}
 "("                   {return '('}
 ")"                   {return ')'}
-\"[^\"]*\"            {return 'STRING';}
+\"([^\"]*)\"          {yytext = this.matches[1]; return 'STRING';}
+\d+                   {yytext = parseInt(yytext); return 'NUMBER';}
 \w+                   {return 'WORD';}
 <<EOF>>               {return 'EOF';}
 
@@ -30,6 +31,7 @@ seq : EXPR EOF
 EXPR: DECLARATION
     | DEPLOYMENT
     | STRING
+    | NUMBER
     ;
 
 
