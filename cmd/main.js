@@ -159,4 +159,28 @@ if (cli.install) {
       web3: rc.data.environments[env].ethereum || 'internal',
       nameFilter: nameFilter
     }));
+} else if(cli.run) {
+  
+  let workspace = Workspace.atPackageRoot();
+  let env = cli['--environment'] || workspace.getEnvironment();
+  let environments = workspace.getEnvironments();
+  
+  let fileName = cli['<script>'];
+  
+  // TODO - refactor to wirkspace
+  let file = fs.readFileSync( workspace.getPackageRoot() + '/' + fileName, 'utf8' );
+  let force = cli['--force'];
+  
+  let
+    initStream = req.pipelines
+      .BuildPipeline({
+        packageRoot: Workspace.findPackageRoot(),
+        subpackages: cli['--subpackages'] || cli['-s']
+      })
+    .pipe(req.pipelines.RunPipeline({
+      script: file
+    }));
+  
+  
+  
 }
