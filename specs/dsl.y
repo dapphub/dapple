@@ -55,10 +55,14 @@ TERM: DEPLOYMENT
     | ADDRESS_CALL
     ;
 
-ADDRESS_CALL: SYMBOL '.' SYMBOL OPT_CALL '(' ')'
-            { $$ = yy.i.call( $1, $3, [], $4 ); }
-            | SYMBOL '.' SYMBOL OPT_CALL '(' ARGS ')'
-            { $$ = yy.i.call( $1, $3, $ARGS, $4 ); }
+ADDRESS_CALL: SYMBOL '.' SYMBOL '(' ')'
+            { $$ = yy.i.call( $1, $3, [], { value: 0, gas: undefined }); }
+            | SYMBOL '.' SYMBOL '(' ARGS ')'
+            { $$ = yy.i.call( $1, $3, $ARGS, { value: 0, gas: undefined } ); }
+            | SYMBOL '.' SYMBOL '.' OPT_CALL '(' ')'
+            { $$ = yy.i.call( $1, $3, [], $OPT_CALL ); }
+            | SYMBOL '.' SYMBOL '.' OPT_CALL '(' ARGS ')'
+            { $$ = yy.i.call( $1, $3, $ARGS, $OPT_CALL ); }
             ;
 
 
