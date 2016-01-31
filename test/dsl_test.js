@@ -2,14 +2,20 @@
 
 var parser = require('../lib/DSL.js');
 var assert = require('chai').assert;
+var Interpreter = require('../lib/interpreter.js');
+
+var interpreter;
 
 describe('DSL', function() {
   
   // TODO - pass the real environment
   beforeEach( function() {
-    parser.yy.localenv = {};
-    parser.yy.globalenv = {};
-    parser.yy.success = true;
+    interpreter = new Interpreter(); 
+    parser.yy.i = interpreter;
+  });
+  
+  afterEach( function() {
+    console.log(interpreter.logs.join('\n') );
   });
   
   
@@ -17,8 +23,8 @@ describe('DSL', function() {
     
     parser.parse('var foo = "bar"');
     
-    assert( parser.yy.success );
-    assert( parser.yy.localenv.foo.value === "bar" );
+    assert( interpreter.success );
+    assert( interpreter.local.foo.value === "bar" );
     
     done();
     
@@ -29,8 +35,8 @@ describe('DSL', function() {
     
     parser.parse('var foo = 42');
     
-    assert( parser.yy.success );
-    assert( parser.yy.localenv.foo.value === 42 );
+    assert( interpreter.success );
+    assert( interpreter.local.foo.value === 42 );
     
     done();
     
@@ -41,13 +47,13 @@ describe('DSL', function() {
     
     parser.parse('var foo = 42');
     
-    assert.ok( parser.yy.success );
-    assert( parser.yy.localenv.foo.value === 42 );
+    assert.ok( interpreter.success );
+    assert( interpreter.local.foo.value === 42 );
     
     parser.parse('var foo = 17');
     
-    assert.notOk( parser.yy.success );
-    assert( parser.yy.localenv.foo.value === 42 );
+    assert.notOk( interpreter.success );
+    assert( interpreter.local.foo.value === 42 );
     
     done();
     
@@ -57,8 +63,8 @@ describe('DSL', function() {
     
     parser.parse('var foo = 17\nexport foo');
     
-    assert.ok( parser.yy.success );
-    assert( parser.yy.globalenv.foo.value === 17 );
+    assert.ok( interpreter.success );
+    assert( interpreter.global.foo.value === 17 );
     
     done();
   });
@@ -68,8 +74,8 @@ describe('DSL', function() {
     
     parser.parse('var foo = 17\nexport foo\nvar foo = 42\nexport foo');
     
-    assert.notOk( parser.yy.success );
-    assert( parser.yy.globalenv.foo.value === 17 );
+    assert.notOk( interpreter.success );
+    assert( interpreter.global.foo.value === 17 );
     
     done();
   });
@@ -78,8 +84,8 @@ describe('DSL', function() {
     
     parser.parse('var foo = new Contract()');
     
-    assert.ok( parser.yy.success );
-    assert( parser.yy.localenv.foo.value === '0x0123' );
+    assert.ok( interpreter.success );
+    assert( interpreter.local.foo.value === '0x0123' );
     
     
     done();
@@ -89,7 +95,7 @@ describe('DSL', function() {
     
     parser.parse('var foo = new NoContract()');
     
-    assert.notOk( parser.yy.success );
+    assert.notOk( interpreter.success );
     
     done();
   });
@@ -107,11 +113,27 @@ describe('DSL', function() {
   it("should call an address", function(done){
     
     
-    parser.parse('var foo = new NoContract()\n foo.functionCall()');
+    parser.parse('var foo = new Contract()\n foo.functionCall()');
     
     
     done();
   });
+  
+  it.only("should fail calling a wrong address", function(done){
+    
+    parser.parse('var foo = new NoContract()\n foo.functionCall()');
+    
+    assert.notOk( interpreter.success );
+    
+    done();
+  });
+  
+  it('should send value to an address');
+  it('should call an address with raw args');
+  it('should switch between keys');
+  
+  it('should assert things');
+  
   
   
   

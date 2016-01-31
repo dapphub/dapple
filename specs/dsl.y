@@ -39,40 +39,40 @@ FORMULAS: FORMULA EOF
 FORMULA: DECLARATION
        { $$ = $DECLARATION; }
        | EXPORT SYMBOL
-       { $$ = yy.export($SYMBOL); }
+       { $$ = yy.i.export($SYMBOL); }
        | TERM
        ;
 
 DECLARATION: VAR SYMBOL "=" TERM
-           { $$ = yy.assign( $SYMBOL, $TERM); }
+           { $$ = yy.i.assign( $SYMBOL, $TERM); }
            ;
 
 TERM: DEPLOYMENT
     | STRING
-    { $$ = new yy.Var( $1, yy.Var.TYPE.STRING ); }
+    { $$ = new yy.i.Var( $1, yy.i.Var.TYPE.STRING ); }
     | NUMBER
-    { $$ = new yy.Var( $1, yy.Var.TYPE.NUMBER ); }
+    { $$ = new yy.i.Var( $1, yy.i.Var.TYPE.NUMBER ); }
     | ADDRESS_CALL
     ;
 
 ADDRESS_CALL: SYMBOL '.' SYMBOL OPT_CALL '(' ')'
-            { $$ = yy.call( $1, $3, [], $4 ); }
+            { $$ = yy.i.call( $1, $3, [], $4 ); }
             | SYMBOL '.' SYMBOL OPT_CALL '(' ARGS ')'
-            { $$ = yy.call( $1, $3, $ARGS, $4 ); }
+            { $$ = yy.i.call( $1, $3, $ARGS, $4 ); }
             ;
 
 
 DEPLOYMENT: NEW SYMBOL "(" ")"
-           { $$ = yy.deploy( $SYMBOL, [], {value: 0, gas:undefined} ); }
+           { $$ = yy.i.deploy( $SYMBOL, [], {value: 0, gas:undefined} ); }
            
           | NEW SYMBOL "(" ARGS ")"
-           { $$ = yy.deploy( $SYMBOL, $ARGS, {value: 0, gas:undefined} ); } 
+           { $$ = yy.i.deploy( $SYMBOL, $ARGS, {value: 0, gas:undefined} ); } 
            
           | NEW SYMBOL '.' OPT_CALL "(" ")"
-           { $$ = yy.deploy( $SYMBOL, [], $OPT_CALL ); }
+           { $$ = yy.i.deploy( $SYMBOL, [], $OPT_CALL ); }
            
           | NEW SYMBOL '.' OPT_CALL "(" ARGS ")"
-           { $$ = yy.deploy( $SYMBOL, $ARGS, $OPT_CALL ); }
+           { $$ = yy.i.deploy( $SYMBOL, $ARGS, $OPT_CALL ); }
           ;
 
 OPT_CALL:
