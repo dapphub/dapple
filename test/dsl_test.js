@@ -1,7 +1,11 @@
 'use strict';
 
+var Workspace = require('../lib/workspace');
 var Parser = require('../lib/DSL.js');
 var assert = require('chai').assert;
+var testenv = require('./testenv');
+var fs = require('../lib/file');
+var pipelines = require( '../lib/pipelines.js');
 var parser;
 
 describe('DSL', function() {
@@ -164,6 +168,30 @@ describe('DSL', function() {
   it('should switch between keys');
   
   it('should assert things');
+  
+  // TODO - don't work: maybe because of workspace?
+  it.skip('should deploy a simple package', function(done) {
+    
+    
+    var workspace = new Workspace(testenv.deploy_package_dir);
+    let environments = workspace.getEnvironments();
+
+    // TODO - refactor to wirkspace
+    let file = fs.readFileSync( testenv.dsl_package_dir + '/deployscript', 'utf8' );
+
+    let
+      initStream = pipelines
+        .BuildPipeline({
+          packageRoot: testenv.deploy_package_dir+'/',
+          subpackages: false
+        })
+      .pipe(req.pipelines.RunPipeline({
+        script: file
+      }));
+
+    done();
+    
+  })
   
   
   
