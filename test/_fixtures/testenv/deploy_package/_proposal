@@ -1,0 +1,11 @@
+deployscript {
+  sequence main(){
+    var foo = new SimpleStorage()
+    export foo
+    run subsequence;
+  }
+  sequence seqName() {
+    var bar = new SimpleStorage("omg")
+    watch bar.getValue();
+  }
+}
