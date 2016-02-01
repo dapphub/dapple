@@ -15,3 +15,5 @@ contract LinkerExample {
         contracts["foo"] = "0xf00";
     }
 }
+
+contract ParenExample() {}
