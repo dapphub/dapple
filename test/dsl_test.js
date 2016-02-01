@@ -14,8 +14,13 @@ describe('DSL', function() {
   beforeEach( function() {
     parser = new Parser({
       classes: {
-        "Contract": {}
-      }
+        'Contract': {
+          interface: 
+[{"constant":false,"inputs":[{"name":"x","type":"uint256"}],"name":"set","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"get","outputs":[{"name":"retVal","type":"uint256"}],"type":"function"}],
+          bytecode: '606060405260978060106000396000f360606040526000357c01000000000000000000000000000000000000000000000000000000009004806360fe47b11460415780636d4ce63c14605757603f565b005b605560048080359060200190919050506078565b005b606260048050506086565b6040518082815260200191505060405180910390f35b806000600050819055505b50565b600060006000505490506094565b9056'
+        }
+      },
+      web3: 'internal'
     });
   });
   
@@ -101,12 +106,12 @@ describe('DSL', function() {
     
   });
   
-  it("should deploy a class", function(done){
+  it.only("should deploy a class", function(done){
     
     parser.parse('var foo = new Contract()', function(err,res) {
       
       assert.ok( parser.interpreter.success );
-      assert( parser.interpreter.local.foo.value === '0x0123' );
+      assert( parser.interpreter.local.foo.value.length === 42 );
       
       done();
       
