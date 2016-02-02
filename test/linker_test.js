@@ -81,6 +81,20 @@ describe('Linker', function () {
     assert(Linker.SOURCEMAP_KEY in linkedSources);
   });
 
+  it('includes a contract map for linked contracts', function () {
+    var linked = Linker.link(workspace, sources);
+    assert(Linker.CONTRACTMAP_KEY in linked);
+  });
+
+  it('only puts valid contract names in the contract map', function () {
+    var map = Linker.link(workspace, sources)[Linker.CONTRACTMAP_KEY];
+    var contractNames = _.values(JSON.parse(map)).sort();
+    assert.deepEqual(contractNames, [
+      'DapplePkgContract', 'Debug', 'LinkerExample',
+      'ParenExample', 'PkgContract', 'Test', 'Tester'
+    ]);
+  });
+
   it('replaces contract names with hashes', function () {
     var linkedSources = Linker.link(workspace, sources);
     linkedSources[Linker.SOURCEMAP_KEY] = JSON.parse(

@@ -7,9 +7,13 @@ import '<%= local_contract_hash %>';
 contract LinkerExample {
     PkgContract pkgContract;
     DapplePkgContract dapplePkgContract;
+    mapping(string=>address) contracts;
 
     function LinkerExample() {
         pkgContract = new PkgContract();
         dapplePkgContract = new DapplePkgContract();
+        contracts["foo"] = "0xf00";
     }
 }
+
+contract ParenExample() {}

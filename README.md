@@ -1,6 +1,7 @@
 # Dapple
 [![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)](https://github.com/Flet/semistandard)
 [![Slack Status](http://slack.makerdao.com/badge.svg)](https://slack.makerdao.com)
+[![Build Status](https://travis-ci.org/NexusDevelopment/dapple.svg?branch=master)](https://travis-ci.org/NexusDevelopment/dapple)
 
 <p align="center">
   <img width=196" src="http://ipfs.pics/ipfs/QmPQcPiaep6Bfp956b5xLDaQdtQVtAWBT9QjWNRiL9y8Cw"/>
