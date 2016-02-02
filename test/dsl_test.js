@@ -2,13 +2,17 @@
 
 var Workspace = require('../lib/workspace');
 var Parser = require('../lib/DSL.js');
+var Web3Factory = require('../lib/web3Factory.js');
 var assert = require('chai').assert;
 var testenv = require('./testenv');
 var fs = require('../lib/file');
 var pipelines = require( '../lib/pipelines.js');
-var parser;
+
 
 describe('DSL', function() {
+  this.timeout(10000);
+  
+  var parser;
   
   // TODO - pass the real environment
   beforeEach( function() {
@@ -20,7 +24,8 @@ describe('DSL', function() {
           bytecode: '606060405260978060106000396000f360606040526000357c01000000000000000000000000000000000000000000000000000000009004806360fe47b11460415780636d4ce63c14605757603f565b005b605560048080359060200190919050506078565b005b606260048050506086565b6040518082815260200191505060405180910390f35b806000600050819055505b50565b600060006000505490506094565b9056'
         }
       },
-      web3: 'internal'
+      web3: 'internal',
+      silent: true 
     });
   });
   
@@ -106,7 +111,7 @@ describe('DSL', function() {
     
   });
   
-  it.only("should deploy a class", function(done){
+  it("should deploy a class", function(done){
     
     parser.parse('var foo = new Contract()', function(err,res) {
       
@@ -196,10 +201,96 @@ describe('DSL', function() {
 
     done();
     
-  })
+  });
+  
+  it.skip("should something", function(done){
+    
+    var c = {
+      classes: {
+        'Contract': {
+          interface: 
+[{"constant":false,"inputs":[{"name":"x","type":"uint256"}],"name":"set","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"get","outputs":[{"name":"retVal","type":"uint256"}],"type":"function"}],
+          bytecode: '606060405260978060106000396000f360606040526000357c01000000000000000000000000000000000000000000000000000000009004806360fe47b11460415780636d4ce63c14605757603f565b005b605560048080359060200190919050506078565b005b606260048050506086565b6040518082815260200191505060405180910390f35b806000600050819055505b50565b600060006000505490506094565b9056'
+        }
+      }
+    };
+    
+    const DEFAULT_GAS = 900000000;
+    
+    var web3 = Web3Factory.EVM();
+    var Class = web3.eth.contract( c.classes['Contract'].interface );
+    
+    if (typeof web3.eth.defaultAccount === 'undefined') {
+      web3.eth.defaultAccount = web3.eth.accounts[0];
+    }
+    
+    web3.eth.sendTransaction({
+      from: web3.eth.defaultAccount,
+      data: '0x' + c.classes.Contract.bytecode,
+      gas: DEFAULT_GAS,
+      gasLimit: DEFAULT_GAS
+
+    }, function(e,r) {
+      console.log(e,r);
+      
+    });
+
+    // Class.new({ 
+    //   data: c.classes['Contract'].bytecode,
+    //   from: web3.eth.coinbase,
+    //   gas: DEFAULT_GAS,
+    //   gasLimit: DEFAULT_GAS
+    // }, function( err, res ) {
+    //   console.log(res);
+    //   if( err ) console.log(err)
+    //   if( res.address ) {
+    //     console.log(res.address);
+    //     done();
+    //   }
+    // });
+    
+    
+    
+  });
   
   
   
   
 });
 
+describe('deploycript against real chain', function() {
+  // 5 min
+  this.timeout(600000);
+  
+  var parser;
+  
+  // TODO - pass the real environment
+  beforeEach( function() {
+    parser = new Parser({
+      classes: {
+        'Contract': {
+          interface: 
+[{"constant":false,"inputs":[{"name":"x","type":"uint256"}],"name":"set","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"get","outputs":[{"name":"retVal","type":"uint256"}],"type":"function"}],
+          bytecode: '606060405260978060106000396000f360606040526000357c01000000000000000000000000000000000000000000000000000000009004806360fe47b11460415780636d4ce63c14605757603f565b005b605560048080359060200190919050506078565b005b606260048050506086565b6040518082815260200191505060405180910390f35b806000600050819055505b50565b600060006000505490506094565b9056'
+        }
+      },
+      web3: {host: '192.168.59.104', port:'8545'},
+      silent: true 
+    });
+  });
+  
+  it("should deploy a contract via rpc", function(done){
+    
+    parser.parse('var foo = new Contract()', function(err,res) {
+      
+      assert.ok( parser.interpreter.success );
+      assert( parser.interpreter.local.foo.value.length === 42 );
+      
+      done();
+      
+    });
+    
+  });
+  
+  
+});

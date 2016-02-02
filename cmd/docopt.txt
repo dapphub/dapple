@@ -6,6 +6,7 @@ Usage:
     dapple test  [-r <RegExp>] [options] [--skip-build]
     dapple new test <class>
     dapple run <script> [--force]
+    dapple step <string> [options]
 
 Options:
     -e ENVIRONMENT, --environment ENVIRONMENT [default: evm]
