@@ -164,6 +164,7 @@ if (cli.install) {
   let workspace = Workspace.atPackageRoot();
   let env = cli['--environment'] || workspace.getEnvironment();
   let environments = workspace.getEnvironments();
+  var rc = Workspace.getDappleRC();
   
   let fileName = cli['<script>'];
   
@@ -178,9 +179,11 @@ if (cli.install) {
         subpackages: cli['--subpackages'] || cli['-s']
       })
     .pipe(req.pipelines.RunPipeline({
-      script: file
+      script: file,
+      workspace: workspace,
+      web3: rc.data.environments[env].ethereum || 'inernal',
+      env
     }));
-  
   
   
 } else if(cli.step) {
