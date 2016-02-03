@@ -91,7 +91,8 @@ describe('Linker', function () {
     var contractNames = _.values(JSON.parse(map)).sort();
     assert.deepEqual(contractNames, [
       'DapplePkgContract', 'Debug', 'LinkerExample',
-      'ParenExample', 'PkgContract', 'Test', 'Tester'
+      'ParenExample', 'PkgContract', 'PkgContract_Test',
+      'Test', 'Tester'
     ]);
   });
 
