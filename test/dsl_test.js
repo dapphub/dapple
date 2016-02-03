@@ -173,6 +173,19 @@ describe('DSL', function() {
     
   });
   
+  it.only("should pass an var as a deploy argument", function(done){
+    
+    parser.parse('var foo = new Contract()\n var bar = new Contract(foo)', function(err,res) {
+      
+      assert.ok( parser.interpreter.success );
+      
+      done();
+      
+    });
+    
+  });
+
+  
   it('should send value to an address');
   it('should call an address with raw args');
   it('should switch between keys');
@@ -202,6 +215,7 @@ describe('DSL', function() {
     done();
     
   });
+  
   
   it.skip("should something", function(done){
     
