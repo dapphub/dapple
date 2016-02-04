@@ -159,4 +159,52 @@ if (cli.install) {
       web3: rc.data.environments[env].ethereum || 'internal',
       nameFilter: nameFilter
     }));
+} else if(cli.run) {
+  
+  var rc = Workspace.getDappleRC();
+  let workspace = Workspace.atPackageRoot();
+  let env = cli['--environment'] || workspace.getEnvironment();
+  let environments = workspace.getEnvironments();
+  
+  let fileName = cli['<script>'];
+  
+  // TODO - refactor to wirkspace
+  let file = fs.readFileSync( workspace.getPackageRoot() + '/' + fileName, 'utf8' );
+  let force = cli['--force'];
+  
+  let
+    initStream = req.pipelines
+      .BuildPipeline({
+        packageRoot: Workspace.findPackageRoot(),
+        subpackages: cli['--subpackages'] || cli['-s']
+      })
+    .pipe(req.pipelines.RunPipeline({
+      script: file,
+      workspace: workspace,
+      web3: rc.data.environments[env].ethereum || 'inernal',
+      env
+    }));
+  
+  
+} else if(cli.step) {
+  
+  let workspace = Workspace.atPackageRoot();
+  let env = cli['--environment'] || workspace.getEnvironment();
+  let environments = workspace.getEnvironments();
+  var rc = Workspace.getDappleRC();
+  
+  let file = cli['<string>'];
+  let force = cli['--force'];
+  
+  let
+    initStream = req.pipelines
+      .BuildPipeline({
+        packageRoot: Workspace.findPackageRoot(),
+        subpackages: cli['--subpackages'] || cli['-s']
+      })
+    .pipe(req.pipelines.RunPipeline({
+      script: file,
+      web3: rc.data.environments[env].ethereum || 'inernal'
+    }));
+
 }
