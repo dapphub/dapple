@@ -25,7 +25,7 @@ describe('DSL', function() {
         }
       },
       web3: 'internal',
-      silent: true 
+      silent: false 
     });
   });
   
@@ -149,10 +149,9 @@ describe('DSL', function() {
   
   it("should deploy contract with the right gas");
   
-  it("should call an address", function(done){
+  it.only("should call an address", function(done){
     
-    
-    parser.parse('var foo = new Contract()\n foo.functionCall()', function( err, res ) {
+    parser.parse('var foo = new Contract()\n foo.set(2) \n foo.get()', function( err, res ) {
       
       done();
       
@@ -173,7 +172,7 @@ describe('DSL', function() {
     
   });
   
-  it.only("should pass an var as a deploy argument", function(done){
+  it("should pass an var as a deploy argument", function(done){
     
     parser.parse('var foo = new Contract()\n var bar = new Contract(foo)', function(err,res) {
       

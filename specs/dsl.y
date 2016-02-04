@@ -13,6 +13,7 @@
 "("                   {return '('}
 ")"                   {return ')'}
 "."                   {return '.'}
+","                   {return ','}
 \"([^\"]*)\"          {yytext = this.matches[1]; return 'STRING';}
 /* \d+.\d*               {yytext = parseFloat(yytext); return 'NUMBER';} */
 \d+                   {yytext = parseInt(yytext); return 'NUMBER';}
@@ -53,6 +54,7 @@ TERM: DEPLOYMENT
     | NUMBER
     { $$ = new yy.i.Var( $1, yy.i.Var.TYPE.NUMBER ); }
     | ADDRESS_CALL
+    | SYMBOL
     ;
 
 ADDRESS_CALL: SYMBOL '.' SYMBOL '(' ')'
@@ -90,9 +92,9 @@ OPT_CALL:
         { $$ = {value:0, gas: $NUMBER}; }
         ;
 
-ARGS: SYMBOL
-    { $$ = [$SYMBOL]; }
-    | SYMBOL ',' ARGS
-    { $$ = [$SYMBOL].concat($ARGS) }
+ARGS: TERM
+    { $$ = [$TERM]; }
+    | TERM ',' ARGS
+    { $$ = [$TERM].concat($ARGS) }
     ;
 
