@@ -161,10 +161,10 @@ if (cli.install) {
     }));
 } else if(cli.run) {
   
+  var rc = Workspace.getDappleRC();
   let workspace = Workspace.atPackageRoot();
   let env = cli['--environment'] || workspace.getEnvironment();
   let environments = workspace.getEnvironments();
-  var rc = Workspace.getDappleRC();
   
   let fileName = cli['<script>'];
   
