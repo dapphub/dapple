@@ -25,7 +25,7 @@ describe('DSL', function() {
         }
       },
       web3: 'internal',
-      silent: false 
+      silent: true 
     });
   });
   
@@ -149,7 +149,7 @@ describe('DSL', function() {
   
   it("should deploy contract with the right gas");
   
-  it.only("should call an address", function(done){
+  it("should call an address", function(done){
     
     parser.parse('var foo = new Contract()\n foo.set(2) \n foo.get()', function( err, res ) {
       
