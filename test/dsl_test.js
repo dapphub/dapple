@@ -10,7 +10,7 @@ var pipelines = require( '../lib/pipelines.js');
 
 
 describe('DSL', function() {
-  this.timeout(10000);
+  this.timeout(1000000);
   
   var parser;
   
@@ -24,8 +24,9 @@ describe('DSL', function() {
           bytecode: '606060405260978060106000396000f360606040526000357c01000000000000000000000000000000000000000000000000000000009004806360fe47b11460415780636d4ce63c14605757603f565b005b605560048080359060200190919050506078565b005b606260048050506086565b6040518082815260200191505060405180910390f35b806000600050819055505b50565b600060006000505490506094565b9056'
         }
       },
-      web3: 'internal',
-      silent: true 
+      // web3: 'internal',
+      web3: {host: '192.168.59.103', port:'8545'},
+      silent: false 
     });
   });
   
@@ -111,7 +112,7 @@ describe('DSL', function() {
     
   });
   
-  it("should deploy a class", function(done){
+  it.only("should deploy a class", function(done){
     
     parser.parse('var foo = new Contract()', function(err,res) {
       
