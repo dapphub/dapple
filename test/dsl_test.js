@@ -272,7 +272,7 @@ describe('DSL', function() {
   
 });
 
-describe('deploycript against real chain', function() {
+describe.skip('deploycript against real chain', function() {
   // 5 min
   this.timeout(600000);
   
