@@ -27,6 +27,19 @@ describe('VMTest', function () {
     assert.equal(1, vmtest.testCount(), 'expected 1 test function');
   });
 
+  it('endows tests with ether upon deployment', function (done) {
+    var contract = new Contract(mock.contracts.Pass);
+    var vmtest = new VMTest(Web3Factory.EVM(), contract);
+    vmtest.deploy(function (err, receipt) {
+      assert.isNull(err, 'error: ' + err);
+      vmtest.web3.eth.getBalance(receipt.contractAddress, function (err, bal) {
+        assert.isNull(err, 'error: ' + err);
+        assert.isAbove(bal.toNumber(), 0, 'test contract has no ether');
+        done();
+      });
+    });
+  });
+
   it('runs tests by their indices', function (done) {
     var contract = new Contract(mock.contracts.Pass);
     var vmtest = new VMTest(Web3Factory.EVM(), contract);
