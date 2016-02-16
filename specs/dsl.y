@@ -17,7 +17,7 @@
 \"([^\"]*)\"          {yytext = this.matches[1]; return 'STRING';}
 /* \d+.\d*               {yytext = parseFloat(yytext); return 'NUMBER';} */
 \d+                   {yytext = parseInt(yytext); return 'NUMBER';}
-\w+                   {return 'SYMBOL';}
+\w+                   {return 'SYMB';}
 <<EOF>>               {return 'EOF';}
 
 /lex
@@ -29,56 +29,53 @@
 %% /* language grammar */
 
 DSL: FORMULAS 
+   { return $1; }
    ;
 
 FORMULAS: FORMULA EOF
-          { $$ = $1; }
+          { $$ = new yy.i.Expr( [$1], [], yy.i.TYPE.SEQ ); }
         | FORMULA FORMULAS
-          { $$ = $1 && $2; }
+          { $2.value = [$1].concat( $2.value ); $$ = $2; }
         ;
 
 FORMULA: DECLARATION
-       { $$ = $DECLARATION; }
        | EXPORT SYMBOL
-       { $$ = yy.i.export($SYMBOL); }
+       { $$ = new yy.i.Expr( yy.i.export, [$SYMBOL], yy.i.TYPE.EXPORT ) }
        | TERM
        ;
 
 DECLARATION: VAR SYMBOL "=" TERM
-           { $$ = yy.i.assign( $SYMBOL, $TERM); }
+           { $$ = new yy.i.Expr( yy.i.assign, [ $SYMBOL, $TERM ], yy.i.TYPE.ASSIGN ); }
            ;
 
 TERM: DEPLOYMENT
     | STRING
-    { $$ = new yy.i.Var( $1, yy.i.Var.TYPE.STRING ); }
+    { $$ = new yy.i.Expr( $1, [], yy.i.TYPE.STRING ); }
     | NUMBER
-    { $$ = new yy.i.Var( $1, yy.i.Var.TYPE.NUMBER ); }
+    { $$ = new yy.i.Expr( $1, [], yy.i.TYPE.NUMBER ); }
     | ADDRESS_CALL
     | SYMBOL
     ;
 
 ADDRESS_CALL: SYMBOL '.' SYMBOL '(' ')'
-            { $$ = yy.i.call( $1, $3, [], { value: 0, gas: undefined }); }
+            { $$ = new yy.i.Expr( yy.i.call, [$1, $3, [], { value: 0, gas: undefined }], yy.i.TYPE.CALL ); }
             | SYMBOL '.' SYMBOL '(' ARGS ')'
-            { $$ = yy.i.call( $1, $3, $ARGS, { value: 0, gas: undefined } ); }
+            { $$ = new yy.i.Expr( yy.i.call, [$1, $3, $ARGS, { value: 0, gas: undefined }], yy.i.TYPE.CALL ); }
             | SYMBOL '.' SYMBOL '.' OPT_CALL '(' ')'
-            { $$ = yy.i.call( $1, $3, [], $OPT_CALL ); }
+            { $$ = new yy.i.Expr( yy.i.call, [$1, $3, [], $OPT_CALL], yy.i.TYPE.CALL ); }
             | SYMBOL '.' SYMBOL '.' OPT_CALL '(' ARGS ')'
-            { $$ = yy.i.call( $1, $3, $ARGS, $OPT_CALL ); }
+            { $$ = new yy.i.Expr( yy.i.call, [$1, $3, $ARGS, $OPT_CALL], yy.i.TYPE.CALL ); }
             ;
 
 
 DEPLOYMENT: NEW SYMBOL "(" ")"
-           { $$ = yy.i.deploy( $SYMBOL, [], {value: 0, gas:undefined} ); }
-           
+          { $$ = new yy.i.Expr( yy.i.deploy, [ $SYMBOL, [], {value: 0, gas:undefined} ], yy.i.TYPE.DEPLOY ); }
           | NEW SYMBOL "(" ARGS ")"
-           { $$ = yy.i.deploy( $SYMBOL, $ARGS, {value: 0, gas:undefined} ); } 
-           
+          { $$ = new yy.i.Expr( yy.i.deploy, [ $SYMBOL, $ARGS, {value: 0, gas:undefined} ], yy.i.TYPE.DEPLOY ); }
           | NEW SYMBOL '.' OPT_CALL "(" ")"
-           { $$ = yy.i.deploy( $SYMBOL, [], $OPT_CALL ); }
-           
+          { $$ = new yy.i.Expr( yy.i.deploy, [ $SYMBOL, [], $OPT_CALL ], yy.i.TYPE.DEPLOY ); }
           | NEW SYMBOL '.' OPT_CALL "(" ARGS ")"
-           { $$ = yy.i.deploy( $SYMBOL, $ARGS, $OPT_CALL ); }
+          { $$ = new yy.i.Expr( yy.i.deploy, [ $SYMBOL, $ARGS, $OPT_CALL ], yy.i.TYPE.DEPLOY ); }
           ;
 
 OPT_CALL:
@@ -97,4 +94,8 @@ ARGS: TERM
     | TERM ',' ARGS
     { $$ = [$TERM].concat($ARGS) }
     ;
+
+SYMBOL: SYMB 
+      { $$ = new yy.i.Expr( $1, [], yy.i.TYPE.SYMBOL ); }
+      ;
 

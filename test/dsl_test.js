@@ -26,7 +26,7 @@ describe('DSL', function() {
       },
       web3: 'internal',
       // web3: {host: '192.168.59.103', port:'8545'},
-      silent: true
+      silent: false
     });
   });
   
@@ -40,7 +40,7 @@ describe('DSL', function() {
     parser.parse('var foo = "bar"', function( err, res ) {
       
       assert( parser.interpreter.success );
-      assert( parser.interpreter.local.foo.value === "bar" );
+      assert( parser.interpreter.local.foo === "bar" );
       
       done();
       
@@ -55,7 +55,7 @@ describe('DSL', function() {
     
     parser.parse('var foo = 42', function( err, res ) {
       assert( parser.interpreter.success );
-      assert( parser.interpreter.local.foo.value === 42 );
+      assert( parser.interpreter.local.foo === 42 );
       
       done();
     });
@@ -69,12 +69,12 @@ describe('DSL', function() {
     parser.parse('var foo = 42', function( err, res ) {
       
       assert.ok( parser.interpreter.success );
-      assert( parser.interpreter.local.foo.value === 42 );
+      assert( parser.interpreter.local.foo === 42 );
       
       parser.parse('var foo = 17', function(err,res) {
         
         assert.notOk( parser.interpreter.success );
-        assert( parser.interpreter.local.foo.value === 42 );
+        assert( parser.interpreter.local.foo === 42 );
         
         done();
         
@@ -90,7 +90,7 @@ describe('DSL', function() {
     parser.parse('var foo = 17\nexport foo', function( err, res ) {
       
       assert.ok( parser.interpreter.success );
-      assert( parser.interpreter.global.foo.value === 17 );
+      assert( parser.interpreter.global.foo === 17 );
       
       done();
       
@@ -104,7 +104,7 @@ describe('DSL', function() {
     parser.parse('var foo = 17\nexport foo\nvar foo = 42\nexport foo', function( err, res ) {
       
       assert.notOk( parser.interpreter.success );
-      assert( parser.interpreter.global.foo.value === 17 );
+      assert( parser.interpreter.global.foo === 17 );
       
       done();
       
@@ -150,7 +150,7 @@ describe('DSL', function() {
   
   it("should deploy contract with the right gas");
   
-  it("should call an address", function(done){
+  it.only("should call an address", function(done){
     
     parser.parse('var foo = new Contract()\n foo.set(2) \n foo.get()', function( err, res ) {
       
