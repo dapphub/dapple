@@ -37,7 +37,7 @@ dapple.golden = (function builder () {
     })(passthroughs[i]);
   }
 
-  function constructor(env, _web3) {
+  function constructor (env, _web3) {
     if (typeof env === 'undefined') {
       env = {};
     }
@@ -53,9 +53,9 @@ dapple.golden = (function builder () {
     }
 
     this.headers = {
-    'contracts': {},
-    'version': {}
-  };
+      'contracts': {},
+      'version': {}
+    };
 
     this.classes = {};
     for (var key in this.headers) {

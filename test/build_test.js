@@ -50,7 +50,8 @@ describe('class Builder', function () {
   });
   it('produces an importable JS file', function () {
     var dappleModule = require(path.join(testenv.golden.JS_OUT_PATH()));
-    assert.isFunction(dappleModule.golden);
+    assert.isFunction(dappleModule.class);
+    assert.isObject(dappleModule.environments);
   });
   it.skip('has helpful error when directory layout misconfigured');
 });

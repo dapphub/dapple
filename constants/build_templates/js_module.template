@@ -37,7 +37,7 @@ dapple.<%= name %> = (function builder () {
     })(passthroughs[i]);
   }
 
-  function constructor(env, _web3) {
+  function constructor (env, _web3) {
     if (typeof env === 'undefined') {
       env = <%= env %>;
     }
