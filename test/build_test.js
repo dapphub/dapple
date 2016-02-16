@@ -40,11 +40,18 @@ describe('class Builder', function () {
   it('writeJsHeader produces the golden output', function (done) {
     var classes = testenv.golden.SOLC_OUT();
     var headers = Builder.extractClassHeaders(classes);
-    var compiled = Builder.compileJsModule(headers);
+    var compiled = Builder.compileJsModule({
+      name: 'golden', headers: headers
+    });
     // Uncomment to make new golden record
-    fs.writeFileSync(testenv.golden.JS_OUT_PATH(), compiled);
+    // fs.writeFileSync(testenv.golden.JS_OUT_PATH(), compiled);
     assert.deepEqual(testenv.golden.JS_OUT(), compiled);
     done();
+  });
+  it('produces an importable JS file', function () {
+    var dappleModule = require(path.join(testenv.golden.JS_OUT_PATH()));
+    assert.isFunction(dappleModule.class);
+    assert.isObject(dappleModule.environments);
   });
   it.skip('has helpful error when directory layout misconfigured');
 });
