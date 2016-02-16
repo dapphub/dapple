@@ -1,7 +1,8 @@
 *.pyc
 *.sw*
 *bower_components*
-build
+/build
+pydapple/build
 pydapple/dist
 *.egg-info
 node_modules
