@@ -26,7 +26,7 @@ describe('DSL', function() {
       },
       web3: 'internal',
       // web3: {host: '192.168.59.103', port:'8545'},
-      silent: false
+      silent: true
     });
   });
   
@@ -150,7 +150,7 @@ describe('DSL', function() {
   
   it("should deploy contract with the right gas");
   
-  it.only("should call an address", function(done){
+  it("should call an address", function(done){
     
     parser.parse('var foo = new Contract()\n foo.set(2) \n foo.get()', function( err, res ) {
       
