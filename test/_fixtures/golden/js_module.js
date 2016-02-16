@@ -1,6 +1,13 @@
 'use strict';
 
-var Web3 = require('web3');
+if (typeof web3 === 'undefined') {
+  var Web3 = require('web3');
+}
+
+var dapple = {};
+if (module && module.exports) {
+  module.exports = dapple;
+}
 
 function ContractWrapper (headers, web3) {
   if (!web3) {
@@ -25,7 +32,7 @@ for (var i = 0; i < passthroughs.length; i += 1) {
   };
 }
 
-module.exports = function (env, web3) {
+dapple.golden = function (env, web3) {
   if (typeof env === 'undefined') {
     env = {};
   }
@@ -37,16 +44,15 @@ module.exports = function (env, web3) {
     web3 = new Web3(new Web3.providers.HttpProvider(env.rpcURL));
   }
 
-  var header = {
+  this.headers = {
     'contracts': {},
     'version': {}
   };
-  this.headers = header;
 
   this.classes = {};
-  for (var key in header) {
+  for (var key in this.headers) {
     this.headers[key].interface = JSON.parse(this.headers[key].interface);
-    this.classes[key] = new ContractWrapper(header[key], web3);
+    this.classes[key] = new ContractWrapper(this.headers[key], web3);
   }
 
   this.objects = {};
