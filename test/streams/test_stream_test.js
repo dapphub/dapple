@@ -11,7 +11,9 @@ var vinyl = require('vinyl-fs');
 describe('streams.test', function () {
   var classesPath = path.join(testenv.stream_test_dir, 'build', 'classes.json');
 
-  it('emits one file for every failing test', function (done) {
+  it('[SLOW] emits one file for every failing test', function (done) {
+    this.timeout(7000);
+
     var output = [];
 
     vinyl.src([classesPath])
