@@ -48,5 +48,9 @@ describe('class Builder', function () {
     assert.deepEqual(testenv.golden.JS_OUT(), compiled);
     done();
   });
+  it('produces an importable JS file', function () {
+    var dappleModule = require(path.join(testenv.golden.JS_OUT_PATH()));
+    assert.isFunction(dappleModule.golden);
+  });
   it.skip('has helpful error when directory layout misconfigured');
 });
