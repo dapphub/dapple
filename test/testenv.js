@@ -31,7 +31,6 @@ module.exports = {
     FILTERED_SOLC_OUT_PATH: path.join(
       __dirname, '_fixtures', 'golden', 'golden_solc_classes_out')
   },
-  
 
   dsl_package_dir: path.join(
     __dirname, '_fixtures', 'testenv', 'deploy_package'),
