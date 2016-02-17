@@ -3,17 +3,12 @@
 
 var _ = require('lodash');
 var assert = require('chai').assert;
-var fs = require('../lib/file');
-var Workspace = require('../lib/workspace');
-var testenv = require('./testenv');
-var path = require('path');
 var dircompare = require('dir-compare');
-var tv4 = require('tv4');
-
-var definitions = require('../specs/definitions.json');
-var dappfileSchema = require('../specs/dappfile.json');
-
-tv4.addSchema('definitions', definitions);
+var fs = require('../lib/file');
+var path = require('path');
+var schemas = require('../lib/schemas.js');
+var testenv = require('./testenv');
+var Workspace = require('../lib/workspace');
 
 describe('class Workspace', function () {
   it('.initialize(emptydir) matches golden version', function () {
@@ -46,8 +41,7 @@ describe('class Workspace', function () {
       testenv.golden_package_dir, 'dappfile'));
     assert.deepEqual(workspace.dappfile, expectedDappfile);
 
-    console.log(testenv.golden_package_dir);
-    assert(tv4.validate(expectedDappfile, dappfileSchema),
+    assert(schemas.dappfile.validate(expectedDappfile),
       'dappfile is not valid by schema');
   });
 
