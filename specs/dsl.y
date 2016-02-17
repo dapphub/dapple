@@ -39,13 +39,13 @@ FORMULAS: FORMULA EOF
         ;
 
 FORMULA: DECLARATION
-       | EXPORT SYMBOL
-       { $$ = new yy.i.Expr( yy.i.export, [$SYMBOL], yy.i.TYPE.EXPORT ) }
+       | EXPORT SYMB
+       { $$ = new yy.i.Expr( yy.i.export, [$SYMB], yy.i.TYPE.EXPORT ) }
        | TERM
        ;
 
-DECLARATION: VAR SYMBOL "=" TERM
-           { $$ = new yy.i.Expr( yy.i.assign, [ $SYMBOL, $TERM ], yy.i.TYPE.ASSIGN ); }
+DECLARATION: VAR SYMB "=" TERM
+           { $$ = new yy.i.Expr( yy.i.assign, [ $SYMB, $TERM ], yy.i.TYPE.ASSIGN ); }
            ;
 
 TERM: DEPLOYMENT
@@ -68,14 +68,14 @@ ADDRESS_CALL: SYMBOL '.' SYMBOL '(' ')'
             ;
 
 
-DEPLOYMENT: NEW SYMBOL "(" ")"
-          { $$ = new yy.i.Expr( yy.i.deploy, [ $SYMBOL, [], {value: 0, gas:undefined} ], yy.i.TYPE.DEPLOY ); }
-          | NEW SYMBOL "(" ARGS ")"
-          { $$ = new yy.i.Expr( yy.i.deploy, [ $SYMBOL, $ARGS, {value: 0, gas:undefined} ], yy.i.TYPE.DEPLOY ); }
-          | NEW SYMBOL '.' OPT_CALL "(" ")"
-          { $$ = new yy.i.Expr( yy.i.deploy, [ $SYMBOL, [], $OPT_CALL ], yy.i.TYPE.DEPLOY ); }
-          | NEW SYMBOL '.' OPT_CALL "(" ARGS ")"
-          { $$ = new yy.i.Expr( yy.i.deploy, [ $SYMBOL, $ARGS, $OPT_CALL ], yy.i.TYPE.DEPLOY ); }
+DEPLOYMENT: NEW SYMB "(" ")"
+          { $$ = new yy.i.Expr( yy.i.deploy, [ $SYMB, [], {value: 0, gas:undefined} ], yy.i.TYPE.DEPLOY ); }
+          | NEW SYMB "(" ARGS ")"
+          { $$ = new yy.i.Expr( yy.i.deploy, [ $SYMB, $ARGS, {value: 0, gas:undefined} ], yy.i.TYPE.DEPLOY ); }
+          | NEW SYMB '.' OPT_CALL "(" ")"
+          { $$ = new yy.i.Expr( yy.i.deploy, [ $SYMB, [], $OPT_CALL ], yy.i.TYPE.DEPLOY ); }
+          | NEW SYMB '.' OPT_CALL "(" ARGS ")"
+          { $$ = new yy.i.Expr( yy.i.deploy, [ $SYMB, $ARGS, $OPT_CALL ], yy.i.TYPE.DEPLOY ); }
           ;
 
 OPT_CALL:
@@ -90,9 +90,9 @@ OPT_CALL:
         ;
 
 ARGS: TERM
-    { $$ = [$TERM]; }
+    { $$ = new yy.i.Expr( [$1], [], yy.i.TYPE.SEQ ); }
     | TERM ',' ARGS
-    { $$ = [$TERM].concat($ARGS) }
+    { $3.value = [$1].concat( $3.value ); $$ = $3; }
     ;
 
 SYMBOL: SYMB 
