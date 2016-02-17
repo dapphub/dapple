@@ -46,6 +46,7 @@ describe('class Workspace', function () {
       testenv.golden_package_dir, 'dappfile'));
     assert.deepEqual(workspace.dappfile, expectedDappfile);
 
+    console.log(testenv.golden_package_dir);
     assert(tv4.validate(expectedDappfile, dappfileSchema),
       'dappfile is not valid by schema');
   });
