@@ -106,30 +106,10 @@ describe('class Workspace', function () {
     assert.deepEqual(rc.data, expectedRC, 'did not create dapplerc');
   });
 
-  it('does not throw an exception if the dappfile is empty', function () {
-    Workspace.create(testenv.empty_package_dir);
-  });
-
-  it('run its getters on an empty dappfile without throwing', function () {
-    var workspace = new Workspace(testenv.empty_package_dir);
-    var getters = [
-      'getBuildDir',
-      'getDappfilePath',
-      'getDependencies',
-      'getEnvironment',
-      'getEnvironments',
-      'getIgnoreGlobs',
-      'getPackagesDir',
-      'getPackagesPath',
-      'getPreprocessorVars',
-      'getSourceDir',
-      'getSourcePath'
-    ];
-
-    for (let getter of getters) {
-      assert.doesNotThrow(workspace[getter].bind(workspace),
-        Error, getter + ' threw!');
-    }
+  it('throws an exception if the dappfile is empty', function () {
+    assert.throws(function () {
+      Workspace.create(testenv.empty_package_dir);
+    });
   });
 
   it('allows setting subordinate dappfiles, even empty ones', function () {
