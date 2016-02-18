@@ -15,7 +15,7 @@ describe('class Workspace', function () {
     var dir = fs.tmpdir();
     Workspace.initialize(dir);
     // fs.copySync(dir, testenv.golden.INIT_EMPTY_DIR); //  Create a new golden record
-    var emptyDirs = ['build', 'src'];
+    var emptyDirs = ['build', 'contracts'];
     var ls = fs.readdirSync(dir);
     assert.deepEqual(_.intersection(ls, emptyDirs), emptyDirs,
       'Workspace does not initialize with expected empty directories.');
@@ -58,7 +58,7 @@ describe('class Workspace', function () {
         ' as the package root', function () {
       let pkgdir = path.join(
         testenv.golden_package_dir, 'dapple_packages', 'pkg');
-      let subdir = path.join(pkgdir, 'src', 'sol');
+      let subdir = path.join(pkgdir, 'contracts');
       assert.equal(Workspace.findPackageRoot(subdir), pkgdir);
     });
 
@@ -124,7 +124,7 @@ describe('class Workspace', function () {
     workspace.addSubDappfile(cwd, {ignore: ['foo/bar.sol']});
     assert.deepEqual(
       _.difference(workspace.getIgnoreGlobs(), prevIgnores), [
-        path.join(cwd, 'src/sol/foo/bar.sol')
+        path.join(cwd, 'contracts/foo/bar.sol')
       ]);
   });
 });
