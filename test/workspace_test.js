@@ -133,18 +133,18 @@ describe('class Workspace', function () {
   });
 
   it('allows setting subordinate dappfiles, even empty ones', function () {
-    var workspace = new Workspace(testenv.golden_package_dir);
+    var workspace = Workspace.atPackageRoot(testenv.golden_package_dir);
     workspace.addSubDappfile(process.cwd(), {});
   });
 
   it('allows setting sub-dappfiles with ignore patterns', function () {
     var cwd = process.cwd();
-    var workspace = new Workspace(testenv.golden_package_dir);
+    var workspace = Workspace.atPackageRoot(testenv.golden_package_dir);
     var prevIgnores = workspace.getIgnoreGlobs();
     workspace.addSubDappfile(cwd, {ignore: ['foo/bar.sol']});
     assert.deepEqual(
       _.difference(workspace.getIgnoreGlobs(), prevIgnores), [
-        path.join(cwd, 'foo/bar.sol')
+        path.join(cwd, 'src/sol/foo/bar.sol')
       ]);
   });
 });
