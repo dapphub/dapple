@@ -8,7 +8,7 @@ var testenv = require('./testenv');
 var Workspace = require('../lib/workspace');
 
 describe('class Builder', function () {
-  var workspace = new Workspace(testenv.golden_package_dir);
+  var workspace = Workspace.atPackageRoot(testenv.golden_package_dir);
   var Builder = require('../lib/build');
   var b = new Builder(workspace);
 
