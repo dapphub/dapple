@@ -17,6 +17,10 @@
     }
   ],
   "homepage": "dapple.info",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nexusdev/dapple.git"
+  },
   "bugs": {
     "url": "https://github.com/NexusDevelopment/dapple/issues"
   },
