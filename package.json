@@ -85,6 +85,7 @@
     "eslint": "^1.10.3",
     "groc": "^0.8.0",
     "gulp": "^3.9.0",
+    "jison": "^0.4.17",
     "semistandard": "^7.0.5"
   },
   "semistandard": {

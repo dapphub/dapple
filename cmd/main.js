@@ -159,4 +159,34 @@ if (cli.install) {
       web3: rc.data.environments[env].ethereum || 'internal',
       nameFilter: nameFilter
     }));
+} else if (cli.run) {
+  let workspace = Workspace.atPackageRoot();
+  let env = cli['--environment'] || workspace.getEnvironment();
+  let fileName = cli['<script>'];
+  // TODO - refactor to wirkspace
+  let file = fs.readFileSync(workspace.getPackageRoot() + '/' + fileName, 'utf8');
+  req.pipelines
+      .BuildPipeline({
+        packageRoot: Workspace.findPackageRoot(),
+        subpackages: cli['--subpackages'] || cli['-s']
+      })
+    .pipe(req.pipelines.RunPipeline({
+      script: file,
+      workspace: workspace,
+      web3: (rc.data.environments[env].ethereum || 'inernal'),
+      env
+    }));
+} else if (cli.step) {
+  let workspace = Workspace.atPackageRoot();
+  let env = cli['--environment'] || workspace.getEnvironment();
+  let file = cli['<string>'];
+  req.pipelines
+      .BuildPipeline({
+        packageRoot: Workspace.findPackageRoot(),
+        subpackages: cli['--subpackages'] || cli['-s']
+      })
+    .pipe(req.pipelines.RunPipeline({
+      script: file,
+      web3: (rc.data.environments[env].ethereum || 'inernal')
+    }));
 }
