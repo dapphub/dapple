@@ -58,7 +58,7 @@
     "gulp-smake": "^0.2.2",
     "gulp-util": "^3.0.7",
     "inquirer": "^0.11.1",
-    "ipfs-api": "^2.13.0",
+    "ipfs-js": "0.0.8",
     "js-yaml": "^3.5.2",
     "json-schema-defaults": "^0.1.1",
     "lazreq": "^0.1.1",
