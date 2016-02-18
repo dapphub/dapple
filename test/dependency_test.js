@@ -4,7 +4,7 @@
 var assert = require('chai').assert;
 var Dependency = require('../lib/dependency');
 
-describe.only('Dependency', function () {
+describe('Dependency', function () {
   describe('construction from strings resolving to git paths', function () {
     // We'll be changing this to prefer Dapphub paths once that's launched.
     it('translates NexusDev/dappsys to a Github URL', function () {
