@@ -34,7 +34,7 @@
     "dependencies": {
       "title": "Dependencies",
       "description": "Direct dependency list",
-      "type": "array",
+      "type": "object",
       "items": {
         "title": "Path",
         "description": "Dependency path.",

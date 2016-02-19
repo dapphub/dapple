@@ -62,7 +62,12 @@ if (cli.install) {
 
   let packages;
   if (cli['<package>']) {
-    packages = [cli['<package>']];
+    if (!cli['<url-or-version>']) {
+      console.error('No version or URL specified for package.');
+      process.exit(1);
+    }
+    packages = {};
+    packages[cli['<package>']] = cli['<url-or-version>'];
   } else {
     packages = workspace.getDependencies();
   }
@@ -70,7 +75,7 @@ if (cli.install) {
   let success = req.Installer.install(packages, console, web3);
 
   if (success && cli['--save'] && cli['<package>']) {
-    workspace.addDependency(cli['<package>']);
+    workspace.addDependency(cli['<package>'], cli['<url-or-version>']);
     workspace.writeDappfile();
   }
 
