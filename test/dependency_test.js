@@ -4,7 +4,7 @@
 var assert = require('chai').assert;
 var Dependency = require('../lib/dependency');
 
-describe('Dependency', function () {
+describe.only('Dependency', function () {
   describe('construction from strings resolving to git paths', function () {
     it('handles git addresses', function () {
       var dep = Dependency.fromDependencyString(
@@ -97,6 +97,23 @@ describe('Dependency', function () {
       assert.equal(dep.getName(), 'dappsys2');
       assert.equal(dep.getPath(), 'ipfs://Qmdeadbeef');
       assert.equal(dep.getVersion(), 'Qmdeadbeef');
+    });
+  });
+
+  describe('construction for DappHub dependencies', function () {
+    it('recognizes dappsys 1.2.3 as a DappHub reference', function () {
+      var dep = Dependency.fromDependencyString('1.2.3', 'dappsys');
+      assert(dep.hasDappHubPath(), 'does not recognize DappHub reference');
+      assert.equal(dep.getName(), 'dappsys');
+      assert.equal(dep.getPath(), 'dappsys@1.2.3');
+      assert.equal(dep.getVersion(), '1.2.3');
+    });
+    it('recognizes dappsys v1.2.3 as a DappHub reference', function () {
+      var dep = Dependency.fromDependencyString('v1.2.3', 'dappsys');
+      assert(dep.hasDappHubPath(), 'does not recognize DappHub reference');
+      assert.equal(dep.getName(), 'dappsys');
+      assert.equal(dep.getPath(), 'dappsys@1.2.3');
+      assert.equal(dep.getVersion(), '1.2.3');
     });
   });
 });
