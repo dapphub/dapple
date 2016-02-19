@@ -4,4 +4,4 @@ layout:
     build_dir: "build"
 
 dependencies:
-    - pkg
+    pkg: 0.0.1

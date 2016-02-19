@@ -40,8 +40,8 @@ describe('DappleRC', function () {
   it('fills in unspecified properties with defaults', function () {
     var rc = DappleRC.create({paths: [fixtureRC]});
     assert.deepEqual(
-      rc.data.environments.default.ipfs,
-      rc.data.environments.evm.ipfs);
+      rc.environment('default').ipfs,
+      rc.environment('evm').ipfs);
   });
 
   it('validates itself and throws an exception if it fails', function () {

@@ -4,7 +4,7 @@
 var assert = require('chai').assert;
 var Dependency = require('../lib/dependency');
 
-describe.only('Dependency', function () {
+describe('Dependency', function () {
   describe('construction from strings resolving to git paths', function () {
     it('handles git addresses', function () {
       var dep = Dependency.fromDependencyString(
