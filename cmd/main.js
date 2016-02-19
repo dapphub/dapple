@@ -173,7 +173,7 @@ if (cli.install) {
     .pipe(req.pipelines.RunPipeline({
       script: file,
       workspace: workspace,
-      web3: (rc.data.environments[env].ethereum || 'inernal'),
+      web3: (rc.environment(env).ethereum || 'internal'),
       env
     }));
 } else if (cli.step) {
@@ -187,6 +187,6 @@ if (cli.install) {
       })
     .pipe(req.pipelines.RunPipeline({
       script: file,
-      web3: (rc.data.environments[env].ethereum || 'inernal')
+      web3: (rc.data.environments[env].ethereum || 'internal')
     }));
 }
