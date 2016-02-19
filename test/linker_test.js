@@ -3,6 +3,7 @@
 
 var _ = require('lodash');
 var assert = require('chai').assert;
+var constants = require('../lib/constants.js');
 var fs = require('fs');
 var Linker = require('../lib/linker.js');
 var testenv = require('./testenv');
@@ -30,7 +31,7 @@ describe('Linker', function () {
     };
     var mockWorkspace = {
       getPackageRoot: (f) => '/package',
-      getPackagesDir: (f) => 'dapple_packages',
+      getPackagesDir: (f) => constants.PACKAGES_DIRECTORY,
       getSourcePath: (f) => '/package/src'
     };
     var importer = '/package/test/contract2.sol';
@@ -113,7 +114,7 @@ describe('Linker', function () {
     };
 
     var contract_hash = getHashpath(
-      'dapple_packages/pkg/src/sol/contract.sol');
+      constants.PACKAGES_DIRECTORY + '/pkg/src/sol/contract.sol');
     var local_contract_hash = getHashpath(
       'linker_test_package/src/sol/pkg/contract.sol');
 
