@@ -67,9 +67,9 @@ if (cli.install) {
     packages = workspace.getDependencies();
   }
 
-  req.Installer.install(packages, console);
+  let success = req.Installer.install(packages, console, web3);
 
-  if (cli['--save'] && cli['<package>']) {
+  if (success && cli['--save'] && cli['<package>']) {
     workspace.addDependency(cli['<package>']);
     workspace.writeDappfile();
   }
