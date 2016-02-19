@@ -59,6 +59,13 @@ if (cli.config || typeof (rc.path) === 'undefined') {
 // a git repository. Otherwise we'll just clone them.
 if (cli.install) {
   let workspace = Workspace.atPackageRoot();
+  let env = cli['--environment'] || workspace.getEnvironment();
+
+  if (!(env in rc.data.environments)) {
+    console.error('Environment not defined: ' + env);
+    process.exit(1);
+  }
+  let web3 = rc.environment(env).ethereum || 'internal';
 
   let packages;
   if (cli['<package>']) {
