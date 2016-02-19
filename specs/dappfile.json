@@ -2,9 +2,15 @@
   "title": "dappfile definition",
   "description": "dappfile definition",
   "type": "object",
-  "required": [ "layout" ],
+  "required": [ "name", "layout" ],
   "additionalProperties": false,
   "properties": {
+    "name": {
+      "title": "Package Name",
+      "description": "Used for creating its dapple_packages directory",
+      "type": "string"
+    },
+
     "layout": {
       "title": "Directory Structure",
       "description": "Specifies where relevant files are located",
@@ -24,14 +30,14 @@
         }
       }
     },
-    
+
     "dependencies": {
       "title": "Dependencies",
       "description": "Direct dependency list",
-      "type": "array",
+      "type": "object",
       "items": {
-        "title": "Name",
-        "description": "Dependency name.",
+        "title": "Path",
+        "description": "Dependency path.",
         "type": "string"
       }
     },
@@ -45,7 +51,7 @@
         "type": "string"
       }
     },
-    
+
     "environments": {
       "title": "Environments",
       "description": "Local environments options",

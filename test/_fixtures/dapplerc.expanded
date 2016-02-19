@@ -5,11 +5,7 @@ environments:
             port: '4001'
         ethereum: "internal"
 
-    evm:
-        ipfs:
-            host: 'localhost'
-            port: '4001'
-        ethereum: "internal"
+    evm: default
 
     live:
         ipfs:

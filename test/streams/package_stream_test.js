@@ -37,7 +37,7 @@ describe('streams.package_stream', function () {
       path.join(sourceDir, 'example_test.sol'),
       path.join(sourceDir, 'subdirectory', 'example2.sol'),
       path.join(workspace.package_root,
-        'dapple_packages', 'pkg', 'src', 'sol', 'example.sol')
+        'dapple_packages', 'pkg', 'contracts', 'example.sol')
     ]);
   });
 });

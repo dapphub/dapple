@@ -1,7 +1,7 @@
 Usage:
     dapple config
     dapple init
-    dapple install [--save] [<package>]
+    dapple install [--save] [options] [<package> <url-or-version>]
     dapple build [options]
     dapple test  [-r <RegExp>] [options] [--skip-build]
     dapple new test <class>

@@ -1,3 +1,4 @@
+name: "mypackage"
 layout:
-    sol_sources: "src/sol"
+    sol_sources: "contracts"
     build_dir: "build"

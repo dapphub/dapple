@@ -9,8 +9,8 @@ if (typeof web3 === 'undefined' && typeof Web3 === 'undefined') {
   var Web3 = require('web3');
 }
 
-dapple['golden'] = (function builder () {
-  var environments = {};
+dapple['<%= name %>'] = (function builder () {
+  var environments = <%= envs %>;
 
   function ContractWrapper (headers, _web3) {
     if (!_web3) {
@@ -39,7 +39,7 @@ dapple['golden'] = (function builder () {
 
   function constructor (_web3, env) {
     if (!env) {
-      env = {};
+      env = <%= env %>;
     }
     while (typeof env !== 'object') {
       env = environments[env];
@@ -52,10 +52,7 @@ dapple['golden'] = (function builder () {
       _web3 = new Web3(new Web3.providers.HttpProvider(env.rpcURL));
     }
 
-    this.headers = {
-      'contracts': {},
-      'version': {}
-    };
+    this.headers = <%= headers %>;
 
     this.classes = {};
     for (var key in this.headers) {
@@ -76,5 +73,5 @@ dapple['golden'] = (function builder () {
 })();
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = dapple['golden'];
+  module.exports = dapple['<%= name %>'];
 }

@@ -8,7 +8,7 @@ var testenv = require('./testenv');
 var Workspace = require('../lib/workspace');
 
 describe('class Builder', function () {
-  var workspace = new Workspace(testenv.golden_package_dir);
+  var workspace = Workspace.atPackageRoot(testenv.golden_package_dir);
   var Builder = require('../lib/build');
   var b = new Builder(workspace);
 
@@ -19,7 +19,7 @@ describe('class Builder', function () {
     var tmpdir = fs.tmpdir();
     var returned = b.build(tmpdir);
     // Uncomment to make new golden record
-    // fs.writeJsonSync(testenv.golden.SOLC_OUT_PATH(), returned);
+    fs.writeJsonSync(testenv.golden.SOLC_OUT_PATH(), returned);
     var written = fs.readJsonSync(path.join(tmpdir, 'classes.json'));
     var golden = testenv.golden.SOLC_OUT();
 
@@ -40,11 +40,18 @@ describe('class Builder', function () {
   it('writeJsHeader produces the golden output', function (done) {
     var classes = testenv.golden.SOLC_OUT();
     var headers = Builder.extractClassHeaders(classes);
-    var compiled = Builder.compileJsModule(headers);
+    var compiled = Builder.compileJsModule({
+      name: 'golden', headers: headers
+    });
     // Uncomment to make new golden record
     fs.writeFileSync(testenv.golden.JS_OUT_PATH(), compiled);
     assert.deepEqual(testenv.golden.JS_OUT(), compiled);
     done();
+  });
+  it('produces an importable JS file', function () {
+    var dappleModule = require(path.join(testenv.golden.JS_OUT_PATH()));
+    assert.isFunction(dappleModule.class);
+    assert.isObject(dappleModule.environments);
   });
   it.skip('has helpful error when directory layout misconfigured');
 });
