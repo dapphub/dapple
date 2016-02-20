@@ -1,0 +1,43 @@
+{
+  "title": "package data model",
+  "type": "object",
+  "required": ["name"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "$ref": "dappfile#/name"
+    },
+    
+    "description": {
+      "type": "string",
+      "title": "description"
+    },
+    
+    "version": {
+      "type": "string",
+      "title": "semver",
+      "pattern": "^\\d+\\.\\d+.\\d+$"
+    },
+
+    "tags": {
+      "type": "array",
+      "title": "tags",
+      "items": {
+        "type": "string"
+      }
+    },
+    
+    "root": {
+      "title": "ipfs root file object",
+      "type": "string"
+    },
+    
+    "dependencies": {
+      "$ref": "dappfile#/definitions/dependencies"
+    },
+    
+    "environments": {
+      "$ref": "dappfile#/definitions/environments"
+    }
+  }
+}
