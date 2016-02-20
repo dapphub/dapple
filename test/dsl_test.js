@@ -1,9 +1,13 @@
 /* global beforeEach, it, describe */
 'use strict';
 
-var Parser = require('../lib/DSL.js');
-var Web3Factory = require('../lib/web3Factory.js');
 var assert = require('chai').assert;
+var fs = require('fs');
+var Parser = require('../lib/DSL.js');
+var pipelines = require('../lib/pipelines.js');
+var testenv = require('./testenv.js');
+var through = require('through2');
+var Web3Factory = require('../lib/web3Factory.js');
 
 describe('DSL', function () {
   this.timeout(1000000);
@@ -63,7 +67,7 @@ describe('DSL', function () {
     parser.parse('var foo = 17\nexport foo', function (err, res) {
       if (err) throw err;
       assert.ok(parser.interpreter.success);
-      // assert(parser.interpreter.global.foo === 17);
+      assert(parser.interpreter.global.foo === 17);
       done();
     });
   });
@@ -72,7 +76,7 @@ describe('DSL', function () {
     parser.parse('var foo = 17\nexport foo\nvar foo = 42\nexport foo', function (err, res) {
       if (err) throw err;
       assert.notOk(parser.interpreter.success);
-      // assert(parser.interpreter.global.foo === 17);
+      assert(parser.interpreter.global.foo === 17);
       done();
     });
   });
@@ -132,21 +136,29 @@ describe('DSL', function () {
 
   it('should assert things');
 
-  // TODO - don't work: maybe because of workspace?
-  it.skip('should deploy a simple package', function (done) {
-    // var workspace = new Workspace(testenv.deploy_package_dir);
-    // let environments = workspace.getEnvironments();
-    // TODO - refactor to wirkspace
-    // let file = fs.readFileSync(testenv.dsl_package_dir + '/deployscript', 'utf8');
-    // let initStream = pipelines
-    //   .BuildPipeline({
-    //     packageRoot: testenv.deploy_package_dir + '/',
-    //     subpackages: false
-    //   })
-    //   .pipe(req.pipelines.RunPipeline({
-    //     script: file
-    //   }));
-    done();
+  it('should deploy a simple package', function (done) {
+    let file = fs.readFileSync(
+      testenv.dsl_package_dir + '/deployscript', 'utf8');
+
+    pipelines
+      .BuildPipeline({
+        packageRoot: testenv.dsl_package_dir + '/',
+        subpackages: false
+      })
+      .pipe(pipelines.RunPipeline({
+        script: file
+      }))
+      .pipe(through.obj(function (file, enc, cb) {
+        if (!/deployScript\.std[err|out]/.test(file.path)) {
+          cb();
+          return;
+        }
+
+        var output = JSON.parse(String(file.contents));
+        assert(output.success, 'parser did not report success');
+        cb();
+        done();
+      }));
   });
 
   it.skip('should something', function (done) {
@@ -174,7 +186,7 @@ describe('DSL', function () {
   });
 });
 
-describe.skip('deploycript against real chain', function () {
+describe.skip('deployscript against real chain', function () {
   // 5 min
   this.timeout(600000);
   var parser;
