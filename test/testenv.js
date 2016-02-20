@@ -32,6 +32,9 @@ module.exports = {
       __dirname, '_fixtures', 'golden', 'golden_solc_classes_out')
   },
 
+  dsl_package_dir: path.join(
+    __dirname, '_fixtures', 'testenv', 'deploy_package'),
+
   empty_package_dir: path.join(
     __dirname, '_fixtures', 'testenv', 'empty_package'),
 

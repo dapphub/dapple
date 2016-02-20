@@ -1,4 +1,4 @@
-name: "pkg"
+name: 'dsl_pkg'
 layout:
     sol_sources: "src/sol"
     build_dir: "build"

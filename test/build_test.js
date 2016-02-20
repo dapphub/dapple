@@ -8,7 +8,7 @@ var testenv = require('./testenv');
 var Workspace = require('../lib/workspace');
 
 describe('class Builder', function () {
-  var workspace = new Workspace(testenv.golden_package_dir);
+  var workspace = Workspace.atPackageRoot(testenv.golden_package_dir);
   var Builder = require('../lib/build');
   var b = new Builder(workspace);
 
@@ -19,7 +19,7 @@ describe('class Builder', function () {
     var tmpdir = fs.tmpdir();
     var returned = b.build(tmpdir);
     // Uncomment to make new golden record
-    // fs.writeJsonSync(testenv.golden.SOLC_OUT_PATH(), returned);
+    fs.writeJsonSync(testenv.golden.SOLC_OUT_PATH(), returned);
     var written = fs.readJsonSync(path.join(tmpdir, 'classes.json'));
     var golden = testenv.golden.SOLC_OUT();
 
@@ -44,7 +44,7 @@ describe('class Builder', function () {
       name: 'golden', headers: headers
     });
     // Uncomment to make new golden record
-    // fs.writeFileSync(testenv.golden.JS_OUT_PATH(), compiled);
+    fs.writeFileSync(testenv.golden.JS_OUT_PATH(), compiled);
     assert.deepEqual(testenv.golden.JS_OUT(), compiled);
     done();
   });

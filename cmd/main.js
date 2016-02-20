@@ -59,18 +59,30 @@ if (cli.config || typeof (rc.path) === 'undefined') {
 // a git repository. Otherwise we'll just clone them.
 if (cli.install) {
   let workspace = Workspace.atPackageRoot();
+  let env = cli['--environment'] || workspace.getEnvironment();
+
+  if (!(env in rc.data.environments)) {
+    console.error('Environment not defined: ' + env);
+    process.exit(1);
+  }
+  let web3 = rc.environment(env).ethereum || 'internal';
 
   let packages;
   if (cli['<package>']) {
-    packages = [cli['<package>']];
+    if (!cli['<url-or-version>']) {
+      console.error('No version or URL specified for package.');
+      process.exit(1);
+    }
+    packages = {};
+    packages[cli['<package>']] = cli['<url-or-version>'];
   } else {
     packages = workspace.getDependencies();
   }
 
-  req.Installer.install(packages, console);
+  let success = req.Installer.install(packages, console, web3);
 
-  if (cli['--save'] && cli['<package>']) {
-    workspace.addDependency(cli['<package>']);
+  if (success && cli['--save'] && cli['<package>']) {
+    workspace.addDependency(cli['<package>'], cli['<url-or-version>']);
     workspace.writeDappfile();
   }
 
@@ -158,5 +170,35 @@ if (cli.install) {
     .pipe(req.pipelines.TestPipeline({
       web3: rc.data.environments[env].ethereum || 'internal',
       nameFilter: nameFilter
+    }));
+} else if (cli.run) {
+  let workspace = Workspace.atPackageRoot();
+  let env = cli['--environment'] || workspace.getEnvironment();
+  let fileName = cli['<script>'];
+  // TODO - refactor to wirkspace
+  let file = fs.readFileSync(workspace.getPackageRoot() + '/' + fileName, 'utf8');
+  req.pipelines
+      .BuildPipeline({
+        packageRoot: Workspace.findPackageRoot(),
+        subpackages: cli['--subpackages'] || cli['-s']
+      })
+    .pipe(req.pipelines.RunPipeline({
+      script: file,
+      workspace: workspace,
+      web3: (rc.environment(env).ethereum || 'internal'),
+      env
+    }));
+} else if (cli.step) {
+  let workspace = Workspace.atPackageRoot();
+  let env = cli['--environment'] || workspace.getEnvironment();
+  let file = cli['<string>'];
+  req.pipelines
+      .BuildPipeline({
+        packageRoot: Workspace.findPackageRoot(),
+        subpackages: cli['--subpackages'] || cli['-s']
+      })
+    .pipe(req.pipelines.RunPipeline({
+      script: file,
+      web3: (rc.data.environments[env].ethereum || 'internal')
     }));
 }

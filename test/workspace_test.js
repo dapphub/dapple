@@ -3,24 +3,20 @@
 
 var _ = require('lodash');
 var assert = require('chai').assert;
-var fs = require('../lib/file');
-var Workspace = require('../lib/workspace');
-var testenv = require('./testenv');
-var path = require('path');
+var constants = require('../lib/constants.js');
 var dircompare = require('dir-compare');
-var tv4 = require('tv4');
-
-var definitions = require('../specs/definitions.json');
-var dappfileSchema = require('../specs/dappfile.json');
-
-tv4.addSchema('definitions', definitions);
+var fs = require('../lib/file');
+var path = require('path');
+var schemas = require('../lib/schemas.js');
+var testenv = require('./testenv');
+var Workspace = require('../lib/workspace');
 
 describe('class Workspace', function () {
   it('.initialize(emptydir) matches golden version', function () {
     var dir = fs.tmpdir();
     Workspace.initialize(dir);
     // fs.copySync(dir, testenv.golden.INIT_EMPTY_DIR); //  Create a new golden record
-    var emptyDirs = ['build', 'src'];
+    var emptyDirs = ['build', 'contracts'];
     var ls = fs.readdirSync(dir);
     assert.deepEqual(_.intersection(ls, emptyDirs), emptyDirs,
       'Workspace does not initialize with expected empty directories.');
@@ -46,7 +42,7 @@ describe('class Workspace', function () {
       testenv.golden_package_dir, 'dappfile'));
     assert.deepEqual(workspace.dappfile, expectedDappfile);
 
-    assert(tv4.validate(expectedDappfile, dappfileSchema),
+    assert(schemas.dappfile.validate(expectedDappfile),
       'dappfile is not valid by schema');
   });
 
@@ -62,8 +58,8 @@ describe('class Workspace', function () {
     it('recognizes the lowest parent directory with a dappfile' +
         ' as the package root', function () {
       let pkgdir = path.join(
-        testenv.golden_package_dir, 'dapple_packages', 'pkg');
-      let subdir = path.join(pkgdir, 'src', 'sol');
+        testenv.golden_package_dir, constants.PACKAGES_DIRECTORY, 'pkg');
+      let subdir = path.join(pkgdir, 'contracts');
       assert.equal(Workspace.findPackageRoot(subdir), pkgdir);
     });
 
@@ -111,45 +107,25 @@ describe('class Workspace', function () {
     assert.deepEqual(rc.data, expectedRC, 'did not create dapplerc');
   });
 
-  it('does not throw an exception if the dappfile is empty', function () {
-    Workspace.create(testenv.empty_package_dir);
-  });
-
-  it('run its getters on an empty dappfile without throwing', function () {
-    var workspace = new Workspace(testenv.empty_package_dir);
-    var getters = [
-      'getBuildDir',
-      'getDappfilePath',
-      'getDependencies',
-      'getEnvironment',
-      'getEnvironments',
-      'getIgnoreGlobs',
-      'getPackagesDir',
-      'getPackagesPath',
-      'getPreprocessorVars',
-      'getSourceDir',
-      'getSourcePath'
-    ];
-
-    for (let getter of getters) {
-      assert.doesNotThrow(workspace[getter].bind(workspace),
-        Error, getter + ' threw!');
-    }
+  it('throws an exception if the dappfile is empty', function () {
+    assert.throws(function () {
+      Workspace.create(testenv.empty_package_dir);
+    });
   });
 
   it('allows setting subordinate dappfiles, even empty ones', function () {
-    var workspace = new Workspace(testenv.golden_package_dir);
+    var workspace = Workspace.atPackageRoot(testenv.golden_package_dir);
     workspace.addSubDappfile(process.cwd(), {});
   });
 
   it('allows setting sub-dappfiles with ignore patterns', function () {
     var cwd = process.cwd();
-    var workspace = new Workspace(testenv.golden_package_dir);
+    var workspace = Workspace.atPackageRoot(testenv.golden_package_dir);
     var prevIgnores = workspace.getIgnoreGlobs();
     workspace.addSubDappfile(cwd, {ignore: ['foo/bar.sol']});
     assert.deepEqual(
       _.difference(workspace.getIgnoreGlobs(), prevIgnores), [
-        path.join(cwd, 'foo/bar.sol')
+        path.join(cwd, 'contracts/foo/bar.sol')
       ]);
   });
 });

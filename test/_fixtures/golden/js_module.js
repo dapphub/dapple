@@ -9,7 +9,7 @@ if (typeof web3 === 'undefined' && typeof Web3 === 'undefined') {
   var Web3 = require('web3');
 }
 
-dapple.golden = (function builder () {
+dapple['golden'] = (function builder () {
   var environments = {};
 
   function ContractWrapper (headers, _web3) {
@@ -37,8 +37,8 @@ dapple.golden = (function builder () {
     })(passthroughs[i]);
   }
 
-  function constructor (env, _web3) {
-    if (typeof env === 'undefined') {
+  function constructor (_web3, env) {
+    if (!env) {
       env = {};
     }
     while (typeof env !== 'object') {
@@ -76,5 +76,5 @@ dapple.golden = (function builder () {
 })();
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = dapple.golden;
+  module.exports = dapple['golden'];
 }
