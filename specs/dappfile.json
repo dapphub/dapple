@@ -32,14 +32,7 @@
     },
 
     "dependencies": {
-      "title": "Dependencies",
-      "description": "Direct dependency list",
-      "type": "object",
-      "items": {
-        "title": "Path",
-        "description": "Dependency path.",
-        "type": "string"
-      }
+      "$ref": "#/definitions/dependencies"
     },
 
     "ignore": {
@@ -53,8 +46,27 @@
     },
 
     "environments": {
+      "$ref": "#/definitions/environments"
+    }
+  },
+  "definitions": {
+    "dependencies": {
+      "title": "Dependencies",
+      "description": "Direct dependency list",
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^.*$": {
+          "title": "Path",
+          "description": "Dependency path.",
+          "type": "string"
+        }
+      }
+    },
+    "environments": {
       "title": "Environments",
       "description": "Local environments options",
+      "additionalProperties": false,
       "patternProperties": {
         "^\\w+$": {
           "title": "named environment specification",
