@@ -122,6 +122,15 @@ describe('DSL', function () {
     });
   });
 
+  it('should allow logging via "log"', function (done) {
+    parser.parse('log "Logging test!"', function (err, res) {
+      if (err) throw err;
+      assert.ok(parser.interpreter.success);
+      assert.include(parser.interpreter.logs, 'Logging test!');
+      done();
+    });
+  });
+
   it('should pass an var as a deploy argument', function (done) {
     parser.parse('var foo = new Contract()\n var bar = new Contract(foo)', function (err, res) {
       if (err) throw err;

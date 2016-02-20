@@ -5,6 +5,7 @@
 %%
 \s+                   {/* skip whitespace */}
 "var"                 {return 'VAR';}
+"log"                 {return 'LOG';}
 "new"                 {return 'NEW';}
 "export"              {return 'EXPORT'}
 "value"               {return 'VALUE'}
@@ -28,7 +29,7 @@
 
 %% /* language grammar */
 
-DSL: FORMULAS 
+DSL: FORMULAS
    { return $1; }
    ;
 
@@ -42,14 +43,19 @@ FORMULA: DECLARATION
        | EXPORT SYMBOL
        { $$ = new yy.i.Expr( yy.i.export, [$SYMBOL], yy.i.TYPE.EXPORT ) }
        | TERM
+       | LOG_STATEMENT
        ;
 
 DECLARATION: VAR SYMBOL "=" TERM
            { $$ = new yy.i.Expr( yy.i.assign, [ $SYMBOL, $TERM ], yy.i.TYPE.ASSIGN ); }
            ;
 
+LOG_STATEMENT: LOG TERM
+               { $$ = new yy.i.Expr( yy.i.log, [$TERM], yy.i.TYPE.CALL ); }
+               ;
+
 TERM: DEPLOYMENT
-    | STRING
+    | STRING
     { $$ = new yy.i.Expr( $1, [], yy.i.TYPE.STRING ); }
     | NUMBER
     { $$ = new yy.i.Expr( $1, [], yy.i.TYPE.NUMBER ); }
@@ -95,7 +101,7 @@ ARGS: TERM
     { $3.value = [$1].concat( $3.value ); $$ = $3; }
     ;
 
-REFERENCE: SYMBOL 
+REFERENCE: SYMBOL
       { $$ = new yy.i.Expr( $1, [], yy.i.TYPE.REFERENCE ); }
       ;
 
