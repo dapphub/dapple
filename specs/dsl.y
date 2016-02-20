@@ -8,6 +8,7 @@
 "log"                 {return 'LOG';}
 "new"                 {return 'NEW';}
 "export"              {return 'EXPORT'}
+"import"              {return 'IMPORT'}
 "value"               {return 'VALUE'}
 "gas"                 {return 'GAS'}
 "="                   {return '='}

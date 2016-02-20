@@ -9,7 +9,7 @@ var testenv = require('./testenv.js');
 var through = require('through2');
 var Web3Factory = require('../lib/web3Factory.js');
 
-describe('DSL', function () {
+describe.only('DSL', function () {
   this.timeout(1000000);
 
   var parser;
@@ -131,14 +131,6 @@ describe('DSL', function () {
     });
   });
 
-  it('should pass an var as a deploy argument', function (done) {
-    parser.parse('var foo = new Contract()\n var bar = new Contract(foo)', function (err, res) {
-      if (err) throw err;
-      assert.ok(parser.interpreter.success);
-      done();
-    });
-  });
-
   it('should send value to an address');
   it('should call an address with raw args');
   it('should switch between keys');
@@ -165,6 +157,34 @@ describe('DSL', function () {
 
         var output = JSON.parse(String(file.contents));
         assert(output.success, 'parser did not report success');
+        cb();
+        done();
+      }));
+  });
+
+  it('allows passing values to constructors', function (done) {
+    let script = 'var foo = 42\n' +
+                 'var bar = new ConstructorContract(foo)\n' +
+                 'var res = bar.constructorArg()' +
+                 'export res';
+
+    var output;
+    pipelines
+      .BuildPipeline({
+        packageRoot: testenv.dsl_package_dir + '/',
+        subpackages: false
+      })
+      .pipe(pipelines.RunPipeline({
+        script: script
+      }))
+      .pipe(through.obj(function (file, enc, cb) {
+        if (/deployScript\.std[err|out]/.test(file.path)) {
+          output = JSON.parse(String(file.contents));
+        }
+        cb();
+      }, function (cb) {
+        assert(output.success, 'parser did not report success');
+        assert.equal(output.globals.res, '42');
         cb();
         done();
       }));
