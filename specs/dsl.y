@@ -54,7 +54,7 @@ DECLARATION: VAR SYMBOL "=" TERM
            ;
 
 LOG_STATEMENT: LOG TERM
-               { $$ = new yy.i.Expr( yy.i.log, [$TERM], yy.i.TYPE.LOG ); }
+               { $$ = new yy.i.Expr( yy.i.log_args, [$TERM], yy.i.TYPE.LOG ); }
                ;
 
 TERM: DEPLOYMENT
