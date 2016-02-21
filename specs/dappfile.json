@@ -6,9 +6,19 @@
   "additionalProperties": false,
   "properties": {
     "name": {
-      "title": "Package Name",
-      "description": "Used for creating its dapple_packages directory",
-      "type": "string"
+      "$ref": "#/definitions/name"
+    },
+    
+    "version": {
+      "$ref": "#/definitions/version"
+    },
+    
+    "summery": {
+      "$ref": "#/definitions/summery"
+    },
+    
+    "tags": {
+      "$ref": "#/definitions/tags"
     },
 
     "layout": {
@@ -48,7 +58,9 @@
     "environments": {
       "$ref": "#/definitions/environments"
     }
+    
   },
+  
   "definitions": {
     "dependencies": {
       "title": "Dependencies",
@@ -63,6 +75,7 @@
         }
       }
     },
+    
     "environments": {
       "title": "Environments",
       "description": "Local environments options",
@@ -74,5 +87,33 @@
         }
       }
     }
+  },
+
+  "tags": {
+    "type": "array",
+    "title": "Tags",
+    "items": {
+      "type": "string"
+    }
+  },
+  
+  "summery": {
+    "title": "Description",
+    "description": "Short summery of the package",
+    "type": "string",
+    "pattern": "^.{0,80}$"
+  },
+
+  "name": {
+    "title": "Package Name",
+    "description": "Used for creating its dapple_packages directory",
+    "type": "string"
+  },
+
+  "version": {
+    "type": "string",
+    "title": "semver",
+    "pattern": "^\\d+\\.\\d+.\\d+$"
   }
+  
 }
