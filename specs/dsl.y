@@ -43,6 +43,8 @@ FORMULAS: FORMULA EOF
 FORMULA: DECLARATION
        | EXPORT SYMBOL
        { $$ = new yy.i.Expr( yy.i.export, [$SYMBOL], yy.i.TYPE.EXPORT ) }
+       | IMPORT SYMBOL
+       { $$ = new yy.i.Expr( yy.i.import, [$SYMBOL], yy.i.TYPE.IMPORT ) }
        | TERM
        | LOG_STATEMENT
        ;
