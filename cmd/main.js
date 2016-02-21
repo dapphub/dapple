@@ -198,6 +198,8 @@ if (cli.install) {
         subpackages: cli['--subpackages'] || cli['-s']
       })
     .pipe(req.pipelines.RunPipeline({
+      environment: env,
+      environments: workspace.getEnvironments(),
       script: file,
       web3: (rc.data.environments[env].ethereum || 'internal')
     }));

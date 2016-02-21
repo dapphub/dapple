@@ -5,8 +5,10 @@
 %%
 \s+                   {/* skip whitespace */}
 "var"                 {return 'VAR';}
+"log"                 {return 'LOG';}
 "new"                 {return 'NEW';}
 "export"              {return 'EXPORT'}
+"import"              {return 'IMPORT'}
 "value"               {return 'VALUE'}
 "gas"                 {return 'GAS'}
 "="                   {return '='}
@@ -28,7 +30,7 @@
 
 %% /* language grammar */
 
-DSL: FORMULAS 
+DSL: FORMULAS
    { return $1; }
    ;
 
@@ -41,15 +43,22 @@ FORMULAS: FORMULA EOF
 FORMULA: DECLARATION
        | EXPORT SYMBOL
        { $$ = new yy.i.Expr( yy.i.export, [$SYMBOL], yy.i.TYPE.EXPORT ) }
+       | IMPORT SYMBOL
+       { $$ = new yy.i.Expr( yy.i.import, [$SYMBOL], yy.i.TYPE.IMPORT ) }
        | TERM
+       | LOG_STATEMENT
        ;
 
 DECLARATION: VAR SYMBOL "=" TERM
            { $$ = new yy.i.Expr( yy.i.assign, [ $SYMBOL, $TERM ], yy.i.TYPE.ASSIGN ); }
            ;
 
+LOG_STATEMENT: LOG TERM
+               { $$ = new yy.i.Expr( yy.i.log_args, [$TERM], yy.i.TYPE.LOG ); }
+               ;
+
 TERM: DEPLOYMENT
-    | STRING
+    | STRING
     { $$ = new yy.i.Expr( $1, [], yy.i.TYPE.STRING ); }
     | NUMBER
     { $$ = new yy.i.Expr( $1, [], yy.i.TYPE.NUMBER ); }
@@ -57,13 +66,13 @@ TERM: DEPLOYMENT
     | REFERENCE
     ;
 
-ADDRESS_CALL: REFERENCE '.' REFERENCE '(' ')'
+ADDRESS_CALL: REFERENCE '.' SYMBOL '(' ')'
             { $$ = new yy.i.Expr( yy.i.call, [$1, $3, [], { value: 0, gas: undefined }], yy.i.TYPE.CALL ); }
-            | REFERENCE '.' REFERENCE '(' ARGS ')'
+            | REFERENCE '.'SYMBOL '(' ARGS ')'
             { $$ = new yy.i.Expr( yy.i.call, [$1, $3, $ARGS, { value: 0, gas: undefined }], yy.i.TYPE.CALL ); }
-            | REFERENCE '.' REFERENCE '.' OPT_CALL '(' ')'
+            | REFERENCE '.' SYMBOL '.' OPT_CALL '(' ')'
             { $$ = new yy.i.Expr( yy.i.call, [$1, $3, [], $OPT_CALL], yy.i.TYPE.CALL ); }
-            | REFERENCE '.' REFERENCE '.' OPT_CALL '(' ARGS ')'
+            | REFERENCE '.'SYMBOL '.' OPT_CALL '(' ARGS ')'
             { $$ = new yy.i.Expr( yy.i.call, [$1, $3, $ARGS, $OPT_CALL], yy.i.TYPE.CALL ); }
             ;
 
@@ -95,7 +104,7 @@ ARGS: TERM
     { $3.value = [$1].concat( $3.value ); $$ = $3; }
     ;
 
-REFERENCE: SYMBOL 
+REFERENCE: SYMBOL
       { $$ = new yy.i.Expr( $1, [], yy.i.TYPE.REFERENCE ); }
       ;
 
