@@ -170,10 +170,15 @@ describe('DSL', function () {
     pipelines
       .BuildPipeline({
         packageRoot: testenv.dsl_package_dir + '/',
-        subpackages: false
+        subpackages: false,
+        logger: {
+          info: () => {},
+          error: (e) => { throw e; }
+        }
       })
       .pipe(pipelines.RunPipeline({
-        script: file
+        script: file,
+        silent: true
       }))
       .pipe(through.obj(function (file, enc, cb) {
         if (!/deployScript\.std[err|out]/.test(file.path)) {
@@ -197,10 +202,15 @@ describe('DSL', function () {
     pipelines
       .BuildPipeline({
         packageRoot: testenv.dsl_package_dir + '/',
-        subpackages: false
+        subpackages: false,
+        logger: {
+          info: () => {},
+          error: (e) => { throw e; }
+        }
       })
       .pipe(pipelines.RunPipeline({
-        script: script
+        script: script,
+        silent: true
       }))
       .pipe(through.obj(function (file, enc, cb) {
         if (/deployScript\.std[err|out]/.test(file.path)) {
@@ -225,10 +235,15 @@ describe('DSL', function () {
     pipelines
       .BuildPipeline({
         packageRoot: testenv.dsl_package_dir + '/',
-        subpackages: false
+        subpackages: false,
+        logger: {
+          info: () => {},
+          error: (e) => { throw e; }
+        }
       })
       .pipe(pipelines.RunPipeline({
-        script: script
+        script: script,
+        silent: true
       }))
       .pipe(through.obj(function (file, enc, cb) {
         if (/deployScript\.std[err|out]/.test(file.path)) {
