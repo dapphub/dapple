@@ -3,6 +3,7 @@
 /* lexical grammar */
 %lex
 %%
+\/\/[^\n]*\n          {/* skip comments */}
 \s+                   {/* skip whitespace */}
 "var"                 {return 'VAR';}
 "log"                 {return 'LOG';}
@@ -17,6 +18,7 @@
 "."                   {return '.'}
 ","                   {return ','}
 \"([^\"]*)\"          {yytext = this.matches[1]; return 'STRING';}
+\'([^\']*)\'          {yytext = this.matches[1]; return 'STRING';}
 /* \d+.\d*               {yytext = parseFloat(yytext); return 'NUMBER';} */
 \d+                   {yytext = parseInt(yytext); return 'NUMBER';}
 \w+                   {return 'SYMBOL';}
