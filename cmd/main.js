@@ -183,10 +183,11 @@ if (cli.install) {
         subpackages: cli['--subpackages'] || cli['-s']
       })
     .pipe(req.pipelines.RunPipeline({
+      environment: env,
       script: file,
-      workspace: workspace,
+      throws: true,
       web3: (rc.environment(env).ethereum || 'internal'),
-      env
+      workspace: workspace
     }));
 } else if (cli.step) {
   let workspace = Workspace.atPackageRoot();
@@ -201,6 +202,8 @@ if (cli.install) {
       environment: env,
       environments: workspace.getEnvironments(),
       script: file,
-      web3: (rc.data.environments[env].ethereum || 'internal')
+      throws: true,
+      web3: (rc.data.environments[env].ethereum || 'internal'),
+      workspace: workspace
     }));
 }
