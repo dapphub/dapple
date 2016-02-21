@@ -106,7 +106,7 @@ describe('DSL', function () {
       done();
     });
   });
-  
+
   it.skip('should pass an object as a deploy argument', function (done) {
     parser.parse('var foo = new Contract()\n var bar = new Contract(foo)', function (err, res) {
       // TODO: test if foo got passed as an correct address
