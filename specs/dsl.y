@@ -54,7 +54,7 @@ DECLARATION: VAR SYMBOL "=" TERM
            ;
 
 LOG_STATEMENT: LOG TERM
-               { $$ = new yy.i.Expr( yy.i.log, [$TERM], yy.i.TYPE.CALL ); }
+               { $$ = new yy.i.Expr( yy.i.log, [$TERM], yy.i.TYPE.LOG ); }
                ;
 
 TERM: DEPLOYMENT
@@ -66,13 +66,13 @@ TERM: DEPLOYMENT
     | REFERENCE
     ;
 
-ADDRESS_CALL: REFERENCE '.' REFERENCE '(' ')'
+ADDRESS_CALL: REFERENCE '.' SYMBOL '(' ')'
             { $$ = new yy.i.Expr( yy.i.call, [$1, $3, [], { value: 0, gas: undefined }], yy.i.TYPE.CALL ); }
-            | REFERENCE '.' REFERENCE '(' ARGS ')'
+            | REFERENCE '.'SYMBOL '(' ARGS ')'
             { $$ = new yy.i.Expr( yy.i.call, [$1, $3, $ARGS, { value: 0, gas: undefined }], yy.i.TYPE.CALL ); }
-            | REFERENCE '.' REFERENCE '.' OPT_CALL '(' ')'
+            | REFERENCE '.' SYMBOL '.' OPT_CALL '(' ')'
             { $$ = new yy.i.Expr( yy.i.call, [$1, $3, [], $OPT_CALL], yy.i.TYPE.CALL ); }
-            | REFERENCE '.' REFERENCE '.' OPT_CALL '(' ARGS ')'
+            | REFERENCE '.'SYMBOL '.' OPT_CALL '(' ARGS ')'
             { $$ = new yy.i.Expr( yy.i.call, [$1, $3, $ARGS, $OPT_CALL], yy.i.TYPE.CALL ); }
             ;
 

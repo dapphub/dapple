@@ -11,7 +11,6 @@ var Web3Factory = require('../lib/web3Factory.js');
 
 describe.only('DSL', function () {
   this.timeout(1000000);
-
   var parser;
 
   // TODO - pass the real environment
@@ -23,11 +22,20 @@ describe.only('DSL', function () {
           bytecode: '606060405260978060106000396000f360606040526000357c01000000000000000000000000000000000000000000000000000000009004806360fe47b11460415780636d4ce63c14605757603f565b005b605560048080359060200190919050506078565b005b606260048050506086565b6040518082815260200191505060405180910390f35b806000600050819055505b50565b600060006000505490506094565b9056'
         }
       },
+      environment: 'test',
+      environments: {
+        'test': {
+          'objects': {
+            'fizzbuzz': 'buzz buzz'
+          }
+        }
+      },
       web3: 'internal',
       // web3: {host: '192.168.59.103', port:'8545'},
       silent: true
     });
   });
+
   // afterEach( function() {
   //   console.log(parser.interpreter.logs.join('\n') )
   // })
@@ -60,6 +68,15 @@ describe.only('DSL', function () {
         assert(parser.interpreter.local.foo === 42);
         done();
       });
+    });
+  });
+
+  it('allows importing object values from the dappfile', function (done) {
+    parser.parse('import fizzbuzz\nlog fizzbuzz', function (err, res) {
+      if (err) throw err;
+      assert.ok(parser.interpreter.success);
+      assert.include(parser.interpreter.logs, 'buzz buzz');
+      done();
     });
   });
 
@@ -162,7 +179,34 @@ describe.only('DSL', function () {
       }));
   });
 
-  it('allows passing values to constructors', function (done) {
+  it('allows passing raw values to constructors', function (done) {
+    let script = 'var bar = new ConstructorContract(42)\n' +
+                 'var res = bar.constructorArg()' +
+                 'export res';
+
+    var output;
+    pipelines
+      .BuildPipeline({
+        packageRoot: testenv.dsl_package_dir + '/',
+        subpackages: false
+      })
+      .pipe(pipelines.RunPipeline({
+        script: script
+      }))
+      .pipe(through.obj(function (file, enc, cb) {
+        if (/deployScript\.std[err|out]/.test(file.path)) {
+          output = JSON.parse(String(file.contents));
+        }
+        cb();
+      }, function (cb) {
+        assert(output.success, 'parser did not report success');
+        assert.equal(output.globals.res, '42');
+        cb();
+        done();
+      }));
+  });
+
+  it('allows passing variables to constructors', function (done) {
     let script = 'var foo = 42\n' +
                  'var bar = new ConstructorContract(foo)\n' +
                  'var res = bar.constructorArg()' +
