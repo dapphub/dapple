@@ -115,5 +115,12 @@ describe('Dependency', function () {
       assert.equal(dep.getPath(), 'dappsys');
       assert.equal(dep.getVersion(), '1.2.3');
     });
+    it('can be constructed from the string 1.2.3 and the name dappsys', function () {
+      var dep = Dependency.fromDependencyString('1.2.3', 'dappsys');
+      assert(dep.hasDappHubPath(), 'does not recognize DappHub reference');
+      assert.equal(dep.getName(), 'dappsys');
+      assert.equal(dep.getPath(), 'dappsys');
+      assert.equal(dep.getVersion(), '1.2.3');
+    });
   });
 });
