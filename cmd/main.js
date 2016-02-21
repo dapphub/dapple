@@ -185,7 +185,8 @@ if (cli.install) {
     .pipe(req.pipelines.RunPipeline({
       environment: env,
       script: file,
-      throws: true,
+      simulate: !cli['--no-simulation'],
+      throws: !cli['--force'],
       web3: (rc.environment(env).ethereum || 'internal'),
       workspace: workspace
     }));
@@ -202,7 +203,8 @@ if (cli.install) {
       environment: env,
       environments: workspace.getEnvironments(),
       script: file,
-      throws: true,
+      simulate: !cli['--no-simulation'],
+      throws: !cli['--force'],
       web3: (rc.data.environments[env].ethereum || 'internal'),
       workspace: workspace
     }));
