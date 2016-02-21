@@ -43,7 +43,7 @@ describe('DSL', function () {
     parser.parse('var foo = "bar"', function (err, res) {
       if (err) throw err;
       assert(parser.interpreter.success);
-      assert(parser.interpreter.local.foo === 'bar');
+      assert(parser.interpreter.local.foo.value === 'bar');
       done();
     });
   });
@@ -52,7 +52,7 @@ describe('DSL', function () {
     parser.parse('var foo = 42', function (err, res) {
       if (err) throw err;
       assert(parser.interpreter.success);
-      assert(parser.interpreter.local.foo === 42);
+      assert(parser.interpreter.local.foo.value === 42);
       done();
     });
   });
@@ -61,11 +61,11 @@ describe('DSL', function () {
     parser.parse('var foo = 42', function (err, res) {
       if (err) throw err;
       assert.ok(parser.interpreter.success);
-      assert(parser.interpreter.local.foo === 42);
+      assert(parser.interpreter.local.foo.value === 42);
       parser.parse('var foo = 17', function (err, res) {
         if (err) throw err;
         assert.notOk(parser.interpreter.success);
-        assert(parser.interpreter.local.foo === 42);
+        assert(parser.interpreter.local.foo.value === 42);
         done();
       });
     });
@@ -84,7 +84,7 @@ describe('DSL', function () {
     parser.parse('var foo = 17\nexport foo', function (err, res) {
       if (err) throw err;
       assert.ok(parser.interpreter.success);
-      assert(parser.interpreter.global.foo === 17);
+      assert(parser.interpreter.global.foo.value === 17);
       done();
     });
   });
@@ -93,7 +93,7 @@ describe('DSL', function () {
     parser.parse('var foo = 17\nexport foo\nvar foo = 42\nexport foo', function (err, res) {
       if (err) throw err;
       assert.notOk(parser.interpreter.success);
-      assert(parser.interpreter.global.foo === 17);
+      assert(parser.interpreter.global.foo.value === 17);
       done();
     });
   });
@@ -103,6 +103,15 @@ describe('DSL', function () {
       if (err) throw err;
       assert.ok(parser.interpreter.success);
       assert(parser.interpreter.local.foo.value.length === 42);
+      done();
+    });
+  });
+
+  it.skip('should pass an object as a deploy argument', function (done) {
+    parser.parse('var foo = new Contract()\n var bar = new Contract(foo)', function (err, res) {
+      // TODO: test if foo got passed as an correct address
+      if (err) throw err;
+      assert.ok(parser.interpreter.success);
       done();
     });
   });
