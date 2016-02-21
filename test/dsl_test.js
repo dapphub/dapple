@@ -107,7 +107,7 @@ describe('DSL', function () {
     });
   });
 
-  it.skip('should pass an object as a deploy argument', function (done) {
+  it('should pass an object as a deploy argument', function (done) {
     parser.parse('var foo = new Contract()\n var bar = new Contract(foo)', function (err, res) {
       // TODO: test if foo got passed as an correct address
       if (err) throw err;
@@ -181,7 +181,7 @@ describe('DSL', function () {
         silent: true
       }))
       .pipe(through.obj(function (file, enc, cb) {
-        if (!/deployScript\.std[err|out]/.test(file.path)) {
+        if (!/__deployScript\.[json|stderr]/.test(file.path)) {
           cb();
           return;
         }
@@ -213,7 +213,7 @@ describe('DSL', function () {
         silent: true
       }))
       .pipe(through.obj(function (file, enc, cb) {
-        if (/deployScript\.std[err|out]/.test(file.path)) {
+        if (/__deployScript\.json/.test(file.path)) {
           output = JSON.parse(String(file.contents));
         }
         cb();
@@ -246,7 +246,7 @@ describe('DSL', function () {
         silent: true
       }))
       .pipe(through.obj(function (file, enc, cb) {
-        if (/deployScript\.std[err|out]/.test(file.path)) {
+        if (/__deployScript\.json/.test(file.path)) {
           output = JSON.parse(String(file.contents));
         }
         cb();
