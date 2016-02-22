@@ -9,6 +9,7 @@ var fs = require('fs');
 var docopt = require('docopt');
 var doc = fs.readFileSync(__dirname + '/docopt.txt').toString();
 var cli = docopt.docopt(doc);
+var _   = require('lodash');
 
 // These requires take a lot of time to import.
 var req = require('lazreq')({
@@ -203,4 +204,21 @@ if (cli.install) {
       script: file,
       web3: (rc.data.environments[env].ethereum || 'internal')
     }));
+} else if (cli.publish) {
+  let workspace = Workspace.atPackageRoot();
+  let env = cli['--environment'] || workspace.getEnvironment();
+  // TODO - find a nicer way to inherit and normalize environments: dapplerc -> dappfile -> cli settings
+  req.pipelines
+      .BuildPipeline({
+        packageRoot: Workspace.findPackageRoot(),
+        subpackages: cli['--subpackages'] || cli['-s']
+      })
+      .pipe(req.pipelines.PublishPipeline({
+        environment: env,
+        dappfile: workspace.dappfile,
+        ipfs: rc.environment(env).ipfs,
+        path: workspace.package_root,
+        web3: (rc.environment(env).ethereum || 'internal'),
+      }));
+
 }
