@@ -9,7 +9,6 @@ var fs = require('fs');
 var docopt = require('docopt');
 var doc = fs.readFileSync(__dirname + '/docopt.txt').toString();
 var cli = docopt.docopt(doc);
-var _   = require('lodash');
 
 // These requires take a lot of time to import.
 var req = require('lazreq')({
@@ -223,7 +222,6 @@ if (cli.install) {
         dappfile: workspace.dappfile,
         ipfs: rc.environment(env).ipfs,
         path: workspace.package_root,
-        web3: (rc.environment(env).ethereum || 'internal'),
+        web3: (rc.environment(env).ethereum || 'internal')
       }));
-
 }
