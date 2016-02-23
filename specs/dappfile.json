@@ -2,7 +2,7 @@
   "title": "dappfile definition",
   "description": "dappfile definition",
   "type": "object",
-  "required": [ "name", "layout" ],
+  "required": [ "name", "layout", "version" ],
   "additionalProperties": false,
   "properties": {
     "name": {
