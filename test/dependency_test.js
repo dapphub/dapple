@@ -102,17 +102,24 @@ describe('Dependency', function () {
 
   describe('construction for DappHub dependencies', function () {
     it('recognizes dappsys 1.2.3 as a DappHub reference', function () {
+      var dep = new Dependency('dappsys', '1.2.3', 'dsys-alias');
+      assert(dep.hasDappHubPath(), 'does not recognize DappHub reference');
+      assert.equal(dep.getName(), 'dsys-alias');
+      assert.equal(dep.getPath(), 'dappsys');
+      assert.equal(dep.getVersion(), '1.2.3');
+    });
+    it('can be constructed from the string dappsys@1.2.3', function () {
+      var dep = Dependency.fromDependencyString('dappsys@1.2.3', 'dsys-alias');
+      assert(dep.hasDappHubPath(), 'does not recognize DappHub reference');
+      assert.equal(dep.getName(), 'dsys-alias');
+      assert.equal(dep.getPath(), 'dappsys');
+      assert.equal(dep.getVersion(), '1.2.3');
+    });
+    it('can be constructed from the string 1.2.3 and the name dappsys', function () {
       var dep = Dependency.fromDependencyString('1.2.3', 'dappsys');
       assert(dep.hasDappHubPath(), 'does not recognize DappHub reference');
       assert.equal(dep.getName(), 'dappsys');
-      assert.equal(dep.getPath(), 'dappsys@1.2.3');
-      assert.equal(dep.getVersion(), '1.2.3');
-    });
-    it('recognizes dappsys v1.2.3 as a DappHub reference', function () {
-      var dep = Dependency.fromDependencyString('v1.2.3', 'dappsys');
-      assert(dep.hasDappHubPath(), 'does not recognize DappHub reference');
-      assert.equal(dep.getName(), 'dappsys');
-      assert.equal(dep.getPath(), 'dappsys@1.2.3');
+      assert.equal(dep.getPath(), 'dappsys');
       assert.equal(dep.getVersion(), '1.2.3');
     });
   });

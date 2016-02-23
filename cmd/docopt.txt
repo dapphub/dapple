@@ -5,7 +5,7 @@ Usage:
     dapple build [options]
     dapple test  [-r <RegExp>] [options] [--skip-build]
     dapple new test <class>
-    dapple run <script> [--force] [options]
+    dapple run <script> [--force] [--no-simulation] [options]
     dapple step <string> [options]
     dapple publish [options]
 

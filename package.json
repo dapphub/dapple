@@ -1,6 +1,6 @@
 {
   "name": "dapple",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "dapp development tool",
   "keywords": [
     "dapp",
@@ -60,6 +60,7 @@
     "inquirer": "^0.11.1",
     "ipfs-api": "^2.13.1",
     "ipfs-js": "0.0.8",
+    "jison": "^0.4.17",
     "js-yaml": "^3.5.2",
     "json-schema-defaults": "^0.1.1",
     "lazreq": "^0.1.1",
@@ -87,7 +88,6 @@
     "eslint": "^1.10.3",
     "groc": "^0.8.0",
     "gulp": "^3.9.0",
-    "jison": "^0.4.17",
     "semistandard": "^7.0.5"
   },
   "semistandard": {
