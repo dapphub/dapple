@@ -104,6 +104,7 @@ if (cli.install) {
   // Run our build pipeline.
   let jsBuildPipeline = req.pipelines
     .JSBuildPipeline({
+      deploy_data: !cli['--no-deploy-data'],
       environment: env,
       environments: environments,
       subpackages: cli['--subpackages'] || cli['-s']
