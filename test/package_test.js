@@ -9,7 +9,7 @@ describe('package', function () {
     // IPFS link: QmcVb2DkBVJqT4Pw3X9Ge3dzbgSzW7pvDBsxhVs1xGPLV3
     var pkg_definition = {
       'name': 'foobar',
-      'summery': 'this is a test package',
+      'summary': 'this is a test package',
       'version': '12.0.34',
       'solc': {
         'version': 'Version: 0.2.2-37381072/.-Darwin/unknown/JIT linked to libethereum-1.1.1-8138fe14/.-Darwin/unknown/JIT',

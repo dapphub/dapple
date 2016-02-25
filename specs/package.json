@@ -7,7 +7,7 @@
     "name": {
       "$ref": "dappfile#/definitions/name"
     },
-    
+
     "solc": {
       "title": "Solidity Command",
       "description": "Solidity Version and flags with which the contracts were compiled",
@@ -24,15 +24,15 @@
         }
       }
     },
-    
-    "summery": {
-      "$ref": "dappfile#/definitions/summery"
+
+    "summary": {
+      "$ref": "dappfile#/definitions/summary"
     },
-    
+
     "version": {
       "$ref": "dappfile#/definitions/version"
     },
-    
+
     "contracts": {
       "title": "Contracts",
       "description": "Contracts (Name, Binary, ABI) which are provided with this package",
@@ -49,16 +49,16 @@
     "tags": {
       "$ref": "dappfile#/definitions/tags"
     },
-    
+
     "root": {
       "title": "ipfs root file object",
       "type": "string"
     },
-    
+
     "dependencies": {
       "$ref": "dappfile#/definitions/dependencies"
     },
-    
+
     "environments": {
       "$ref": "dappfile#/definitions/environments"
     }

@@ -8,15 +8,15 @@
     "name": {
       "$ref": "#/definitions/name"
     },
-    
+
     "version": {
       "$ref": "#/definitions/version"
     },
-    
-    "summery": {
-      "$ref": "#/definitions/summery"
+
+    "summary": {
+      "$ref": "#/definitions/summary"
     },
-    
+
     "tags": {
       "$ref": "#/definitions/tags"
     },
@@ -58,9 +58,9 @@
     "environments": {
       "$ref": "#/definitions/environments"
     }
-    
+
   },
-  
+
   "definitions": {
     "dependencies": {
       "title": "Dependencies",
@@ -75,7 +75,7 @@
         }
       }
     },
-    
+
     "environments": {
       "title": "Environments",
       "description": "Local environments options",
@@ -96,10 +96,10 @@
       "type": "string"
     }
   },
-  
-  "summery": {
+
+  "summary": {
     "title": "Description",
-    "description": "Short summery of the package",
+    "description": "Short summary of the package",
     "type": "string",
     "pattern": "^.{0,80}$"
   },
@@ -115,5 +115,5 @@
     "title": "semver",
     "pattern": "^\\d+\\.\\d+.\\d+$"
   }
-  
+
 }
