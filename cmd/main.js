@@ -101,11 +101,21 @@ if (cli.install) {
     process.exit(1);
   }
 
+  var nameFilter;
+  if (cli['-r']) {
+    // if filter String contains upper case letters special regex chars,
+    // assume the filtering is case sensitive, otherwise its insensitive
+    nameFilter = new RegExp(cli['<RegExp>'],
+      /[A-Z\\\.\[\]\^\$\*\+\{\}\(\)\?\|]/.test(cli['<RegExp>']) ? '' : 'i');
+  }
+
   // Run our build pipeline.
   let jsBuildPipeline = req.pipelines
     .JSBuildPipeline({
+      deploy_data: !cli['--no-deploy-data'],
       environment: env,
       environments: environments,
+      nameFilter: nameFilter,
       subpackages: cli['--subpackages'] || cli['-s']
     });
 
