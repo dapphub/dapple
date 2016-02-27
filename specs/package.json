@@ -29,6 +29,23 @@
       }
     },
 
+    "scripts": {
+      "title": "scripts",
+      "type": "array",
+      "items": {
+        "type": "path"
+      }
+    },
+
+    "files": {
+      "title": "files",
+      "description": "which which are going to get included to a package",
+      "items": {
+        "type": "string",
+        "title": "path"
+      }
+    },
+
     "summary": {
       "$ref": "dappfile#/definitions/summary"
     },
