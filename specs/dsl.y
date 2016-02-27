@@ -12,6 +12,9 @@
 "import"              {return 'IMPORT'}
 "value"               {return 'VALUE'}
 "gas"                 {return 'GAS'}
+"code"                {return 'CODE'}
+"address"             {return 'ADDRESS'}
+"at"                  {return 'AT'}
 "="                   {return '='}
 "("                   {return '('}
 ")"                   {return ')'}
@@ -65,12 +68,27 @@ TERM: DEPLOYMENT
     | NUMBER
     { $$ = new yy.i.Expr( $1, [], yy.i.TYPE.NUMBER ); }
     | ADDRESS_CALL
-    | REFERENCE
+    | CONTRACT_AT
+    | REFERENCE
+    | GET_CODE
+    | GET_ADDRESS
     ;
+
+GET_CODE: CODE '(' TERM ')'
+          { $$ = new yy.i.Expr( yy.i.getCode, [$3], yy.i.TYPE.GET_CODE ); }
+          ;
+
+GET_ADDRESS: ADDRESS '(' REFERENCE ')'
+             { $$ = new yy.i.Expr( yy.i.getAddress, [$3], yy.i.TYPE.GET_ADDRESS ); }
+             ;
+
+CONTRACT_AT: SYMBOL '(' TERM ')'
+             { $$ = new yy.i.Expr( yy.i.contractAt, [$1, $3], yy.i.TYPE.GET_CONTRACT ); }
+             ;
 
 ADDRESS_CALL: REFERENCE '.' SYMBOL '(' ')'
             { $$ = new yy.i.Expr( yy.i.call, [$1, $3, [], { value: 0, gas: undefined }], yy.i.TYPE.CALL ); }
-            | REFERENCE '.'SYMBOL '(' ARGS ')'
+            | REFERENCE '.'SYMBOL '(' ARGS ')'
             { $$ = new yy.i.Expr( yy.i.call, [$1, $3, $ARGS, { value: 0, gas: undefined }], yy.i.TYPE.CALL ); }
             | REFERENCE '.' SYMBOL '.' OPT_CALL '(' ')'
             { $$ = new yy.i.Expr( yy.i.call, [$1, $3, [], $OPT_CALL], yy.i.TYPE.CALL ); }
