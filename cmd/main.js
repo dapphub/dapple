@@ -165,6 +165,7 @@ if (cli.install) {
       })
       .pipe(req.vinyl.dest(Workspace.findBuildPath()));
   }
+  console.log(initStream);
 
   initStream
     .pipe(req.pipelines.TestPipeline({
@@ -224,4 +225,7 @@ if (cli.install) {
         path: workspace.package_root,
         web3: (rc.environment(env).ethereum || 'internal')
       }));
+} else if (cli.add) {
+  let workspace = Workspace.atPackageRoot();
+  workspace.addPath(cli['<path>']);
 }

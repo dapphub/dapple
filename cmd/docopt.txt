@@ -8,6 +8,8 @@ Usage:
     dapple run <script> [--force] [--no-simulation] [options]
     dapple step <string> [options]
     dapple publish [options]
+    dapple add <path>
+    dapple rm <path>
 
 Options:
     -e ENVIRONMENT, --environment ENVIRONMENT [default: evm]

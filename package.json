@@ -49,6 +49,7 @@
     "docopt": "^0.6.2",
     "ethereumjs-lib": "^1.0.1",
     "ethersim": "git+http://github.com/NexusDevelopment/EtherSim.git",
+    "file": "^0.2.2",
     "fs-extra": "^0.26.3",
     "fs-readdir-recursive": "^1.0.0",
     "geth": "^0.1.4",
