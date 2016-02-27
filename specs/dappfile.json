@@ -17,6 +17,14 @@
       "$ref": "#/definitions/summary"
     },
 
+    "files": {
+      "$ref": "#/definitions/files"
+    },
+
+    "scripts": {
+      "$ref": "#/definitions/scripts"
+    },
+
     "tags": {
       "$ref": "#/definitions/tags",
       "default": []
@@ -120,6 +128,24 @@
     "type": "string",
     "title": "semver",
     "pattern": "^\\d+\\.\\d+.\\d+$"
+  },
+
+  "files":{
+    "title": "files",
+    "description": "which which are going to get included to a package",
+    "items": {
+      "type": "string",
+      "title": "path"
+    }
+  },
+
+  "scripts": {
+    "title": "scripts",
+    "descriptions": "scripts which are going to get included to a package",
+    "type": "array",
+    "items": {
+      "type": "path"
+    }
   }
 
 }

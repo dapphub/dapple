@@ -30,20 +30,11 @@
     },
 
     "scripts": {
-      "title": "scripts",
-      "type": "array",
-      "items": {
-        "type": "path"
-      }
+      "$ref": "dappfile#/definitions/scripts"
     },
 
     "files": {
-      "title": "files",
-      "description": "which which are going to get included to a package",
-      "items": {
-        "type": "string",
-        "title": "path"
-      }
+      "$ref": "dappfile#/definitions/files"
     },
 
     "summary": {
