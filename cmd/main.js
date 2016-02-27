@@ -238,4 +238,7 @@ if (cli.install) {
 } else if (cli.add) {
   let workspace = Workspace.atPackageRoot();
   workspace.addPath(cli['<path>']);
+} else if (cli.ignore) {
+  let workspace = Workspace.atPackageRoot();
+  workspace.ignorePath(cli['<path>']);
 }
