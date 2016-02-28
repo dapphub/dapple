@@ -12,6 +12,18 @@
 "import"              {return 'IMPORT'}
 "value"               {return 'VALUE'}
 "gas"                 {return 'GAS'}
+"code"                {return 'CODE'}
+"address"             {return 'ADDRESS'}
+"at"                  {return 'AT'}
+"=="                  {return 'EQ'}
+"!="                  {return 'NEQ'}
+">"                   {return 'GT'}
+"<"                   {return 'LT'}
+">="                  {return 'GTE'}
+"<="                  {return 'LTE'}
+"assert"              {return 'ASSERT'}
+"true"                {return 'TRUE'}
+"false"               {return 'FALSE'}
 "="                   {return '='}
 "("                   {return '('}
 ")"                   {return ')'}
@@ -33,7 +45,8 @@
 %% /* language grammar */
 
 DSL: FORMULAS
-   { return $1; }
+     { return $1; }
+   | EOF
    ;
 
 FORMULAS: FORMULA EOF
@@ -42,7 +55,8 @@ FORMULAS: FORMULA EOF
           { $2.value = [$1].concat( $2.value ); $$ = $2; }
         ;
 
-FORMULA: DECLARATION
+FORMULA: ASSERTION
+       | DECLARATION
        | EXPORT SYMBOL
        { $$ = new yy.i.Expr( yy.i.export, [$SYMBOL], yy.i.TYPE.EXPORT ) }
        | IMPORT SYMBOL
@@ -55,26 +69,69 @@ DECLARATION: VAR SYMBOL "=" TERM
            { $$ = new yy.i.Expr( yy.i.assign, [ $SYMBOL, $TERM ], yy.i.TYPE.ASSIGN ); }
            ;
 
+
+ASSERTION: ASSERT COMPARISON
+           { $$ = new yy.i.Expr( yy.i.assert, [$COMPARISON], yy.i.TYPE.ASSERTION ) }
+         | ASSERT TERM
+           { $$ = new yy.i.Expr( yy.i.assert, [$TERM], yy.i.TYPE.ASSERTION ) }
+           ;
+
+COMPARISON: TERM EQ TERM
+            { $$ = new yy.i.Expr( yy.i.eq, [$1, $3], yy.i.TYPE.COMPARISON ) }
+          | TERM NEQ TERM
+            { $$ = new yy.i.Expr( yy.i.eq, [$1, $3], yy.i.TYPE.COMPARISON ) }
+          | TERM GT TERM
+            { $$ = new yy.i.Expr( yy.i.gt, [$1, $3], yy.i.TYPE.COMPARISON ) }
+          | TERM LT TERM
+            { $$ = new yy.i.Expr( yy.i.lt, [$1, $3], yy.i.TYPE.COMPARISON ) }
+          | TERM GTE TERM
+            { $$ = new yy.i.Expr( yy.i.gte, [$1, $3], yy.i.TYPE.COMPARISON ) }
+          | TERM LTE TERM
+            { $$ = new yy.i.Expr( yy.i.lte, [$1, $3], yy.i.TYPE.COMPARISON ) }
+          ;
+
 LOG_STATEMENT: LOG TERM
-               { $$ = new yy.i.Expr( yy.i.log_atom, [$TERM], yy.i.TYPE.LOG ); }
+               { $$ = new yy.i.Expr( yy.i.log_atom, [$TERM], yy.i.TYPE.LOG ) }
                ;
+
+BOOLEAN: TRUE
+         { $$ = new yy.i.Expr( true, [], yy.i.TYPE.BOOLEAN ); }
+       | FALSE
+         { $$ = new yy.i.Expr( false, [], yy.i.TYPE.BOOLEAN ); }
+       ;
 
 TERM: DEPLOYMENT
     | STRING
     { $$ = new yy.i.Expr( $1, [], yy.i.TYPE.STRING ); }
     | NUMBER
     { $$ = new yy.i.Expr( $1, [], yy.i.TYPE.NUMBER ); }
+    | BOOLEAN
     | ADDRESS_CALL
-    | REFERENCE
+    | CONTRACT_AT
+    | REFERENCE
+    | GET_CODE
+    | GET_ADDRESS
     ;
+
+GET_CODE: CODE '(' TERM ')'
+          { $$ = new yy.i.Expr( yy.i.getCode, [$3], yy.i.TYPE.GET_CODE ); }
+          ;
+
+GET_ADDRESS: ADDRESS '(' REFERENCE ')'
+             { $$ = new yy.i.Expr( yy.i.getAddress, [$3], yy.i.TYPE.GET_ADDRESS ); }
+             ;
+
+CONTRACT_AT: SYMBOL '(' TERM ')'
+             { $$ = new yy.i.Expr( yy.i.contractAt, [$1, $3], yy.i.TYPE.GET_CONTRACT ); }
+             ;
 
 ADDRESS_CALL: REFERENCE '.' SYMBOL '(' ')'
             { $$ = new yy.i.Expr( yy.i.call, [$1, $3, [], { value: 0, gas: undefined }], yy.i.TYPE.CALL ); }
-            | REFERENCE '.'SYMBOL '(' ARGS ')'
+            | REFERENCE '.'SYMBOL '(' ARGS ')'
             { $$ = new yy.i.Expr( yy.i.call, [$1, $3, $ARGS, { value: 0, gas: undefined }], yy.i.TYPE.CALL ); }
             | REFERENCE '.' SYMBOL '.' OPT_CALL '(' ')'
             { $$ = new yy.i.Expr( yy.i.call, [$1, $3, [], $OPT_CALL], yy.i.TYPE.CALL ); }
-            | REFERENCE '.'SYMBOL '.' OPT_CALL '(' ARGS ')'
+            | REFERENCE '.'SYMBOL '.' OPT_CALL '(' ARGS ')'
             { $$ = new yy.i.Expr( yy.i.call, [$1, $3, $ARGS, $OPT_CALL], yy.i.TYPE.CALL ); }
             ;
 
@@ -90,9 +147,9 @@ DEPLOYMENT: NEW SYMBOL "(" ")"
           ;
 
 OPT_CALL:
-        | VALUE '(' NUMBER ')'
+        | VALUE '(' NUMBER ')'
         { $$ = {value: $NUMBER, gas: undefined}; }
-        | VALUE '(' NUMBER ')' '.' OPT_CALL
+        | VALUE '(' NUMBER ')' '.' OPT_CALL
         { $$ = {value: $NUMBER, gas: $OPT_CALL.gas}; }
         | GAS '(' NUMBER ')'
         { $$ = {value: 0, gas: $NUMBER}; }
