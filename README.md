@@ -17,4 +17,56 @@
 
 #### Basic Usage
 
+##### Create a package directory
+```
+mkdir mydapp && cd mydapp
+dapple init
+```
+
+`dapple init` generates a simple boilerplate `dappfile` in the current
+directory.
+
+If no errors are displayed, the initialization was a success. You should be able
+to see the boilerplate `dappfile` in your current directory, along with a couple
+other directories:
+
+```
+$ ls
+build  contracts  dappfile 
+```
+
+By default, `build` is where the output of `dapple build` gets put, and
+`contracts` is where Dapple looks for your contract source files. Both of these
+are configured in your `dappfile` and can be overridden.
+
+
+
+Write a contract and test (see [dapple test harness docs](https:github.com/nexusdev/dapple/doc/test.md)).
+
+```
+vim contracts/dapp.sol
+vim contracts/dapp_test.sol
+dapple test
+```
+
+Emit build objects, classes.json, and javascript module:
+```
+dapple build
+```
+
+Install via IPFS
+```
+dapple install 
+```
+
+Install via dapphub
+```
+dapple test
+```
+
+Publish to dapphub (currently requires nexus admin key)
+```
+dapple publish
+```
+
 
