@@ -9,6 +9,7 @@
 
 `dapple` is a tool for Solidity developers to help build and manage complex contract systems on Ethereum-like blockchains.
 
+`dapple` is a Solidity developer multitool concerned primarily with managing the growing complexity of interconnected smart contract systems. Its core functionality encompasses *package management*, *build process*, and *deployment scripting*. These concepts are related in a way that is unique to the smart contract ecosystem, due to each blockchain's universal singleton nature. The central data model is the `dappfile`, whose definition depends on IPFS and also on the Ethereum blockchain specifically.
 
 #### Installation
 
@@ -16,33 +17,4 @@
 
 #### Basic Usage
 
-Note that not everything is implemented in the JS rewrite.
-```
-mkdir mydapp && cd mydapp
-dapple init
 
-# Write some contracts - see docs for test contract format
-vim src/sol/mycontract.sol
-vim src/sol/mycontract_test.sol
-
-dapple test # run VM tests
-dapple build # export contract definitions, solidity headers, and JS headers (node and browser)
-
-# Write a deploy sequence
-vim steps/deploy.step
-dapple chain ethereum          # switch chains to default mainnet
-dapple run steps/deploy.step   # run the deploy sequence
-
-```
-
-#### Example dapple packages
-
-Some may still be in an outdated package format.
-
-https://github.com/NexusDevelopment/dappsys
-
-https://github.com/NexusDevelopment/keeper/tree/nexus/keeperd/dapp
-
-https://github.com/NexusDevelopment/ENS
-
-https://github.com/NexusDevelopment/guts
