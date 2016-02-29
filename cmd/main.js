@@ -175,7 +175,6 @@ if (cli.install) {
       })
       .pipe(req.vinyl.dest(Workspace.findBuildPath()));
   }
-  console.log(initStream);
 
   initStream
     .pipe(req.pipelines.TestPipeline({
