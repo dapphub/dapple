@@ -7,8 +7,6 @@
   <img width=196" src="http://ipfs.pics/ipfs/QmPQcPiaep6Bfp956b5xLDaQdtQVtAWBT9QjWNRiL9y8Cw"/>
 </p>
 
-`dapple` is a tool for Solidity developers to help build and manage complex contract systems on Ethereum-like blockchains.
-
 `dapple` is a Solidity developer multitool concerned primarily with managing the growing complexity of interconnected smart contract systems. Its core functionality encompasses *package management*, *build process*, and *deployment scripting*. These concepts are related in a way that is unique to the smart contract ecosystem, due to each blockchain's universal singleton nature. The central data model is the `dappfile`, whose definition depends on IPFS and also on the Ethereum blockchain specifically.
 
 #### Installation
@@ -49,24 +47,23 @@ vim contracts/dapp_test.sol
 dapple test
 ```
 
-Emit build objects, classes.json, and javascript module:
+By default, dapple builds the entire `contracts` tree, and emits the following:
+* dapple build cache objects
+* `classes.json`, all type definitions
+* `js_module.js`, a javascript module which wrapps classes.json and adds instantiated web3js Contract objects for each object in the dappfile. 
+
 ```
 dapple build
 ```
 
-Install via IPFS
-```
-dapple install 
-```
+Feature docs:
 
-Install via dapphub
-```
-dapple test
-```
-
-Publish to dapphub (currently requires nexus admin key)
-```
-dapple publish
-```
+* [Basic VM tests](https://github.com/nexusdev/dapple/doc/test.md)
+* [Testing Exceptions](https://github.com/nexusdev/dapple/doc/test_errors.md)
+* [Testing Events](https://github.com/nexusdev/dapple/doc/test_events.md)
+* [Installing/Publishing Packages]
 
 
+To document:
+* Aliasing and imports
+* Ignore/add
