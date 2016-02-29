@@ -75,7 +75,7 @@ describe('DSL', function () {
     parser.parse('import fizzbuzz\nlog fizzbuzz', function (err, res) {
       if (err) throw err;
       assert.ok(parser.interpreter.success);
-      assert.include(parser.interpreter.logs, 'buzz buzz');
+      assert.include(parser.interpreter.logs, 'buzz buzz\n');
       done();
     });
   });
@@ -152,7 +152,7 @@ describe('DSL', function () {
     parser.parse('log "Logging test!"', function (err, res) {
       if (err) throw err;
       assert.ok(parser.interpreter.success);
-      assert.include(parser.interpreter.logs, 'Logging test!');
+      assert.include(parser.interpreter.logs, 'Logging test!\n');
       done();
     });
   });

@@ -8,6 +8,7 @@ describe('package', function () {
   it('should accept valide package description', function (done) {
     // IPFS link: QmcVb2DkBVJqT4Pw3X9Ge3dzbgSzW7pvDBsxhVs1xGPLV3
     var pkg_definition = {
+      'schema': 'QmXuaDz3Nwmiz38FzG4GpxKAF4fGML1YxZPbKa6pYQcQ9B',
       'name': 'foobar',
       'summary': 'this is a test package',
       'version': '12.0.34',
@@ -34,8 +35,8 @@ describe('package', function () {
         }
       }
     };
-    var valide = schemas.package.validate(pkg_definition);
-    assert(valide);
+    var valide = schemas.package.validateResult(pkg_definition);
+    assert(valide.valid);
     done();
   });
 });

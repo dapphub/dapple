@@ -175,6 +175,7 @@ if (cli.install) {
       })
       .pipe(req.vinyl.dest(Workspace.findBuildPath()));
   }
+  console.log(initStream);
 
   initStream
     .pipe(req.pipelines.TestPipeline({
@@ -218,4 +219,26 @@ if (cli.install) {
       web3: (rc.data.environments[env].ethereum || 'internal'),
       workspace: workspace
     }));
+} else if (cli.publish) {
+  let workspace = Workspace.atPackageRoot();
+  let env = cli['--environment'] || workspace.getEnvironment();
+  // TODO - find a nicer way to inherit and normalize environments: dapplerc -> dappfile -> cli settings
+  req.pipelines
+      .BuildPipeline({
+        packageRoot: Workspace.findPackageRoot(),
+        subpackages: cli['--subpackages'] || cli['-s']
+      })
+      .pipe(req.pipelines.PublishPipeline({
+        environment: env,
+        dappfile: workspace.dappfile,
+        ipfs: rc.environment(env).ipfs,
+        path: workspace.package_root,
+        web3: (rc.environment(env).ethereum || 'internal')
+      }));
+} else if (cli.add) {
+  let workspace = Workspace.atPackageRoot();
+  workspace.addPath(cli['<path>']);
+} else if (cli.ignore) {
+  let workspace = Workspace.atPackageRoot();
+  workspace.ignorePath(cli['<path>']);
 }

@@ -1,9 +1,13 @@
 {
   "title": "package data model",
   "type": "object",
-  "required": ["name"],
+  "required": ["name", "schema"],
   "additionalProperties": false,
   "properties": {
+    "schema": {
+      "title": "ipfs-reference to the used schema",
+      "type": "string"
+    },
     "name": {
       "$ref": "dappfile#/definitions/name"
     },
@@ -23,6 +27,14 @@
           "title": "flags"
         }
       }
+    },
+
+    "scripts": {
+      "$ref": "dappfile#/definitions/scripts"
+    },
+
+    "files": {
+      "$ref": "dappfile#/definitions/files"
     },
 
     "summary": {
