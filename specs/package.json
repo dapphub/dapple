@@ -1,0 +1,78 @@
+{
+  "title": "package data model",
+  "type": "object",
+  "required": ["name", "schema"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "title": "ipfs-reference to the used schema",
+      "type": "string"
+    },
+    "name": {
+      "$ref": "dappfile#/definitions/name"
+    },
+
+    "solc": {
+      "title": "Solidity Command",
+      "description": "Solidity Version and flags with which the contracts were compiled",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "type": "string",
+          "title": "string"
+        },
+        "flags": {
+          "type": "string",
+          "title": "flags"
+        }
+      }
+    },
+
+    "scripts": {
+      "$ref": "dappfile#/definitions/scripts"
+    },
+
+    "files": {
+      "$ref": "dappfile#/definitions/files"
+    },
+
+    "summary": {
+      "$ref": "dappfile#/definitions/summary"
+    },
+
+    "version": {
+      "$ref": "dappfile#/definitions/version"
+    },
+
+    "contracts": {
+      "title": "Contracts",
+      "description": "Contracts (Name, Binary, ABI) which are provided with this package",
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        ".*": {
+          "type": "string",
+          "title": "ipfs hash"
+        }
+      }
+    },
+
+    "tags": {
+      "$ref": "dappfile#/definitions/tags"
+    },
+
+    "root": {
+      "title": "ipfs root file object",
+      "type": "string"
+    },
+
+    "dependencies": {
+      "$ref": "dappfile#/definitions/dependencies"
+    },
+
+    "environments": {
+      "$ref": "dappfile#/definitions/environments"
+    }
+  }
+}

@@ -2,13 +2,32 @@
   "title": "dappfile definition",
   "description": "dappfile definition",
   "type": "object",
-  "required": [ "name", "layout" ],
+  "required": [ "name", "layout", "version" ],
   "additionalProperties": false,
   "properties": {
     "name": {
-      "title": "Package Name",
-      "description": "Used for creating its dapple_packages directory",
-      "type": "string"
+      "$ref": "#/definitions/name"
+    },
+
+    "version": {
+      "$ref": "#/definitions/version",
+      "default": "1.0.0"
+    },
+    "summary": {
+      "$ref": "#/definitions/summary"
+    },
+
+    "files": {
+      "$ref": "#/definitions/files"
+    },
+
+    "scripts": {
+      "$ref": "#/definitions/scripts"
+    },
+
+    "tags": {
+      "$ref": "#/definitions/tags",
+      "default": []
     },
 
     "layout": {
@@ -21,25 +40,21 @@
         "sol_sources": {
           "title": "sol sources",
           "description": "Root directory of the solidity source files.",
-          "type": "string"
+          "type": "string",
+          "default": "contracts"
         },
         "build_dir": {
           "title": "Build Directory",
           "description": "Directory, where all the build files should be stored.",
-          "type": "string"
+          "type": "string",
+          "default": "build"
         }
       }
     },
 
     "dependencies": {
-      "title": "Dependencies",
-      "description": "Direct dependency list",
-      "type": "object",
-      "items": {
-        "title": "Path",
-        "description": "Dependency path.",
-        "type": "string"
-      }
+      "$ref": "#/definitions/dependencies",
+      "default": {}
     },
 
     "ignore": {
@@ -49,12 +64,36 @@
       "items": {
         "title": "Name of file/directory",
         "type": "string"
+      },
+      "default": []
+    },
+
+    "environments": {
+      "$ref": "#/definitions/environments",
+      "default": {}
+    }
+
+  },
+
+  "definitions": {
+    "dependencies": {
+      "title": "Dependencies",
+      "description": "Direct dependency list",
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^.*$": {
+          "title": "Path",
+          "description": "Dependency path.",
+          "type": "string"
+        }
       }
     },
 
     "environments": {
       "title": "Environments",
       "description": "Local environments options",
+      "additionalProperties": false,
       "patternProperties": {
         "^\\w+$": {
           "title": "named environment specification",
@@ -62,5 +101,51 @@
         }
       }
     }
+  },
+
+  "tags": {
+    "type": "array",
+    "title": "Tags",
+    "items": {
+      "type": "string"
+    }
+  },
+
+  "summary": {
+    "title": "Description",
+    "description": "Short summary of the package",
+    "type": "string",
+    "pattern": "^.{0,80}$"
+  },
+
+  "name": {
+    "title": "Package Name",
+    "description": "Used for creating its dapple_packages directory",
+    "type": "string"
+  },
+
+  "version": {
+    "type": "string",
+    "title": "semver",
+    "pattern": "^\\d+\\.\\d+.\\d+$"
+  },
+
+  "files":{
+    "title": "files",
+    "description": "which which are going to get included to a package",
+    "items": {
+      "type": "string",
+      "title": "path"
+    }
+  },
+
+  "scripts": {
+    "title": "scripts",
+    "descriptions": "scripts which are going to get included to a package",
+    "type": "array",
+    "items": {
+      "type": "path"
+    }
   }
+
 }
