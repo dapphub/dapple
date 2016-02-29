@@ -2,21 +2,20 @@
 
 ### DapphubDb
 
-Dapple is capable of installing packages from a central on chain registry and
-publish packages to the registry.
-Ipfs is used as a storage and data transfear layer.
-A dapple package is content addressed by an ipfs hash.
-In order for this to work the user must have a working chain connection
-specified in his `~/.dapplerc` as well as a running ipfs daemon also specified 
-correctly in the dapplerc.
+Dapple is capable of interacting (installing and publishing packages) with an
+on chain package registry. Ipfs is used as a storage and data transfear layer.
+A dapple package is content addressed by an ipfs hash. The hash is stored along
+with the package name and version on the ethereum chain.
+In order for this to work the user must have a working chain and ipfs connection
+specified in his `~/.dapplerc`.
 
 #### installing
 
-Once can use the commandline interface to isntall a package from the registry:
+The commandline command to isntall a package from the registry is:
 
 `dapple install [--save] [options] [<package> <url-or-version>]`
 
-e.g. `dapple install dappsys 1.0.0 --save -e morden`
+E.g. `dapple install dappsys 1.0.0 --save -e morden`
 
 This will install dappsys package at version 1.0.0 from the registry which is
 deployed to morden chain and save this dependecy to the local dappfile, which
