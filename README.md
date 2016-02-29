@@ -61,7 +61,7 @@ Feature docs:
 * [Basic VM tests](https://github.com/nexusdev/dapple/doc/test.md)
 * [Testing Exceptions](https://github.com/nexusdev/dapple/doc/test_errors.md)
 * [Testing Events](https://github.com/nexusdev/dapple/doc/test_events.md)
-* [Installing/Publishing Packages]
+* [Installing/Publishing Packages](https://github.com/nexusdev/dapple/blob/master/doc/install_publish.md)
 
 
 To document:
