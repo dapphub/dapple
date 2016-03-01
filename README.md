@@ -1,10 +1,10 @@
 # Dapple
 
 <div style="float:right; margin: -48px 12px 12px 0px">
- [![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)](https://github.com/Flet/semistandard)
- [![Slack Status](http://slack.makerdao.com/badge.svg)](https://slack.makerdao.com)
- [![Slack Status](http://slack.makerdao.com/badge.svg)](https://slack.makerdao.com)
-[![Build Status](https://travis-ci.org/NexusDevelopment/dapple.svg?branch=master)](https://travis-ci.org/NexusDevelopment/dapple)
+<a href="https://github.com/Flet/semistandard"><img src="https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)"</a>
+<a href="https://slack.makerdao.com"><img src="http://slack.makerdao.com/badge.svg"</a>
+<a href="https://travis-ci.org/NexusDevelopment/dapple.svg?branch=master"><img src="https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)"</a>
+
 </div>
 
 <p align="center">
