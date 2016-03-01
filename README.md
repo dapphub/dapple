@@ -36,7 +36,7 @@ are configured in your `dappfile` and can be overridden.
 
 
 
-Write a contract and test (see [dapple test harness docs](https:github.com/nexusdev/blob/master/dapple/doc/test.md)).
+Write a contract and test (see [dapple test harness docs](https://github.com/nexusdev/dapple/blob/master/doc/test.md)).
 
 ```
 vim contracts/dapp.sol
