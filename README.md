@@ -1,7 +1,10 @@
-
-[![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)](https://github.com/Flet/semistandard)
-[![Slack Status](http://slack.makerdao.com/badge.svg)](https://slack.makerdao.com)
+<p style="float:left;">
 [![Build Status](https://travis-ci.org/NexusDevelopment/dapple.svg?branch=master)](https://travis-ci.org/NexusDevelopment/dapple)
+[![Slack Status](http://slack.makerdao.com/badge.svg)](https://slack.makerdao.com)
+</p>
+<p style="float:right;">
+[![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)](https://github.com/Flet/semistandard)
+</p>
 <br>
 <img src='https://ipfs.pics/ipfs/QmPy1osQumX7ugMKiFYL8Y9dKdPnCcq64H2ZfefeRdeddd'/>
 
