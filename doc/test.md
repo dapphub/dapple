@@ -1,4 +1,4 @@
-Dapple provides a VM test harness so you can write your tests directly in Solidity. This is less flexible and sometimes more verbose than writing tests in the harness language, but the lack of a context switch means makes writing unit tests more pleasant for the developer.
+Dapple provides a VM test harness so you can write your tests directly in Solidity. This is less flexible and sometimes more verbose than writing tests in the harness language, but the lack of a context means makes writing unit tests more pleasant for the developer.
 
 Suppose you want to test this contract:
 
@@ -57,6 +57,6 @@ contract MyRegistryTest is Test {
 
 Further docs:
 
-[Testing Exceptions](https://github.com/nexusdev/dapple/doc/test_errors.md)
-[Testing Events](https://github.com/nexusdev/dapple/doc/test_events.md)
+[Testing Exceptions](https://github.com/nexusdev/dapple/blob/master/doc/test_errors.md)
+[Testing Events](https://github.com/nexusdev/dapple/blog/master/doc/test_events.md)
 

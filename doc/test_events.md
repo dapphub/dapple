@@ -35,7 +35,7 @@ contract `EventDefnitons`.
 ##### passing example
 The following shows a passing test:
 ```
-contract Tester is Test, EventDefinitions {
+contract MyTest is Test, EventDefinitions {
 
   [...]
 
@@ -53,7 +53,7 @@ contract Tester is Test, EventDefinitions {
 ##### failing examples
 The following test will fail because of the wrong **order** of the events:
 ```
-contract Tester is Test, EventDefinitions {
+contract MyTest is Test, EventDefinitions {
 
   [...]
 
@@ -70,7 +70,7 @@ contract Tester is Test, EventDefinitions {
 
 The following test will fail because of the wrong **type** of the events:
 ```
-contract Tester is Test, EventDefinitions {
+contract MyTest is Test, EventDefinitions {
 
   [...]
 
@@ -87,7 +87,7 @@ contract Tester is Test, EventDefinitions {
 
 The following test will fail because of the wrong **content** of the events:
 ```
-contract Tester is Test, EventDefinitions {
+contract MyTest is Test, EventDefinitions {
 
   [...]
 
@@ -104,7 +104,7 @@ contract Tester is Test, EventDefinitions {
 
 The following test will fail because an **unexpected** event is emited:
 ```
-contract Tester is Test, EventDefinitions {
+contract MyTest is Test, EventDefinitions {
 
   [...]
 
@@ -120,7 +120,7 @@ contract Tester is Test, EventDefinitions {
 
 The following test will fail because an expected event is **not emited**:
 ```
-contract Tester is Test, EventDefinitions {
+contract MyTest is Test, EventDefinitions {
 
   [...]
 

@@ -1,5 +1,5 @@
 ## Test Errors
-This test feature captures thrown Errors of a transaction.
+This test feature captures thrown Errors (VM exceptions) of a transaction.
 All test functions which are starting with `testThrow`, `testFail` or `testError`
 are expected to crash: a `throw;` is expected somewhere in the scenario.
 
@@ -24,7 +24,7 @@ contract Contract {
 
 The following shows a passing test, because an expected throw actually happens:
 ```
-contract Tester is Test {
+contract MyTest is Test {
   function testThrow() {
     Contract target = new Contract();
     target.crash();
@@ -36,7 +36,7 @@ contract Tester is Test {
 
 The following test fails, because the function name has a **wrong prefix**:
 ```
-contract Tester is Test {
+contract MyTest is Test {
   function testCrash() {
     Contract target = new Contract();
     target.crash();
@@ -46,7 +46,7 @@ contract Tester is Test {
 
 The following test fails, because **no expected** throw happens:
 ```
-contract Tester is Test {
+contract MyTest is Test {
   function testError() {
     Contract target = new Contract();
     target.passing();
