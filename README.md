@@ -1,4 +1,4 @@
-<img src='https://ipfs.pics/ipfs/QmPy1osQumX7ugMKiFYL8Y9dKdPnCcq64H2ZfefeRdeddd'/>
+<img src='https://ipfs.pics/ipfs/QmdUKEX48hXDgG2Y4XkxKJMV8qojiLYGc2mtEncBcEnSLd'/>
 <br><br>
 [![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)](https://github.com/Flet/semistandard)
 [![Build Status](https://travis-ci.org/NexusDevelopment/dapple.svg?branch=master)](https://travis-ci.org/NexusDevelopment/dapple)
