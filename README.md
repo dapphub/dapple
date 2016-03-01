@@ -59,7 +59,7 @@ Feature docs:
 * [Testing Exceptions](https://github.com/nexusdev/dapple/blob/master/doc/test_errors.md)
 * [Testing Events](https://github.com/nexusdev/dapple/blob/master/doc/test_events.md)
 * [Installing/Publishing Packages](https://github.com/nexusdev/dapple/blob/master/doc/install_publish.md)
-* [Deployment Scrpting](https://github.com/nexusdev/dapple/blob/master/doc/deployscript.md)
+* [Deployment Scripting](https://github.com/nexusdev/dapple/blob/master/doc/deployscript.md)
 
 
 To document:
