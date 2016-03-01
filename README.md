@@ -1,7 +1,7 @@
 # Dapple
 
 <div class="head">
-<img src='https://ipfs.pics/ipfs/Qma7DZRVZxXMQiS8e3Dsn2SWiENKxazHipMAvKMYHcFF9a'/>
+<img src='https://ipfs.pics/ipfs/QmPy1osQumX7ugMKiFYL8Y9dKdPnCcq64H2ZfefeRdeddd'/>
 </div>
 <br>
 
