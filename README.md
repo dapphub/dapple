@@ -1,6 +1,9 @@
 # Dapple
 
-<img src='https://ipfs.pics/ipfs/QmSjYnNQCNmsmntoeSvJJoFN12PR7PeprjvN5wteWgTNtH'/>
+<div class="head">
+<img src='https://ipfs.pics/ipfs/Qma7DZRVZxXMQiS8e3Dsn2SWiENKxazHipMAvKMYHcFF9a'/>
+</div>
+<br>
 
 [![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)](https://github.com/Flet/semistandard)
 [![Slack Status](http://slack.makerdao.com/badge.svg)](https://slack.makerdao.com)
