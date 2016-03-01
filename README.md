@@ -3,8 +3,8 @@
 [![Slack Status](http://slack.makerdao.com/badge.svg)](https://slack.makerdao.com)
 [![Build Status](https://travis-ci.org/NexusDevelopment/dapple.svg?branch=master)](https://travis-ci.org/NexusDevelopment/dapple)
 
-<p align="center">
-  <img width=196" src="http://ipfs.pics/ipfs/QmPQcPiaep6Bfp956b5xLDaQdtQVtAWBT9QjWNRiL9y8Cw"/>
+<p align="center" style="position:absolute;">
+<img src='https://ipfs.pics/ipfs/QmSjYnNQCNmsmntoeSvJJoFN12PR7PeprjvN5wteWgTNtH'/>
 </p>
 
 `dapple` is a Solidity developer multitool concerned primarily with managing the growing complexity of interconnected smart contract systems. Its core functionality encompasses *package management*, *build process*, and *deployment scripting*. These concepts are related in a way that is unique to the smart contract ecosystem, due to each blockchain's universal singleton nature. The central data model is the `dappfile`, whose definition depends on IPFS and also on the Ethereum blockchain specifically.
@@ -30,7 +30,7 @@ other directories:
 
 ```
 $ ls
-build  contracts  dappfile 
+build  contracts  dappfile
 ```
 
 By default, `build` is where the output of `dapple build` gets put, and
@@ -50,7 +50,7 @@ dapple test
 By default, dapple builds the entire `contracts` tree, and emits the following:
 * dapple build cache objects
 * `classes.json`, all type definitions
-* `js_module.js`, a javascript module which wrapps classes.json and adds instantiated web3js Contract objects for each object in the dappfile. 
+* `js_module.js`, a javascript module which wrapps classes.json and adds instantiated web3js Contract objects for each object in the dappfile.
 
 ```
 dapple build
