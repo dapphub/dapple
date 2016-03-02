@@ -1,0 +1,8 @@
+name: "linker_test_package"
+version: 1.0.0
+layout:
+    sol_sources: "src/sol"
+    build_dir: "build"
+
+dependencies:
+    pkg: 0.0.1

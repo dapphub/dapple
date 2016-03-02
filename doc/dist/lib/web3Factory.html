@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="en"><head><title>lib/web3Factory</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/web3Factory"><meta name="groc-project-path" content="lib/web3Factory.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/lib/web3Factory.js">lib/web3Factory.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
+
+<span class="hljs-keyword">var</span> deasync = <span class="hljs-built_in">require</span>(<span class="hljs-string">'deasync'</span>);
+<span class="hljs-keyword">var</span> EtherSim = <span class="hljs-built_in">require</span>(<span class="hljs-string">'ethersim'</span>);
+<span class="hljs-keyword">var</span> utils = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./utils'</span>);
+<span class="hljs-keyword">var</span> Web3 = <span class="hljs-built_in">require</span>(<span class="hljs-string">'web3'</span>);
+<span class="hljs-keyword">const</span> DEFAULT_GAS = <span class="hljs-number">900000000</span>;
+
+<span class="hljs-built_in">module</span>.exports = {
+  JSONRPC: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">opts, cb</span>) </span>{
+    <span class="hljs-keyword">var</span> connection_string = <span class="hljs-string">'http://localhost:8545'</span>;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> (opts) === <span class="hljs-string">'function'</span> &amp;&amp; <span class="hljs-keyword">typeof</span> (cb) === <span class="hljs-string">'undefined'</span>) {
+      cb = opts;
+    }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> (opts) === <span class="hljs-string">'object'</span> &amp;&amp; <span class="hljs-string">'web3'</span> <span class="hljs-keyword">in</span> opts) {
+      <span class="hljs-keyword">if</span> (<span class="hljs-string">'connection_string'</span> <span class="hljs-keyword">in</span> opts.web3) {
+        connection_string = opts.web3.connection_string;
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">var</span> host = opts.web3.host;
+        <span class="hljs-keyword">if</span> (!<span class="hljs-regexp">/^https?:\/\//</span>.test(host.toLowerCase())) {
+          host = <span class="hljs-string">'http://'</span> + host;
+        }
+        connection_string = host + <span class="hljs-string">':'</span> + opts.web3.port;
+      }
+    }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> (opts) === <span class="hljs-string">'string'</span>) {
+      connection_string = opts;
+    }
+
+    cb = utils.optionalCallback(cb);
+
+    <span class="hljs-keyword">var</span> web3 = <span class="hljs-keyword">new</span> Web3(<span class="hljs-keyword">new</span> Web3.providers.HttpProvider(connection_string));
+
+    <span class="hljs-keyword">try</span> {
+      <span class="hljs-keyword">if</span> (web3.eth.coinbase === <span class="hljs-literal">undefined</span>) {
+        <span class="hljs-keyword">return</span> cb(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Could not connect to test web3 provider,'</span> +
+                            <span class="hljs-string">' or it set no coinbase'</span>));
+      }
+    } <span class="hljs-keyword">catch</span> (e) {
+      <span class="hljs-keyword">return</span> cb(<span class="hljs-built_in">String</span>(e));
+    }
+    web3.eth.defaultAccount = web3.eth.accounts[<span class="hljs-number">0</span>];
+
+    <span class="hljs-keyword">return</span> cb(<span class="hljs-literal">null</span>, web3);
+  },
+
+  EVM: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">cb</span>) </span>{</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Technically this number is too big to represent as an integer in
+Javascript, but the actual value doesn&#39;t really matter and 2^256 is
+the maximum integer size in Solidity.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">const</span> INITIAL_WEI = <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span>, <span class="hljs-number">256</span>);
+    cb = utils.optionalCallback(cb);
+
+    <span class="hljs-keyword">var</span> provider = EtherSim.web3Provider();
+    provider.manager.blockchain.setGasLimit(DEFAULT_GAS);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Set a no-op logger. We&#39;re not interested in EtherSim&#39;s output ATM.</p></div></div><div class="code"><div class="wrapper">    provider.manager.blockchain.setLogger({
+      log: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{},
+      error: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{}
+    });
+
+    <span class="hljs-keyword">var</span> web3 = <span class="hljs-keyword">new</span> Web3(provider);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Create a tester account and give it an arbitrary amount of ether.
+Any amount necessary to run all the tests should be fine.</p></div></div><div class="code"><div class="wrapper">    deasync(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">cb</span>) </span>{
+      provider.manager.blockchain.addAccount(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        web3.eth.defaultAccount = web3.eth.accounts[<span class="hljs-number">0</span>];
+        provider.manager.blockchain.setBalance(
+          web3.eth.defaultAccount, INITIAL_WEI, cb);
+      });
+    })();
+
+    <span class="hljs-keyword">return</span> cb(<span class="hljs-literal">null</span>, web3);
+  }
+};</div></div></div></div></body></html>

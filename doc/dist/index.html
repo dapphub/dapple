@@ -1,0 +1,32 @@
+<!DOCTYPE html><html lang="en"><head><title>index</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="index"><meta name="groc-project-path" content="README.md"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/README.md">README.md</a></div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><h1 id="dapple">Dapple</h1>
+<p><a href="https://github.com/Flet/semistandard"><img src="https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square" alt="js-semistandard-style"></a>
+<a href="https://slack.makerdao.com"><img src="http://slack.makerdao.com/badge.svg" alt="Slack Status"></a></p>
+<p align="center">
+  &lt;img width=196&quot; src=&quot;<a href="http://ipfs.pics/ipfs/QmPQcPiaep6Bfp956b5xLDaQdtQVtAWBT9QjWNRiL9y8Cw&quot;/&gt;">http://ipfs.pics/ipfs/QmPQcPiaep6Bfp956b5xLDaQdtQVtAWBT9QjWNRiL9y8Cw&quot;/&gt;</a>
+</p>
+
+<p><code>dapple</code> is a tool for Solidity developers to help build and manage complex contract systems on Ethereum-like blockchains.</p>
+<h4 id="installation">Installation</h4>
+<p><code>npm install -g dapple</code></p>
+<h4 id="basic-usage">Basic Usage</h4>
+<p>Note that not everything is implemented in the JS rewrite.</p>
+<pre><code>mkdir mydapp &amp;&amp; cd mydapp
+dapple init
+
+# Write some contracts - see docs for test contract format
+vim src/sol/mycontract.sol
+vim src/sol/mycontract_test.sol
+
+dapple test # run VM tests
+dapple build # export contract definitions, solidity headers, and JS headers (node and browser)
+
+# Write a deploy sequence
+vim steps/deploy.step
+dapple chain ethereum          # switch chains to default mainnet
+dapple run steps/deploy.step   # run the deploy sequence</code></pre>
+<h4 id="example-dapple-packages">Example dapple packages</h4>
+<p>Some may still be in an outdated package format.</p>
+<p><a href="https://github.com/NexusDevelopment/dappsys">https://github.com/NexusDevelopment/dappsys</a></p>
+<p><a href="https://github.com/NexusDevelopment/keeper/tree/nexus/keeperd/dapp">https://github.com/NexusDevelopment/keeper/tree/nexus/keeperd/dapp</a></p>
+<p><a href="https://github.com/NexusDevelopment/ENS">https://github.com/NexusDevelopment/ENS</a></p>
+<p><a href="https://github.com/NexusDevelopment/guts">https://github.com/NexusDevelopment/guts</a></p></div></div></div></div></body></html>

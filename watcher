@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+while : ; do
+    echo "Watching for changes..."
+    inotifywait -r -qq -e close_write -e create -e delete --exclude ^.+?\.sw.?$ .
+    echo "File changed! Linting and rebuilding docs..."
+
+    semistandard &&
+      eslint . &&
+      echo "Linter passed." &&
+      mocha --recursive &&
+      groc --only-render-newer
+done

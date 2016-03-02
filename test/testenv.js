@@ -1,23 +1,58 @@
-"use strict";
-var chai = require("chai");
-var fs = require("../lib/file");
-var path = require("path");
+'use strict';
+
+var fs = require('../lib/file');
+var SourcePipeline = require('../lib/pipelines.js').SourcePipeline;
+var path = require('path');
+var through = require('through2');
+var Workspace = require('../lib/workspace.js');
 
 module.exports = {
-    golden_package_dir: path.join(__dirname, "/testenv/golden_package"),
-    GOLDEN_SOLC_OUT_PATH: path.join(__dirname,"/golden/solc_out.json"),
-    golden_solc_output: function() {
-        return fs.readJsonSync(this.GOLDEN_SOLC_OUT_PATH);
+  golden_package_dir: path.join(
+    __dirname, '_fixtures', 'testenv', 'golden_package'),
+  golden_solc_output: function () {
+    return fs.readJsonSync(this.golden.SOLC_OUT_PATH());
+  },
+  golden: {
+    ROOT: path.join(__dirname, '_fixtures', 'testenv', 'golden'),
+    JS_OUT_PATH: function () {
+      return path.join(__dirname, '_fixtures', 'golden', 'js_module.js');
     },
-    golden: {
-        ROOT: path.join(__dirname, "testenv/golden"),
-        SOLC_OUT_PATH: function() {
-            return path.join(__dirname,"/golden/solc_out.json");
-        },
-        SOLC_OUT: function() {
-            return fs.readJsonSync(this.SOLC_OUT_PATH())
-        },
-        INIT_EMPTY_DIR: path.join(__dirname, "golden/golden_init"),
-        FILTERED_SOLC_OUT_PATH: path.join(__dirname, "golden/golden_solc_classes_out")
-    }
-}
+    JS_OUT: function () {
+      return fs.readFileSync(this.JS_OUT_PATH(), 'utf8');
+    },
+    SOLC_OUT_PATH: function () {
+      return path.join(__dirname, '_fixtures', 'golden', 'solc_out.json');
+    },
+    SOLC_OUT: function () {
+      return fs.readJsonSync(this.SOLC_OUT_PATH());
+    },
+    INIT_EMPTY_DIR: path.join(
+      __dirname, '_fixtures', 'golden', 'golden_init'),
+    FILTERED_SOLC_OUT_PATH: path.join(
+      __dirname, '_fixtures', 'golden', 'golden_solc_classes_out')
+  },
+
+  dsl_package_dir: path.join(
+    __dirname, '_fixtures', 'testenv', 'deploy_package'),
+
+  empty_package_dir: path.join(
+    __dirname, '_fixtures', 'testenv', 'empty_package'),
+
+  linker_package_dir: path.join(__dirname, '_fixtures', 'linker_test_package'),
+
+  stream_test_dir: path.join(__dirname, '_fixtures', 'streams_test'),
+
+  get_source_files: function (packagePath, callback) {
+    var sources = {};
+    var packageRoot = Workspace.findPackageRoot(packagePath);
+
+    SourcePipeline({packageRoot: packageRoot})
+      .pipe(through.obj(function (file, enc, cb) {
+        sources[file.path] = file;
+        cb();
+      }, function (cb) {
+        callback(sources);
+        cb();
+      }));
+  }
+};

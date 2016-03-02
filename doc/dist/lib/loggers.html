@@ -1,0 +1,94 @@
+<!DOCTYPE html><html lang="en"><head><title>lib/loggers</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/loggers"><meta name="groc-project-path" content="lib/loggers.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/lib/loggers.js">lib/loggers.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
+
+<span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lodash'</span>);
+<span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);
+<span class="hljs-keyword">var</span> through = <span class="hljs-built_in">require</span>(<span class="hljs-string">'through2'</span>);
+
+<span class="hljs-keyword">const</span> LEVELS = {
+  <span class="hljs-string">'debug'</span>: <span class="hljs-number">1</span>,
+  <span class="hljs-string">'info'</span>: <span class="hljs-number">2</span>,
+  <span class="hljs-string">'warn'</span>: <span class="hljs-number">4</span>,
+  <span class="hljs-string">'error'</span>: <span class="hljs-number">8</span>
+};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>A basic logger class. Provides a layer of logging abstraction.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Logger</span> </span>{
+  constructor (opts) {
+    <span class="hljs-keyword">var</span> defaults = {
+      level: LEVELS.info | LEVELS.error,
+      fatal: LEVELS.error,
+      streams: {}
+    };
+    defaults.streams[LEVELS.debug] = process.stdout;
+    defaults.streams[LEVELS.info] = process.stdout;
+    defaults.streams[LEVELS.warn] = process.stderr;
+    defaults.streams[LEVELS.error] = process.stderr;
+
+    <span class="hljs-keyword">this</span>.opts = _.assign(defaults, opts);
+  }
+
+  getErrorHandler () {
+    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">error</span>) </span>{
+      that.error(error);
+    };
+  }
+
+  log (msg) {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._log(msg, LEVELS.info);
+  }
+
+  info (msg) {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.log(msg);
+  }
+
+  warn (msg) {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._log(msg, LEVELS.warn);
+  }
+
+  error (msg) {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._log(msg, LEVELS.error);
+  }
+
+  _log (msg, level) {
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Boolean</span>(<span class="hljs-keyword">this</span>.opts.level &amp; level)) <span class="hljs-keyword">return</span>;
+
+    <span class="hljs-keyword">this</span>.opts.streams[level].write(msg + <span class="hljs-string">'\n'</span>);
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Boolean</span>(<span class="hljs-keyword">this</span>.opts.fatal &amp; level)) {
+      process.exit(<span class="hljs-number">1</span>);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  }
+}</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Builds on our logging abstraction to provide a logger that can take source
+maps (as output by Dapple) via a through stream and then replace hashes in
+all its logging output with the original data in the map.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MapAwareLogger</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Logger</span> </span>{
+  constructor (opts) {
+    <span class="hljs-keyword">super</span>(opts);
+    <span class="hljs-keyword">this</span>.maps = [];
+  }
+
+  seedStream () {
+    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> through.obj(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">file, enc, cb</span>) </span>{
+      <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/^__.*map__$/</span>.test(path.basename(file.path))) {
+        that.maps.push(<span class="hljs-built_in">JSON</span>.parse(<span class="hljs-built_in">String</span>(file.contents)));
+      }
+      <span class="hljs-keyword">this</span>.push(file);
+      cb();
+    });
+  }
+
+  _log (msg, level) {
+    <span class="hljs-keyword">super</span>._log(_.reduce(<span class="hljs-keyword">this</span>.maps, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">str, map</span>) </span>{
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> hash <span class="hljs-keyword">in</span> map) {
+        str = str.replace(<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(hash, <span class="hljs-string">'g'</span>),
+          map[hash][<span class="hljs-number">0</span>]);
+      }
+      <span class="hljs-keyword">return</span> str;
+    }, msg), level);
+  }
+}
+
+<span class="hljs-built_in">module</span>.exports = {
+  Logger: Logger,
+  MapAwareLogger: MapAwareLogger,
+  LEVELS: LEVELS
+};</div></div></div></div></body></html>

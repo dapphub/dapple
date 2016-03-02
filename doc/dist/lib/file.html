@@ -1,0 +1,46 @@
+<!DOCTYPE html><html lang="en"><head><title>lib/file</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/file"><meta name="groc-project-path" content="lib/file.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/lib/file.js">lib/file.js</a></div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>Extensions for the <code>fs</code> module which we use often.
+Everything in here should work its way into someone else&#39;s library.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs-extra'</span>);
+<span class="hljs-keyword">var</span> mkdirp = <span class="hljs-built_in">require</span>(<span class="hljs-string">'mkdirp'</span>);
+<span class="hljs-keyword">var</span> readyaml = <span class="hljs-built_in">require</span>(<span class="hljs-string">'read-yaml'</span>);
+<span class="hljs-keyword">var</span> tmp = <span class="hljs-built_in">require</span>(<span class="hljs-string">'tmp'</span>);
+<span class="hljs-keyword">var</span> writeyaml = <span class="hljs-built_in">require</span>(<span class="hljs-string">'write-yaml'</span>);
+
+fs.readFileStringSync = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">path</span>) </span>{
+  <span class="hljs-keyword">return</span> fs.readFileSync(path).toString();
+};
+
+fs.readJsonSync = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">path</span>) </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-built_in">JSON</span>.parse(fs.readFileStringSync(path));
+};
+
+fs.writeJsonSync = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">path, data</span>) </span>{
+  <span class="hljs-keyword">return</span> fs.writeFileSync(path, <span class="hljs-built_in">JSON</span>.stringify(data));
+};
+
+fs.existsSync = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">path</span>) </span>{
+  <span class="hljs-keyword">try</span> {
+    fs.lstatSync(path);
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+  } <span class="hljs-keyword">catch</span> (e) {
+    <span class="hljs-keyword">if</span> (e.errno === -<span class="hljs-number">2</span>) {
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    }
+    <span class="hljs-keyword">throw</span> e;
+  }
+};
+
+fs.readYamlSync = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">path</span>) </span>{
+  <span class="hljs-keyword">return</span> readyaml.sync(path);
+};
+
+fs.writeYamlSync = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">path, data</span>) </span>{
+  <span class="hljs-keyword">return</span> writeyaml.sync(path, data);
+};
+
+fs.tmpdir = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">return</span> tmp.dirSync().name;
+};
+
+fs.mkdirp = mkdirp;
+
+<span class="hljs-built_in">module</span>.exports = fs;</div></div></div></div></body></html>

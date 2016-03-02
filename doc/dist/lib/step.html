@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="en"><head><title>lib/step</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/step"><meta name="groc-project-path" content="lib/step.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/lib/step.js">lib/step.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">"use strict"</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This module defines how step instructions are executed given a chain environment.</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><pre><code>The Step class represents one atomic operation done by a key to a chain.
+The types are:
+- deploy
+- send
+- assert</code></pre>
+<p>*</p></div></div><div class="code"><div class="wrapper"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Step</span> </span>{
+    constructor(params) {
+        <span class="hljs-keyword">this</span>.type = params.type;
+        <span class="hljs-keyword">this</span>.lvalue = params.lvalue;
+        <span class="hljs-keyword">this</span>.classname = params.classname;
+        <span class="hljs-keyword">this</span>.gas = <span class="hljs-number">3000000</span> <span class="hljs-comment">// TODO 'max' special arg</span>
+        <span class="hljs-keyword">this</span>.state = <span class="hljs-string">'unexecuted'</span>;
+    }
+    updateState(state) {
+        <span class="hljs-keyword">this</span>.state = state;
+    }
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StepExecutor</span> </span>{
+    static step(web3, env, step, cb) {
+        <span class="hljs-keyword">if</span>( step.type == <span class="hljs-string">"deploy"</span> ) {
+            <span class="hljs-keyword">var</span> typeInfo = env.classes[step.classname];
+            <span class="hljs-keyword">var</span> type = web3.eth.contract(<span class="hljs-built_in">JSON</span>.parse(typeInfo.interface));
+            type.new({
+                data: <span class="hljs-string">"0x"</span> + typeInfo.bytecode,
+                from: web3.eth.coinbase, <span class="hljs-comment">//TODO comes from chain connection manager</span>
+                gas: step.gas
+            }, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, instance</span>) </span>{
+                <span class="hljs-keyword">if</span>(err) cb(err);
+                <span class="hljs-keyword">if</span>( instance.address ) {
+                    step.updateState(<span class="hljs-string">'pending (0-conf)'</span>);
+                    env.objects[step.lvalue] = {
+                        <span class="hljs-string">"name"</span>: step.lvalue,
+                        <span class="hljs-string">"address"</span>: instance.address,
+                        <span class="hljs-string">"classname"</span>: step.classname
+                    };
+                    cb(<span class="hljs-literal">null</span>, env);
+                } <span class="hljs-keyword">else</span> {
+                    step.updateState(<span class="hljs-string">'sent'</span>);
+                }
+            });
+        } <span class="hljs-keyword">else</span> {
+            cb(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Unknown step type"</span>, step.type));
+        }
+    }
+}
+
+<span class="hljs-built_in">module</span>.exports = {
+    Step: Step,
+    StepExecutor: StepExecutor
+}</div></div></div></div></body></html>

@@ -1,5 +1,0 @@
-module.exports = new (function() {
-    var header = <%= header %>;
-    return header;
-})();
-    

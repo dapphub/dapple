@@ -1,0 +1,5 @@
+name: 'dsl_pkg'
+version: 1.0.0
+layout:
+    sol_sources: "src/sol"
+    build_dir: "build"

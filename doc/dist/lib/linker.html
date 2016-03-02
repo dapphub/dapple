@@ -1,0 +1,214 @@
+<!DOCTYPE html><html lang="en"><head><title>lib/linker</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/linker"><meta name="groc-project-path" content="lib/linker.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/lib/linker.js">lib/linker.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
+
+<span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lodash'</span>);
+<span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>).posix;
+<span class="hljs-keyword">var</span> Web3 = <span class="hljs-built_in">require</span>(<span class="hljs-string">'web3'</span>);
+
+<span class="hljs-keyword">var</span> web3 = <span class="hljs-keyword">new</span> Web3();
+
+<span class="hljs-keyword">const</span> SOURCEMAP_KEY = <span class="hljs-string">'__dapplesourcemap__'</span>;
+<span class="hljs-keyword">const</span> CONTRACTMAP_KEY = <span class="hljs-string">'__dapplecontractmap__'</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Linker</span> </span>{
+  static link (workspace, sources) {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.linkContracts(<span class="hljs-keyword">this</span>.linkImports(workspace, sources));
+  }
+
+  static resolveImport (sources, sourcePath, importPath, workspace) {
+    <span class="hljs-keyword">if</span> (importPath <span class="hljs-keyword">in</span> sources) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Fully qualified import path.</p></div></div><div class="code"><div class="wrapper">      <span class="hljs-keyword">return</span> importPath;
+    }
+
+    <span class="hljs-keyword">var</span> importParts = importPath.split(path.sep);
+    <span class="hljs-keyword">var</span> packagePath = path.join(
+      workspace.getPackageRoot(sourcePath),
+      workspace.getPackagesDir(sourcePath),
+      importParts[<span class="hljs-number">0</span>]);
+    <span class="hljs-keyword">var</span> exists = (packagePath === workspace.getPackageRoot(packagePath));
+
+    <span class="hljs-keyword">if</span> (!importPath.startsWith(<span class="hljs-string">'./'</span>) &amp;&amp; exists) {
+      <span class="hljs-keyword">var</span> resolvedPath = path.join.apply(path,
+        [workspace.getSourcePath(packagePath)]
+          .concat(importParts.slice(<span class="hljs-number">1</span>)));
+
+      <span class="hljs-keyword">if</span> (resolvedPath <span class="hljs-keyword">in</span> sources) {
+        <span class="hljs-keyword">return</span> resolvedPath;
+      }
+    }
+
+    <span class="hljs-keyword">var</span> localPath = path.normalize(
+      path.join(workspace.getSourcePath(sourcePath), importPath));
+
+    <span class="hljs-keyword">if</span> (localPath <span class="hljs-keyword">in</span> sources) {
+      <span class="hljs-keyword">return</span> localPath;
+    }
+
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(
+      <span class="hljs-string">'Unable to resolve import path \''</span> + importPath +
+      <span class="hljs-string">'\' in file \''</span> + sourcePath + <span class="hljs-string">'\''</span>);
+  }
+
+  static linkImports (workspace, _sources) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Prevent accidental mutation.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">var</span> sources = _.cloneDeep(_sources);
+
+    <span class="hljs-keyword">var</span> linked = {};
+    linked[SOURCEMAP_KEY] = {};</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Walk all the source files and replace import paths with paths derived
+from the content being imported. This is a crude way of
+de-duplicating imported data and slimming down our builds.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">var</span> importRegex = <span class="hljs-regexp">/(^\s*import\s*['|""])([^'|"]+)/gm</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> sourcePair <span class="hljs-keyword">of</span> _.pairs(sources)) {
+      <span class="hljs-keyword">let</span> path = sourcePair[<span class="hljs-number">0</span>];
+      <span class="hljs-keyword">let</span> source = sourcePair[<span class="hljs-number">1</span>];
+
+      <span class="hljs-keyword">if</span> (!path.toLocaleLowerCase().endsWith(<span class="hljs-string">'.sol'</span>)) {
+        <span class="hljs-keyword">continue</span>;
+      }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Provide a map for relating hashes back to paths.</p></div></div><div class="code"><div class="wrapper">      <span class="hljs-keyword">let</span> pathHash = <span class="hljs-keyword">this</span>.solidityHashpath(source);
+      <span class="hljs-keyword">if</span> (!(pathHash <span class="hljs-keyword">in</span> linked[SOURCEMAP_KEY])) {
+        linked[SOURCEMAP_KEY][pathHash] = [];
+      }
+      linked[SOURCEMAP_KEY][pathHash].push(path);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Replace all import paths with paths derived from the content
+being imported.</p></div></div><div class="code"><div class="wrapper">      <span class="hljs-keyword">let</span> that = <span class="hljs-keyword">this</span>;
+      linked[pathHash] = source.replace(
+        importRegex, (_, importPrefix, importPath) =&gt; {
+          <span class="hljs-keyword">let</span> resolvedPath = that.resolveImport(
+            sources, path, importPath, workspace);
+          <span class="hljs-keyword">let</span> pathHash = that.solidityHashpath(sources[resolvedPath]);
+          <span class="hljs-keyword">return</span> importPrefix + pathHash;
+        });
+    }
+
+    linked[SOURCEMAP_KEY] = <span class="hljs-built_in">JSON</span>.stringify(linked[SOURCEMAP_KEY]);
+
+    <span class="hljs-keyword">return</span> linked;
+  }
+
+  static contractDepths (sources) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If we were given a sourcemap, we&#39;re going to want to use it.
+In particular, we&#39;re going to want to have a concept of each contract
+file&#39;s package depth. This will let us provide a mapping of which
+contracts should be included in the build output when there&#39;s a
+naming collision. Any included package&#39;s directory depth will always
+been lower than the depth of the package including it.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">var</span> depths = {};
+    <span class="hljs-keyword">if</span> (SOURCEMAP_KEY <span class="hljs-keyword">in</span> sources) {
+      sources[SOURCEMAP_KEY] = <span class="hljs-built_in">JSON</span>.parse(sources[SOURCEMAP_KEY]);
+
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> pair <span class="hljs-keyword">of</span> _.pairs(sources[SOURCEMAP_KEY])) {
+        <span class="hljs-keyword">let</span> hashPath = pair[<span class="hljs-number">0</span>];
+        <span class="hljs-keyword">let</span> paths = pair[<span class="hljs-number">1</span>];
+
+        depths[hashPath] = _.min(_.map(
+          paths, (p) =&gt; p.split(<span class="hljs-string">'/'</span>).length));
+      }
+    }
+    <span class="hljs-keyword">return</span> depths;
+  }
+
+  static dependencyMap (sources) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Build up a mapping from imported files to the files importing them.
+We&#39;ll use this to update references to contracts as we hash their
+names.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">var</span> dependencyMap = {};
+    <span class="hljs-keyword">var</span> importRegex = <span class="hljs-regexp">/(^\s*import\s*['|""])([^'|"]+)/gm</span>;
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> sourcePair <span class="hljs-keyword">of</span> _.pairs(sources)) {
+      <span class="hljs-keyword">let</span> p = sourcePair[<span class="hljs-number">0</span>];
+      <span class="hljs-keyword">let</span> source = sourcePair[<span class="hljs-number">1</span>];
+      <span class="hljs-keyword">let</span> match;
+
+      <span class="hljs-keyword">while</span> ((match = importRegex.exec(source)) !== <span class="hljs-literal">null</span>) {
+        <span class="hljs-keyword">let</span> imported = match[<span class="hljs-number">2</span>];
+        <span class="hljs-keyword">if</span> (!(imported <span class="hljs-keyword">in</span> dependencyMap)) {
+          dependencyMap[imported] = [];
+        }
+        dependencyMap[imported].push(p);
+      }
+
+      <span class="hljs-keyword">if</span> (!(p <span class="hljs-keyword">in</span> dependencyMap)) {
+        dependencyMap[p] = [];
+      }
+    }
+    <span class="hljs-keyword">return</span> dependencyMap;
+  }
+
+  static linkContracts (sources) {
+    <span class="hljs-keyword">var</span> linked = _.cloneDeep(sources);
+    <span class="hljs-keyword">var</span> depths = <span class="hljs-keyword">this</span>.contractDepths(linked);
+    <span class="hljs-keyword">var</span> dependencyMap = <span class="hljs-keyword">this</span>.dependencyMap(linked);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Now we&#39;ve got our dependency graph. Let&#39;s do one more iteration
+through the source files and replace contract names with hashes.
+TODO: Clean this up. Three nested for loops is turrible.
+TODO: We could also be somewhat more intelligent about this. As
+written, this will totally overwrite contract names in strings and
+comments.
+TODO: Find a clean way to share this regex with PackageBuildFilter.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">var</span> contractDecRegex = <span class="hljs-regexp">/(^\s*contract\s*)([^\{\s]+)/gm</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>We&#39;re going to keep track of the hashes we assign to the shallowest
+contract names so we can give them back their original names before
+returning. This is how we resolve naming collisions. Anything
+occluded by a naming collision will retain its hashed name.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">let</span> contractDepths = {};
+    <span class="hljs-keyword">let</span> contractLocations = [];
+    <span class="hljs-keyword">let</span> shallowestContracts = {};
+
+    linked[CONTRACTMAP_KEY] = {};
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> sourcePair <span class="hljs-keyword">of</span> _.pairs(dependencyMap)) {
+      <span class="hljs-keyword">let</span> path = sourcePair[<span class="hljs-number">0</span>];
+      <span class="hljs-keyword">if</span> (path === SOURCEMAP_KEY) <span class="hljs-keyword">continue</span>;
+
+      <span class="hljs-keyword">let</span> dependencies = sourcePair[<span class="hljs-number">1</span>];
+      <span class="hljs-keyword">let</span> contractHashes = {};
+      <span class="hljs-keyword">let</span> source = sources[path];
+      <span class="hljs-keyword">let</span> match;
+
+      <span class="hljs-keyword">while</span> ((match = contractDecRegex.exec(source)) !== <span class="hljs-literal">null</span>) {
+        <span class="hljs-keyword">let</span> contractName = match[<span class="hljs-number">2</span>];
+        <span class="hljs-keyword">let</span> contractHash = <span class="hljs-keyword">this</span>.uniquifyContractName(
+          path, contractName);
+        contractHashes[contractName] = contractHash;
+        linked[CONTRACTMAP_KEY][contractHash] = contractName;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Populate our output mapping.</p></div></div><div class="code"><div class="wrapper">        <span class="hljs-keyword">if</span> (!(contractName <span class="hljs-keyword">in</span> contractDepths) ||
+            contractDepths[contractName] &gt; depths[path]) {
+          contractDepths[contractName] = depths[path];
+          contractLocations[contractName] = [path].concat(
+            dependencies);
+          shallowestContracts[contractName] = contractHash;
+        }
+      }
+
+      <span class="hljs-keyword">let</span> replaceContractNames = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">source</span>) </span>{
+        <span class="hljs-keyword">var</span> names = _.sortBy(_.keys(contractHashes),
+          (k) =&gt; k.length * -<span class="hljs-number">1</span>);
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> name <span class="hljs-keyword">of</span> names) {
+          source = source.replace(
+            <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'([^A-Za-z0-9_\'"])('</span> +
+                       name + <span class="hljs-string">')([^A-Za-z0-9_\'"])'</span>, <span class="hljs-string">'gm'</span>),
+            <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">match, ws1, name, ws2</span>) </span>{
+              <span class="hljs-keyword">return</span> ws1 + contractHashes[name] + ws2;
+            });
+        }
+        <span class="hljs-keyword">return</span> source;
+      };
+
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> dependency <span class="hljs-keyword">of</span> dependencies) {
+        linked[dependency] = replaceContractNames(linked[dependency]);
+      }
+      linked[path] = replaceContractNames(source);
+    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Restore the names of contracts not occluded by shallower contracts.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> pair <span class="hljs-keyword">of</span> _.pairs(shallowestContracts)) {
+      <span class="hljs-keyword">let</span> contract = pair[<span class="hljs-number">0</span>];
+      <span class="hljs-keyword">let</span> contractHash = pair[<span class="hljs-number">1</span>];
+
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> path <span class="hljs-keyword">of</span> contractLocations[contract]) {
+        linked[path] = linked[path].replace(
+          <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(contractHash, <span class="hljs-string">'g'</span>), contract);
+      }
+    }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Stringify JSON elements.</p></div></div><div class="code"><div class="wrapper">    linked[CONTRACTMAP_KEY] = <span class="hljs-built_in">JSON</span>.stringify(linked[CONTRACTMAP_KEY]);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>A shortcut we can take because we didn&#39;t mutate the JSON in <code>linked</code>.</p></div></div><div class="code"><div class="wrapper">    <span class="hljs-keyword">if</span> (SOURCEMAP_KEY <span class="hljs-keyword">in</span> sources) {
+      linked[SOURCEMAP_KEY] = sources[SOURCEMAP_KEY];
+    }
+
+    <span class="hljs-keyword">return</span> linked;
+  }
+
+  static uniquifyContractName (filepath, name) {
+    <span class="hljs-keyword">return</span> <span class="hljs-string">'_CT'</span> + web3.sha3(path.join(filepath, name));
+  }
+
+  static solidityHashpath (content) {
+    <span class="hljs-keyword">return</span> <span class="hljs-string">'_'</span> + web3.sha3(content) + <span class="hljs-string">'.sol'</span>;
+  }
+}
+Linker.SOURCEMAP_KEY = SOURCEMAP_KEY;
+Linker.CONTRACTMAP_KEY = CONTRACTMAP_KEY;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Helper regexes for classes that need to parse Linker output.</p></div></div><div class="code"><div class="wrapper">Linker.CONTRACTLINK_REGEXP = <span class="hljs-regexp">/_CT[0-9a-f]+/</span>;
+Linker.SOURCELINK_REGEXP = <span class="hljs-regexp">/_[0-9a-f]+/</span>;
+
+<span class="hljs-built_in">module</span>.exports = Linker;</div></div></div></div></body></html>

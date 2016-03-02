@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="en"><head><title>lib/utils</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/utils"><meta name="groc-project-path" content="lib/utils.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/lib/utils.js">lib/utils.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-built_in">module</span>.exports = {
+  optionalCallback: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">cb</span>) </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> (cb) === <span class="hljs-string">'undefined'</span>) {
+      cb = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, result</span>) </span>{
+        <span class="hljs-keyword">if</span> (err) { <span class="hljs-keyword">throw</span> err; }
+        <span class="hljs-keyword">return</span> result;
+      };
+    }
+    <span class="hljs-keyword">return</span> cb;
+  },
+
+  classToFilename: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">className</span>) </span>{
+    <span class="hljs-keyword">var</span> filename = <span class="hljs-string">''</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; className.length; i++) {
+      <span class="hljs-keyword">if</span> (i !== <span class="hljs-number">0</span> &amp;&amp; className[i] !== className[i].toLowerCase()) {
+        filename += <span class="hljs-string">'_'</span>;
+      }
+      filename += className[i].toLowerCase();
+    }
+    <span class="hljs-keyword">return</span> filename + <span class="hljs-string">'.sol'</span>;
+  }
+};</div></div></div></div></body></html>

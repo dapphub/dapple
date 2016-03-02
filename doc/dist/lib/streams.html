@@ -1,0 +1,15 @@
+<!DOCTYPE html><html lang="en"><head><title>lib/streams</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/streams"><meta name="groc-project-path" content="lib/streams.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/lib/streams.js">lib/streams.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Don&#39;t load the streams until they&#39;re requested.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-built_in">module</span>.exports = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lazreq'</span>)({
+  build: <span class="hljs-string">'./streams/build.js'</span>,
+  cli_out: <span class="hljs-string">'./streams/cli_out.js'</span>,
+  linker: <span class="hljs-string">'./streams/linker.js'</span>,
+  linker_filter: <span class="hljs-string">'./streams/linker_filter.js'</span>,
+  ignore: <span class="hljs-string">'./streams/ignore.js'</span>,
+  inject_virtual_contracts: <span class="hljs-string">'./streams/inject_virtual_contracts.js'</span>,
+  js_postprocess: <span class="hljs-string">'./streams/js_postprocess.js'</span>,
+  PackageBuildFilter: <span class="hljs-string">'./streams/package_build_filter_stream.js'</span>,
+  package_stream: <span class="hljs-string">'./streams/package_stream.js'</span>,
+  preprocess: <span class="hljs-string">'./streams/preprocess.js'</span>,
+  test: <span class="hljs-string">'./streams/test.js'</span>,
+  test_summarizer: <span class="hljs-string">'./streams/test_summarizer.js'</span>,
+  file_logger: <span class="hljs-string">'./streams/file_logger.js'</span>
+});</div></div></div></div></body></html>

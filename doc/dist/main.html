@@ -1,0 +1,127 @@
+<!DOCTYPE html><html lang="en"><head><title>main</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="main"><meta name="groc-project-path" content="cmd/main.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/cmd/main.js">cmd/main.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">
+'use strict'</span>;</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>This is the file that gets executed when you run <code>dapple</code>. It uses <code>docopt</code>
+to parse the arguments passed in.</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Usage first.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>);
+<span class="hljs-keyword">var</span> docopt = <span class="hljs-built_in">require</span>(<span class="hljs-string">'docopt'</span>);
+<span class="hljs-keyword">var</span> doc = fs.readFileSync(__dirname + <span class="hljs-string">'/docopt.txt'</span>).toString();
+<span class="hljs-keyword">var</span> cli = docopt.docopt(doc);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>These requires take a lot of time to import.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">var</span> req = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lazreq'</span>)({
+  DappleRCPrompter: <span class="hljs-string">'../lib/dapplerc_prompter.js'</span>,
+  deasync: <span class="hljs-string">'deasync'</span>,
+  Installer: <span class="hljs-string">'../lib/installer.js'</span>,
+  inquirer: <span class="hljs-string">'inquirer'</span>,
+  path: <span class="hljs-string">'path'</span>,
+  pipelines: <span class="hljs-string">'../lib/pipelines.js'</span>,
+  userHome: <span class="hljs-string">'user-home'</span>,
+  vinyl: <span class="hljs-string">'vinyl-fs'</span>
+});
+
+<span class="hljs-keyword">var</span> Workspace = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../lib/workspace'</span>);
+<span class="hljs-keyword">var</span> VMTest = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../lib/vmtest'</span>);
+<span class="hljs-keyword">var</span> rc = Workspace.getDappleRC();
+
+<span class="hljs-keyword">if</span> (cli.config || <span class="hljs-keyword">typeof</span> (rc.path) === <span class="hljs-string">'undefined'</span>) {
+  <span class="hljs-keyword">let</span> homeRC = req.path.join(req.userHome, <span class="hljs-string">'.dapplerc'</span>);
+  <span class="hljs-keyword">let</span> confirmed;
+  <span class="hljs-keyword">let</span> chosen = <span class="hljs-literal">false</span>;
+
+  <span class="hljs-keyword">if</span> (rc.path !== <span class="hljs-literal">undefined</span> &amp;&amp; rc.path === homeRC) {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'You already have a .dapplerc in your home directory!'</span>);
+    req.inquirer.prompt([{
+      type: <span class="hljs-string">'confirm'</span>,
+      message: <span class="hljs-string">'Proceeding will overwrite ~/.dapplerc. Proceed?'</span>,
+      name: <span class="hljs-string">'confirmed'</span>,
+      <span class="hljs-keyword">default</span>: <span class="hljs-literal">false</span>
+    }], <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">res</span>) </span>{
+      chosen = <span class="hljs-literal">true</span>;
+      confirmed = res.confirmed;
+    });
+    req.deasync.loopWhile(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> !chosen; });
+
+    <span class="hljs-keyword">if</span> (confirmed) {
+      Workspace.writeDappleRC(homeRC, req.DappleRCPrompter.prompt());
+    }
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'No configuration found! Generating...'</span>);
+    Workspace.writeDappleRC(homeRC, req.DappleRCPrompter.prompt());
+  }
+  rc = Workspace.getDappleRC();
+}</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If the user ran the <code>install</code> command, we&#39;re going to walk the dependencies
+in the dappfile and pull them in as git submodules, if the current package is
+a git repository. Otherwise we&#39;ll just clone them.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-keyword">if</span> (cli.install) {
+  <span class="hljs-keyword">let</span> workspace = Workspace.atPackageRoot();
+
+  <span class="hljs-keyword">let</span> packages;
+  <span class="hljs-keyword">if</span> (cli[<span class="hljs-string">'&lt;package&gt;'</span>]) {
+    packages = [cli[<span class="hljs-string">'&lt;package&gt;'</span>]];
+  } <span class="hljs-keyword">else</span> {
+    packages = workspace.getDependencies();
+  }
+
+  req.Installer.install(packages, <span class="hljs-built_in">console</span>);
+
+  <span class="hljs-keyword">if</span> (cli[<span class="hljs-string">'--save'</span>] &amp;&amp; cli[<span class="hljs-string">'&lt;package&gt;'</span>]) {
+    workspace.addDependency(cli[<span class="hljs-string">'&lt;package&gt;'</span>]);
+    workspace.writeDappfile();
+  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If the user ran the <code>build</code> command, we&#39;re going to open the current directory
+as if it were a package and commence with building.</p></div></div><div class="code"><div class="wrapper">} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cli.build) {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Building...'</span>);
+
+  <span class="hljs-keyword">let</span> workspace = Workspace.atPackageRoot();
+  <span class="hljs-keyword">let</span> env = cli[<span class="hljs-string">'--environment'</span>] || workspace.getEnvironment();
+  <span class="hljs-keyword">let</span> environments = workspace.getEnvironments();
+
+  <span class="hljs-keyword">if</span> (env &amp;&amp; environments &amp;&amp; !(env <span class="hljs-keyword">in</span> environments)) {
+    <span class="hljs-built_in">console</span>.error(<span class="hljs-string">'Could not find environment in dappfile: '</span> + env);
+    process.exit(<span class="hljs-number">1</span>);
+  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Run our build pipeline.</p></div></div><div class="code"><div class="wrapper">  <span class="hljs-keyword">let</span> jsBuildPipeline = req.pipelines
+    .JSBuildPipeline({
+      environment: env,
+      environments: environments,
+      subpackages: cli[<span class="hljs-string">'--subpackages'</span>] || cli[<span class="hljs-string">'-s'</span>]
+    });
+
+  <span class="hljs-keyword">if</span> (!jsBuildPipeline) process.exit(<span class="hljs-number">1</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Write output to filesystem.</p></div></div><div class="code"><div class="wrapper">  jsBuildPipeline.pipe(req.vinyl.dest(Workspace.findBuildPath()));</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If they ran the <code>init</code> command, we just set up the current directory as a
+Dapple package and exit.</p></div></div><div class="code"><div class="wrapper">} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cli.init) {
+  Workspace.initialize(process.cwd());</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If they ran the <code>new test</code> command, we&#39;re going to generate the boilerplate
+sol files. This command is checked for before the <code>test</code> command otherwise
+that test would be triggered instead.</p></div></div><div class="code"><div class="wrapper">} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cli.new &amp;&amp; cli.test) {
+  VMTest.writeTestTemplate(cli[<span class="hljs-string">'&lt;class&gt;'</span>]);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>If they ran the <code>test</code> command, we&#39;re going to run our build pipeline and
+then pass the output on to our test pipeline, finally spitting out the
+results to stdout and stderr (in case of failure).</p></div></div><div class="code"><div class="wrapper">} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cli.test) {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Testing...'</span>);
+
+  <span class="hljs-keyword">let</span> nameFilter;
+  <span class="hljs-keyword">let</span> workspace = Workspace.atPackageRoot();
+  <span class="hljs-keyword">let</span> env = cli[<span class="hljs-string">'--environment'</span>] || workspace.getEnvironment();
+
+  <span class="hljs-keyword">if</span> (!(env <span class="hljs-keyword">in</span> rc.data.environments)) {
+    <span class="hljs-built_in">console</span>.error(<span class="hljs-string">'Environment not defined: '</span> + env);
+    process.exit(<span class="hljs-number">1</span>);
+  }
+
+  <span class="hljs-keyword">if</span> (cli[<span class="hljs-string">'-r'</span>]) {</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>if filter String contains upper case letters special regex chars,
+assume the filtering is case sensitive, otherwise its insensitive</p></div></div><div class="code"><div class="wrapper">    nameFilter = <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(cli[<span class="hljs-string">'&lt;RegExp&gt;'</span>],
+      <span class="hljs-regexp">/[A-Z\\\.\[\]\^\$\*\+\{\}\(\)\?\|]/</span>.test(cli[<span class="hljs-string">'&lt;RegExp&gt;'</span>]) ? <span class="hljs-string">''</span> : <span class="hljs-string">'i'</span>);
+  }
+
+  <span class="hljs-keyword">let</span> initStream;
+  <span class="hljs-keyword">if</span> (cli[<span class="hljs-string">'--skip-build'</span>]) {
+    initStream = req.pipelines.BuiltClassesPipeline({
+      buildRoot: Workspace.findBuildPath(),
+      packageRoot: Workspace.findPackageRoot(),
+      subpackages: cli[<span class="hljs-string">'--subpackages'</span>] || cli[<span class="hljs-string">'-s'</span>]
+    });
+  } <span class="hljs-keyword">else</span> {
+    initStream = req.pipelines
+      .BuildPipeline({
+        packageRoot: Workspace.findPackageRoot(),
+        subpackages: cli[<span class="hljs-string">'--subpackages'</span>] || cli[<span class="hljs-string">'-s'</span>]
+      })
+      .pipe(req.vinyl.dest(Workspace.findBuildPath()));
+  }
+
+  initStream
+    .pipe(req.pipelines.TestPipeline({
+      web3: rc.data.environments[env].ethereum || <span class="hljs-string">'internal'</span>,
+      nameFilter: nameFilter
+    }));
+}</div></div></div></div></body></html>

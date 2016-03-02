@@ -1,8 +1,0 @@
-ipfs:
-    host: localhost 
-    port: 5001
-
-# By default, dapple uses `DAPPLEDIR/chains` to store chain datadirs.
-"chain-overrides":
-    ethereum:
-        datadir: "~/Library/Ethereum/chaindata"

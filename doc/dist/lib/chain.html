@@ -1,0 +1,44 @@
+<!DOCTYPE html><html lang="en"><head><title>lib/chain</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/chain"><meta name="groc-project-path" content="lib/chain.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/lib/chain.js">lib/chain.js</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="hljs-pi">"use strict"</span>
+
+<span class="hljs-keyword">var</span> Web3 = <span class="hljs-built_in">require</span>(<span class="hljs-string">'web3'</span>);</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Provides a common interface for EVM-based chains and RPC-based chains.
+This allows VMTest to not care about the implementation of what it is
+running its tests on.</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>First we define a base class. It doesn&#39;t do anything aside from 
+define the common interface for all its subclasses.</p></div></div><div class="code"><div class="wrapper"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Chain</span> </span>{
+    setDefaultAccount(account) {
+        <span class="hljs-keyword">this</span>.defaultAccount = account;
+    }
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RPCChain</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Chain</span> </span>{
+    constructor(connection_string, cb) {
+        <span class="hljs-keyword">this</span>.web3 = <span class="hljs-keyword">new</span> Web3();
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span>(connection_string) == <span class="hljs-string">'function'</span> &amp;&amp; <span class="hljs-keyword">typeof</span>(cb) == <span class="hljs-string">'undefined'</span>) {
+            cb = connection_string;
+            connection_string = <span class="hljs-string">"http://localhost:8544"</span>;
+        }
+
+        web3.setProvider(<span class="hljs-keyword">new</span> web3.providers.HttpProvider(connection_string));
+
+        <span class="hljs-keyword">if</span>( web3.eth.coinbase === <span class="hljs-literal">undefined</span> ) {
+            <span class="hljs-keyword">return</span> cb(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(
+                <span class="hljs-string">"Couldn't connect to test web3 provider, or it set no coinbase"</span>));
+        }
+        <span class="hljs-keyword">this</span>.setDefaultAccount(web3.eth.accounts[<span class="hljs-number">0</span>]);
+    }
+
+    setDefaultAccount(account) {
+        <span class="hljs-keyword">super</span>.setDefaultAccount(account);
+        <span class="hljs-keyword">this</span>.web3.eth.defaultAccount = <span class="hljs-keyword">this</span>.web3.eth.accounts[<span class="hljs-number">0</span>];
+    }
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EVMChain</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Chain</span> </span>{
+    constructor(evm) {
+        <span class="hljs-keyword">this</span>.evm = evm;
+    }
+}
+
+<span class="hljs-built_in">module</span>.exports = {
+    RPCChain: RPCChain
+}</div></div></div></div></body></html>

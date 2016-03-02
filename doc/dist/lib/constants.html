@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="en"><head><title>lib/constants</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="lib/constants"><meta name="groc-project-path" content="lib/constants.js"><meta name="groc-github-url" content="http://github.com/NexusDevelopment/dapple"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="http://github.com/NexusDevelopment/dapple/blob/master/lib/constants.js">lib/constants.js</a></div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>Get stuff from the <code>const</code> folder.
+TODO this class is a disaster</p></div></div><div class="code"><div class="wrapper"><span class="hljs-pi">'use strict'</span>;
+<span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./file'</span>);
+<span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Const</span> </span>{
+  constructor () {
+    <span class="hljs-keyword">var</span> constants_directory = path.join(__dirname, <span class="hljs-string">'/../constants'</span>);
+    <span class="hljs-keyword">this</span>.CONSTANTS_DIRECTORY = constants_directory;
+    <span class="hljs-keyword">this</span>.DAPPFILE_FILENAME = <span class="hljs-string">'dappfile'</span>;
+    <span class="hljs-keyword">this</span>.DAPPLERC_FILENAME = <span class="hljs-string">'_dapplerc'</span>;
+    <span class="hljs-keyword">this</span>.JS_HEADER_TEMPLATE = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">return</span> fs.readFileStringSync(
+        path.join(<span class="hljs-keyword">this</span>.CONSTANTS_DIRECTORY, <span class="hljs-string">'js_module.template'</span>));
+    };
+
+    <span class="hljs-keyword">this</span>.SOL_CONTRACT_TEMPLATE = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">return</span> fs.readFileStringSync(
+        path.join(<span class="hljs-keyword">this</span>.CONSTANTS_DIRECTORY, <span class="hljs-string">'template.sol'</span>));
+    };
+
+    <span class="hljs-keyword">this</span>.SOL_CONTRACT_TEST_TEMPLATE = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">return</span> fs.readFileStringSync(
+        path.join(<span class="hljs-keyword">this</span>.CONSTANTS_DIRECTORY, <span class="hljs-string">'template_test.sol'</span>));
+    };
+
+    <span class="hljs-keyword">this</span>.DAPPLE_VMTEST_CLASSES = {
+      <span class="hljs-string">'dapple/test.sol'</span>: path.join(constants_directory, <span class="hljs-string">'/test.sol'</span>),
+      <span class="hljs-string">'dapple/debug.sol'</span>: path.join(constants_directory, <span class="hljs-string">'/debug.sol'</span>)
+    };
+    <span class="hljs-keyword">this</span>.DAPPLE_HEADERS = [<span class="hljs-string">'Test'</span>, <span class="hljs-string">'Debug'</span>, <span class="hljs-string">'Tester'</span>];
+  }</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Source object you can feed into solc module
+TODO dapple-buildpack should be a proper package</p></div></div><div class="code"><div class="wrapper">  get DEFAULT_DAPPFILE_CONTENTS () {
+    <span class="hljs-keyword">return</span> fs.readFileStringSync(path.join(<span class="hljs-keyword">this</span>.CONSTANTS_DIRECTORY, <span class="hljs-string">'init_dappfile'</span>));
+  }
+  get DEFAULT_DAPPFILE_OBJECT () {
+    <span class="hljs-keyword">return</span> fs.readYamlSync(path.join(<span class="hljs-keyword">this</span>.CONSTANTS_DIRECTORY, <span class="hljs-string">'init_dappfile'</span>));
+  }
+  get DAPPLE_PACKAGE_SOURCES () {
+    <span class="hljs-keyword">var</span> out = {};
+    <span class="hljs-keyword">var</span> classpaths = <span class="hljs-keyword">this</span>.DAPPLE_VMTEST_CLASSES;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> path <span class="hljs-keyword">in</span> classpaths) {
+      out[path] = fs.readFileStringSync(classpaths[path]);
+    }
+    <span class="hljs-keyword">return</span> out;
+  }
+}
+
+<span class="hljs-built_in">module</span>.exports = <span class="hljs-keyword">new</span> Const();</div></div></div></div></body></html>
