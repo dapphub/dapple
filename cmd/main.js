@@ -59,7 +59,8 @@ if (cli.config || typeof (rc.path) === 'undefined') {
 // a git repository. Otherwise we'll just clone them.
 if (cli.install) {
   let workspace = Workspace.atPackageRoot();
-  let env = cli['--environment'] || workspace.getEnvironment();
+  // let env = cli['--environment'] || workspace.getEnvironment();
+  let env = 'morden';
 
   if (!(env in rc.data.environments)) {
     console.error('Environment not defined: ' + env);
