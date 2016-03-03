@@ -1,6 +1,6 @@
 <img src='https://ipfs.pics/ipfs/QmdUKEX48hXDgG2Y4XkxKJMV8qojiLYGc2mtEncBcEnSLd'/>
 <br><br>
-[![Dapple Version](https://img.shields.io/badge/version-0.3.0-8D86C9.svg?style=flat-square)](#)
+[![Dapple Version](https://img.shields.io/badge/version-0.3.0-8D86C9.svg?style=flat-square)](https://github.com/nexusdev/dapple/releases/tag/0.3.0)
 [![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)](https://github.com/Flet/semistandard)
 [![Build Status](https://travis-ci.org/NexusDevelopment/dapple.svg?branch=master)](https://travis-ci.org/NexusDevelopment/dapple)
 [![Slack Status](http://slack.makerdao.com/badge.svg)](https://slack.makerdao.com)
