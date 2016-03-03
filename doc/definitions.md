@@ -1,5 +1,7 @@
 ## Definitions
 
+Last updated 0.2.0
+
 #### basics
 
 The term "contract" introduces ambiguity. We use the familiar terms "class" and "object" instead.

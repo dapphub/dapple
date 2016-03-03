@@ -1,11 +1,11 @@
-Dapples script language is a domain specific language(DSL) which allows to write
-arbitrary scripts to automatically set up contract systems on a specified chain.
+Dapple understands a simple domain specific language which allows you to write
+scripts to automatically set up contract systems on a specified chain.
 This includes deploying and calling contracts, logging values, persistently
 saving values, importing values from the current environment and dependant packages.
 
 ## How to
-A script is usually written to the root package directory and can have
-an arbitrary name. It can be called with `dapple run <script> [--force] [--no-simulation] [options]`
+A script is usually written either to the package root or a `scripts` directory.
+It can be called with `dapple run <script> [--force] [--no-simulation] [options]`
 
 If only a specific expression needs to be executed it can be called without a 
 script with `dapple step <string> [options]`.

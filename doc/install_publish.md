@@ -1,21 +1,23 @@
 ## Install and Publish
 
+Note: DapphubDB address not finalized, use caution until this notice is removed.
+
 ### DapphubDb
 
-Dapple is capable of interacting (installing and publishing packages) with an
-on chain package registry. Ipfs is used as a storage and data transfear layer.
+Dapple is capable of interacting with an on-chain package registry for installing
+and publishing packages. IPFS is used as a storage and data transfer layer.
 A dapple package is content addressed by an ipfs hash. The hash is stored along
-with the package name and version on the ethereum chain.
-In order for this to work the user must have a working chain and ipfs connection
+with the package name and semantic version on the ethereum chain.
+In order for this to work the user must have a working Ethereum and IPFS connection
 specified in his `~/.dapplerc`.
 
 #### installing
 
-The commandline command to isntall a package from the registry is:
+The command to install a package from the registry is:
 
 `dapple install [--save] [options] [<package> <url-or-version>]`
 
-E.g. `dapple install dappsys 1.0.0 --save -e morden`
+E.g. `dapple install dappsys 0.1.0 --save`
 
 This will install dappsys package at version 1.0.0 from the registry which is
 deployed to morden chain and save this dependecy to the local dappfile, which
@@ -27,15 +29,17 @@ can be installed with `dapple install`:
 ```
 [...]
 dependencies:
-  dappsys: 1.0.0
+  dappsys: 0.1.0
 ```
 
 #### publishing
 
-To prevent poluting the global namespace, publishing is currently restricted
-to the internal dapple developers. This is ensured by the authentication system
-provided by dappsys framework. After a initial test phase a publish use will
-be introduced to the public.
+To prevent pollution of the global namespace, publishing is currently restricted
+to a few trusted dapple developers who curate the registry.
+This is ensured by the authentication system provided by [dappsys](https://github.com/nexusdev/dappsys) framework.
+The intent is to enable open publication as soon as some kind of arbitration or at least
+initial distribution scheme is invented. It is possible to update the system in-place,
+and there will be no need to redeploy the data store contract which dapple reads from.
 
 The command `dapple publish [options]` will build the current package based on
 the specifications given in the local dappfile and publish it to the registry
