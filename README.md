@@ -53,7 +53,14 @@ By default, dapple builds the entire `contracts` tree, and emits the following:
 dapple build
 ```
 
-Feature docs:
+#### Example dapple packages
+
+[dappsys](https://github.com/nexusdev/dappsys): A contract system framework, Nexus's "standard library".
+
+[feedbase](https://github.com/nexusdev/feedbase): Simple paid feed app.
+
+
+#### Feature docs
 
 * [Basic VM tests](https://github.com/nexusdev/dapple/blob/master/doc/test.md)
 * [Testing Exceptions](https://github.com/nexusdev/dapple/blob/master/doc/test_errors.md)
