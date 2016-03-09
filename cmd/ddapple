@@ -1,0 +1,8 @@
+#!/bin/sh
+exec docker run --rm -it --name=dapple-$$ \
+-u `id -u`:`id -g` -e HOME \
+-v /etc/passwd:/etc/passwd:ro \
+-v /etc/group:/etc/group:ro \
+-v "$HOME/.dapplerc:$HOME/.dapplerc" \
+-w "`pwd`" -v "`pwd`:`pwd`" \
+dbrock/dapple "$@"

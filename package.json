@@ -1,7 +1,7 @@
 {
   "name": "dapple",
   "version": "0.3.0",
-  "description": "dapp development tool",
+  "description": "Solidity developer multitool",
   "keywords": [
     "dapp",
     "ethereum",
@@ -25,7 +25,7 @@
     "url": "https://github.com/nexusdev/dapple.git"
   },
   "bugs": {
-    "url": "https://github.com/NexusDevelopment/dapple/issues"
+    "url": "https://github.com/nexusdev/dapple/issues"
   },
   "scripts": {
     "test": "./node_modules/semistandard/bin/cmd.js && ./node_modules/mocha/bin/mocha --recursive test/*",
@@ -33,7 +33,8 @@
   },
   "main": "lib.js",
   "bin": {
-    "dapple": "./cmd/main.js"
+    "dapple": "cmd/main.js",
+    "ddapple": "cmd/ddapple"
   },
   "directories": {
     "lib": "lib",
