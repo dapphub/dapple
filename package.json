@@ -33,8 +33,7 @@
   },
   "main": "lib.js",
   "bin": {
-    "dapple": "cmd/main.js",
-    "ddapple": "cmd/ddapple"
+    "dapple": "cmd/main.js"
   },
   "directories": {
     "lib": "lib",

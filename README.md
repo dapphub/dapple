@@ -28,12 +28,12 @@ The normal way to install Dapple is through npm:
     $ dapple help
 
 If you don't want to install Dapple and the Solidity compiler on your
-host machine, you can use the `ddapple` wrapper script to run the
-whole toolchain inside a Docker container.  This script is used
+host machine, you can use the `dapple-docker` wrapper script to run
+the whole toolchain inside a Docker container.  This script is used
 instead of `dapple` and can be installed separately:
 
-    $ make install-ddapple
-    $ ddapple help
+    $ make install-dapple-docker
+    $ dapple-docker help
 
 #### Basic usage
 
@@ -42,7 +42,7 @@ with a couple of other directories:
 
     $ mkdir mydapp
     $ cd mydapp
-    $ dapple init # or `ddapple init' to run inside Docker
+    $ dapple init
     $ ls
     build  contracts  dappfile
 
@@ -60,8 +60,8 @@ Finally, try building your project:
 
     $ dapple build
 
-By default, `dapple build` builds the entire `contracts` tree, and emits
-the following:
+By default, `dapple build` builds the entire `contracts/` tree, and
+emits the following:
 
 * cached build objects
 * `classes.json` — a list of type definitions
