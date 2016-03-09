@@ -28,7 +28,7 @@ dapple['golden'] = (function builder () {
   };
 
   // Wrap pass-through functions by name.
-  var passthroughs = ["at","new"];
+  var passthroughs = ['at', 'new'];
   for (var i = 0; i < passthroughs.length; i += 1) {
     ContractWrapper.prototype[passthroughs[i]] = (function (passthrough) {
       return function () {
