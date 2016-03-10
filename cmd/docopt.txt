@@ -16,3 +16,4 @@ Options:
     -c DAPPLERC, --config DAPPLERC
     -s, --subpackages   Include subpackages in output
     --report            Turn on the reporer
+    --version           Dapple Version

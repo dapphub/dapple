@@ -8,7 +8,10 @@
 var fs = require('fs');
 var docopt = require('docopt');
 var doc = fs.readFileSync(__dirname + '/docopt.txt').toString();
-var cli = docopt.docopt(doc);
+var packageSpec = require('../package.json');
+var cli = docopt.docopt(doc, {
+  version: packageSpec.version
+});
 
 // These requires take a lot of time to import.
 var req = require('lazreq')({
