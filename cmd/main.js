@@ -148,6 +148,7 @@ if (cli.install) {
   let nameFilter;
   let workspace = Workspace.atPackageRoot();
   let env = cli['--environment'] || workspace.getEnvironment();
+  let report = cli['--report'] || false;
 
   if (!(env in rc.data.environments)) {
     console.error('Environment not defined: ' + env);
@@ -172,7 +173,8 @@ if (cli.install) {
     initStream = req.pipelines
       .BuildPipeline({
         packageRoot: Workspace.findPackageRoot(),
-        subpackages: cli['--subpackages'] || cli['-s']
+        subpackages: cli['--subpackages'] || cli['-s'],
+        report
       })
       .pipe(req.vinyl.dest(Workspace.findBuildPath()));
   }

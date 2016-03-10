@@ -91,9 +91,9 @@ describe('Linker', function () {
     var map = Linker.link(workspace, sources)[Linker.CONTRACTMAP_KEY];
     var contractNames = _.values(JSON.parse(map)).sort();
     assert.deepEqual(contractNames, [
-      'DapplePkgContract', 'Debug', 'LinkerExample',
+      'DappleLogger', 'DapplePkgContract', 'Debug', 'LinkerExample',
       'ParenExample', 'PkgContract', 'PkgContract_Test',
-      'Test', 'Tester'
+      'Reporter', 'Test', 'Tester'
     ]);
   });
 
