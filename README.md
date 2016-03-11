@@ -27,10 +27,10 @@ The normal way to install Dapple is through npm:
     $ npm install -g dapple
     $ dapple help
 
-#### Ubuntu 15.10
+#### Ubuntu 14.04 or above
 
-If you're on Ubuntu 15.10 and don't have Node.js or the Solidity
-compiler installed, please follow these steps to install them:
+If you're on Ubuntu 14.04 or above and don't have Node.js or the
+Solidity compiler, try following these steps to install them:
 
 Install Node.js:
 
