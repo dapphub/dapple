@@ -28,7 +28,7 @@ dapple['<%= name %>'] = (function builder () {
   };
 
   // Wrap pass-through functions by name.
-  var passthroughs = <%= JSON.stringify(passthroughs) %>;
+  var passthroughs = <%= passthroughs %>;
   for (var i = 0; i < passthroughs.length; i += 1) {
     ContractWrapper.prototype[passthroughs[i]] = (function (passthrough) {
       return function () {
