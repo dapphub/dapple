@@ -1,0 +1,2 @@
+#!/bin/sh
+DOCKER_OPTIONS=--entrypoint=bash exec dapple-docker
