@@ -1,2 +1,4 @@
 prefix = /usr/local
-install-dapple-docker:; install cmd/dapple-docker "$(prefix)/bin"
+docker-install:
+	install cmd/dapple-docker "$(prefix)/bin"
+	install cmd/dapple-docker-shell "$(prefix)/bin"

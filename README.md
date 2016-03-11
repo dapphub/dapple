@@ -20,28 +20,68 @@ ecosystem, due to each blockchain's universal singleton nature.
 The central data model for Dapple is the `dappfile`, whose definition
 will normally reference IPFS objects and Ethereum contract addresses.
 
-#### Installation
+### Installation
 
 The normal way to install Dapple is through npm:
 
     $ npm install -g dapple
     $ dapple help
 
-If you don't want to install Dapple and the Solidity compiler on your
-host machine, you can use the `dapple-docker` wrapper script to run
-the whole toolchain inside a Docker container.  This script is used
-instead of `dapple` and can be installed separately:
+#### Ubuntu 15.10
 
-    $ make install-dapple-docker
+If you're on Ubuntu 15.10 and don't have Node.js or the Solidity
+compiler installed, please follow these steps to install them:
+
+Install Node.js:
+
+    apt-get install -y curl
+    curl -sL https://deb.nodesource.com/setup_5.x | bash
+    apt-get update
+    apt-get install -y nodejs
+
+Install Solidity:
+
+    apt-get install -y software-properties-common
+    add-apt-repository ppa:ethereum/ethereum
+    add-apt-repository ppa:ethereum/ethereum-qt
+    apt-get update
+    apt-get install -y cpp-ethereum
+
+Install Dapple:
+
+    apt-get install -y git build-essential python
+    git clone https://github.com/nexusdev/dapple
+    cd dapple
+    npm link
+
+#### Docker
+
+If you can't or don't want to install Dapple and the Solidity compiler
+on your host machine, you can use the `dapple-docker` wrapper script
+to run the whole toolchain inside a Docker container.  This script is
+used instead of `dapple` and can be installed separately:
+
+    $ make docker-install
     $ dapple-docker help
 
-#### Basic usage
+The current directory is automatically mounted into the containers and
+your UID/GID are preserved by mounting `/etc/passwd` and `/etc/group`.
+
+Use `dapple-docker-shell` to open a shell in a container:
+
+    ~$ cd src/dapple
+    ~/src/dapple$ dapple-docker-shell
+    john@63faad532599:~/src/dapple$ dapple help
+    john@63faad532599:~/src/dapple$ npm test
+    john@63faad532599:~/src/dapple$ # etc.
+
+### Basic usage
 
 Use `dapple init` to generate a simple boilerplate `dappfile` along
 with a couple of other directories:
 
-    $ mkdir mydapp
-    $ cd mydapp
+    $ mkdir my-dapp
+    $ cd my-dapp
     $ dapple init
     $ ls
     build  contracts  dappfile
@@ -52,8 +92,8 @@ Both of these are configured in your `dappfile` and can be overridden.
 
 Now try writing a contract and a test (see [Dapple test harness docs](https://github.com/nexusdev/dapple/blob/master/doc/test.md)):
 
-    $ $EDITOR contracts/dapp.sol
-    $ $EDITOR contracts/dapp_test.sol
+    $ vim contracts/dapp.sol
+    $ vim contracts/dapp_test.sol
     $ dapple test
 
 Finally, try building your project:
