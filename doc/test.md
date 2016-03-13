@@ -15,6 +15,7 @@ contract MyRegistry {
             throw;
         }
         _values[key] = value;
+        Set(key, value);
     }
     function get(bytes32 key) constant returns (bytes32 value) {
         return _values[key];
