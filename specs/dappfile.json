@@ -83,12 +83,37 @@
       "additionalProperties": false,
       "patternProperties": {
         "^.*$": {
-          "title": "Path",
-          "description": "Dependency path.",
-          "type": "string"
+          "oneOf": [{
+            "title": "Path",
+            "description": "Dependency path.",
+            "type": "string"
+          },
+          {
+            "type": "object",
+            "aditionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string"
+              }
+            }
+          }]
         }
       }
     },
+
+    "depGitUrl": {
+      "type": "string",
+      "pattern": "^(.+.git)(?:@([a-z0-9]+))$"
+    },
+
+    "depPath": {
+      "type": "string",
+      "pattern": ""
+    },
+
 
     "environments": {
       "title": "Environments",
