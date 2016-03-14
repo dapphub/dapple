@@ -226,7 +226,7 @@ if (cli.install) {
     }));
 } else if (cli.publish) {
   let workspace = Workspace.atPackageRoot();
-  let env = cli['--environment'] || workspace.getEnvironment();
+  let env = cli['--environment'] || 'morden';
   // TODO - find a nicer way to inherit and normalize environments: dapplerc -> dappfile -> cli settings
   req.pipelines
       .BuildPipeline({

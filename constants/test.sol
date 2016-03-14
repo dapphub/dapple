@@ -1,13 +1,13 @@
 import 'dapple/debug.sol';
 
 contract Tester {
-	address _t;
-	function _target( address target ) {
-		_t = target;
-	}
-	function() {
-		_t.call(msg.data);
-	}
+  address _t;
+  function _target( address target ) {
+    _t = target;
+  }
+  function() {
+    _t.call(msg.data);
+  }
 }
 
 contract Test is Debug {
