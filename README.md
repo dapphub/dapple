@@ -64,8 +64,11 @@ used instead of `dapple` and can be installed separately:
     $ make docker-install
     $ dapple-docker help
 
-The current directory is automatically mounted into the containers and
-your UID/GID are preserved by mounting `/etc/passwd` and `/etc/group`.
+The current directory is automatically mounted into the containers.
+**Note:** If you're on OS X, this only works in your home directory.
+
+Your UID and GID are preserved by synthesizing a new user inside each
+container that mimics the properties of the user on your host machine.
 
 Use `dapple-docker-shell` to open a shell in a container:
 

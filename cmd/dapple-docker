@@ -1,10 +1,9 @@
 #!/bin/sh
 exec docker run --rm -it --name=dapple-$$ \
--u `id -u`:`id -g` -e HOME \
--v /etc/passwd:/etc/passwd:ro \
--v /etc/group:/etc/group:ro \
--v "$HOME/.npm:$HOME/.npm" \
+-e HOME -e USER=`id -un` -e GROUP=`id -gn` \
+-e entrypoint -w "`pwd`" -v "`pwd`:`pwd`" \
 -v "$HOME/.dapplerc:$HOME/.dapplerc" \
--w "`pwd`" -v "`pwd`:`pwd`" \
-$DOCKER_OPTIONS \
+-v "$HOME/.npm:$HOME/.npm" \
+-v "$HOME/.emacs:$HOME/.emacs:ro" \
+-v "$HOME/.vimrc:$HOME/.vimrc:ro" \
 dbrock/dapple "$@"

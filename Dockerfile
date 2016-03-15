@@ -11,10 +11,17 @@ RUN add-apt-repository ppa:ethereum/ethereum
 RUN add-apt-repository ppa:ethereum/ethereum-qt
 RUN apt-get update && apt-get install -y cpp-ethereum
 
+# Avoid su(1) and sudo(1) due to signal and TTY weirdness
+RUN curl -fsSL https://github.com/tianon/gosu/releases/download/1.7/\
+gosu-`dpkg --print-architecture` -o /bin/gosu && chmod +x /bin/gosu
+
+# Install editors for convenience
+RUN apt-get update && apt-get install -y emacs vim
+
 # Install Dapple
 RUN apt-get update && apt-get install -y git build-essential python
-ENTRYPOINT ["dapple"]
 COPY package.json /dapple/package.json
 RUN cd dapple && npm install
+ENTRYPOINT ["/dapple/docker-entrypoint"]
 COPY . /dapple
 RUN cd dapple && npm link
