@@ -1,5 +1,5 @@
 #!/bin/sh
-exec docker run --rm -it --name=dapple-$$ \
+exec docker run --rm -it --net=host --name=dapple-$$ \
 -e HOME -e USER=`id -un` -e GROUP=`id -gn` \
 -e entrypoint -w "`pwd`" -v "`pwd`:`pwd`" \
 -v "$HOME/.dapplerc:$HOME/.dapplerc" \
