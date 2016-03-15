@@ -1,6 +1,5 @@
 #!/bin/sh -eu
 # Make sure we have the same UID and GID as the host user
-# to get correct permissions on any newly-created files.
 uid=`stat -c %u .` gid=`stat -c %g .`
 groupmod -o -g $gid $GROUP || groupadd -o -g $gid $GROUP
 useradd -o -u $uid -g $gid -d $HOME $USER
