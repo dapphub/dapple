@@ -22,14 +22,25 @@ dapple['<%= name %>'] = (function builder () {
   }
 
   ContractWrapper.prototype.deploy = function () {
-    var args = new Array(arguments);
+    <% if (!deploy_data) {
+    %>throw new Error('Module was built without any deploy data.');<%
+      } else {
+    %>var args = new Array(arguments);
     args[args.length - 1].data = this.headers.bytecode;
-    return this._class.new.apply(this._class, args);
+    return this._class.new.apply(this._class, args);<%
+    }%>
   };
 
-  // Wrap pass-through functions by name.
-  var passthroughs = <%= passthroughs %>;
-  for (var i = 0; i < passthroughs.length; i += 1) {
+  <% if (!deploy_data) {
+  %>ContractWrapper.prototype.new = function () {
+    throw new Error('Module was built without any deploy data.');
+  };
+
+  var passthroughs = ['at'];
+  <% } else {
+  %>var passthroughs = ['at', 'new'];
+  <% }
+  %>for (var i = 0; i < passthroughs.length; i += 1) {
     ContractWrapper.prototype[passthroughs[i]] = (function (passthrough) {
       return function () {
         return this._class[passthrough].apply(this._class, arguments);

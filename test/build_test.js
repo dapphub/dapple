@@ -41,11 +41,22 @@ describe('class Builder', function () {
     var classes = testenv.golden.SOLC_OUT();
     var headers = Builder.extractClassHeaders(classes);
     var compiled = Builder.compileJsModule({
-      name: 'golden', headers: headers
+      name: 'golden', headers: headers, deploy_data: true
     });
     // Uncomment to make new golden record
-    fs.writeFileSync(testenv.golden.JS_OUT_PATH(), compiled);
+    // fs.writeFileSync(testenv.golden.JS_OUT_PATH(), compiled);
     assert.deepEqual(testenv.golden.JS_OUT(), compiled);
+    done();
+  });
+  it('writeJsHeader can also leave out the bytecode', function (done) {
+    var classes = testenv.golden.SOLC_OUT();
+    var headers = Builder.extractClassHeaders(classes);
+    var compiled = Builder.compileJsModule({
+      name: 'golden', headers: headers, deploy_data: false
+    });
+    // Uncomment to make new golden record
+    // fs.writeFileSync(testenv.golden.JS_LITE_OUT_PATH(), compiled);
+    assert.deepEqual(testenv.golden.JS_LITE_OUT(), compiled);
     done();
   });
   it('produces an importable JS file', function () {
