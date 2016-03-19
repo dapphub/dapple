@@ -26,6 +26,12 @@ module.exports = {
     SOLC_OUT: function () {
       return fs.readJsonSync(this.SOLC_OUT_PATH());
     },
+    JS_LITE_OUT_PATH: function () {
+      return path.join(__dirname, '_fixtures', 'golden_lite', 'js_module.js');
+    },
+    JS_LITE_OUT: function () {
+      return fs.readFileSync(this.JS_LITE_OUT_PATH(), 'utf8');
+    },
     INIT_EMPTY_DIR: path.join(
       __dirname, '_fixtures', 'golden', 'golden_init'),
     FILTERED_SOLC_OUT_PATH: path.join(
