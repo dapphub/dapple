@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/nexusdev/dapple.png?label=ready&title=Ready)](https://waffle.io/nexusdev/dapple)
 ![Dapple](https://ipfs.pics/ipfs/QmdUKEX48hXDgG2Y4XkxKJMV8qojiLYGc2mtEncBcEnSLd)
 
 [![Version](https://img.shields.io/badge/version-0.3.0-8D86C9.svg?style=flat-square)](https://github.com/nexusdev/dapple/releases/tag/0.3.0)
