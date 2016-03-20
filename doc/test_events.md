@@ -14,7 +14,7 @@ contract EventDefinitions {
 
 contract Contract is EventDefinitions {
 [...]
-  function call(){
+  function fire() {
     info("ok");
     warn("warning");
   }
@@ -29,8 +29,9 @@ This assert the correct event **types**, correct **inputs** for a type and the
 correct **order** of emits. Also expected but **not emitted** and **unexpected** 
 events are leading to a test fail.
 
-The easiest way to use this is to inherit the test-contract from the target 
-contract `EventDefnitons`.
+The easiest way to use this is to follow the pattern of defining events in their own
+container type like `EventDefinitions`, then have both the implementation and the tester
+derive from it.
 
 ##### passing example
 The following shows a passing test:
@@ -44,7 +45,7 @@ contract MyTest is Test, EventDefinitions {
     expectEventsExact( target );
     info("ok");
     warn("warning");
-    target.call();
+    target.fire();
   }
 
 }
@@ -62,7 +63,7 @@ contract MyTest is Test, EventDefinitions {
     expectEventsExact( target );
     warn("warning");
     info("ok");
-    target.call();
+    target.fire();
   }
 
 }
@@ -79,7 +80,7 @@ contract MyTest is Test, EventDefinitions {
     expectEventsExact( target );
     info("ok");
     info("warning");
-    target.call();
+    target.fire();
   }
 
 }
@@ -96,7 +97,7 @@ contract MyTest is Test, EventDefinitions {
     expectEventsExact( target );
     info("ok");
     warn("error");
-    target.call();
+    target.fire();
   }
 
 }
@@ -112,7 +113,7 @@ contract MyTest is Test, EventDefinitions {
     Contract target = new Contract();
     expectEventsExact( target );
     info("ok");
-    target.call();
+    target.fire();
   }
 
 }
@@ -130,7 +131,7 @@ contract MyTest is Test, EventDefinitions {
     info("ok");
     warn("warn");
     info("success");
-    target.call();
+    target.fire();
   }
 
 }
