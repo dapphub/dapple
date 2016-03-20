@@ -35,7 +35,8 @@ contract MyRegistryTest is Test {
     Tester proxy_tester;
     // The function called "setUp" with no arguments is
     // called on a fresh instance of this contract before
-    // each test. 
+    // each test. TODO: Document when to put setup logic in
+    // setUp vs subclass constructor when writing Test subclasses
     function setUp() {
         reg = new MyRegistry();
         proxy_tester = new Tester();
@@ -59,5 +60,5 @@ contract MyRegistryTest is Test {
 Further docs:
 
 [Testing Exceptions](https://github.com/nexusdev/dapple/blob/master/doc/test_errors.md)
-[Testing Events](https://github.com/nexusdev/dapple/blog/master/doc/test_events.md)
+[Testing Events](https://github.com/nexusdev/dapple/blob/master/doc/test_events.md)
 
