@@ -1,5 +1,4 @@
 #### NatSpec debugger
-This addresses #155 and #143
 
 It is possible to use this statements in any solidity code:
 ```
