@@ -125,6 +125,7 @@ the `dappfile`
 * [Testing events](https://github.com/nexusdev/dapple/blob/master/doc/test_events.md)
 * [Installing and publishing packages](https://github.com/nexusdev/dapple/blob/master/doc/install_publish.md)
 * [Deployment scripting](https://github.com/nexusdev/dapple/blob/master/doc/deployscript.md)
+* [Logging](https://github.com/nexusdev/dapple/blob/master/doc/logging.md)
 
 #### Not yet documented
 

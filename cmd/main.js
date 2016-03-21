@@ -74,8 +74,10 @@ if (cli.install) {
   let packages;
   if (cli['<package>']) {
     if (!cli['<url-or-version>']) {
-      console.error('No version or URL specified for package.');
-      process.exit(1);
+      // asume dapphub package
+      cli['<url-or-version>'] = 'latest';
+      // console.error('No version or URL specified for package.');
+      // process.exit(1);
     }
     packages = {};
     packages[cli['<package>']] = cli['<url-or-version>'];
