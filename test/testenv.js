@@ -26,18 +26,17 @@ module.exports = {
     SOLC_OUT: function () {
       return fs.readJsonSync(this.SOLC_OUT_PATH());
     },
-    JS_LITE_OUT_PATH: function () {
-      return path.join(__dirname, '_fixtures', 'golden_lite', 'js_module.js');
+    NO_DEPLOY_JS_OUT_PATH: function () {
+      return path.join(__dirname, '_fixtures', 'golden', 'js_module.no_deploy.js');
     },
-    JS_LITE_OUT: function () {
-      return fs.readFileSync(this.JS_LITE_OUT_PATH(), 'utf8');
+    NO_DEPLOY_JS_OUT: function () {
+      return fs.readFileSync(this.NO_DEPLOY_JS_OUT_PATH(), 'utf8');
     },
     INIT_EMPTY_DIR: path.join(
       __dirname, '_fixtures', 'golden', 'golden_init'),
     FILTERED_SOLC_OUT_PATH: path.join(
       __dirname, '_fixtures', 'golden', 'golden_solc_classes_out')
   },
-
   dsl_package_dir: path.join(
     __dirname, '_fixtures', 'testenv', 'deploy_package'),
 

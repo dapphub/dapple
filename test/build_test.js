@@ -55,8 +55,8 @@ describe('class Builder', function () {
       name: 'golden', headers: headers, deploy_data: false
     });
     // Uncomment to make new golden record
-    // fs.writeFileSync(testenv.golden.JS_LITE_OUT_PATH(), compiled);
-    assert.deepEqual(testenv.golden.JS_LITE_OUT(), compiled);
+    // fs.writeFileSync(testenv.golden.NO_DEPLOY_JS_OUT_PATH(), compiled);
+    assert.deepEqual(testenv.golden.NO_DEPLOY_JS_OUT(), compiled);
     done();
   });
   it('produces an importable JS file', function () {
