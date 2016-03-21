@@ -22,12 +22,14 @@ dapple['golden'] = (function builder () {
   }
 
   ContractWrapper.prototype.deploy = function () {
-    var args = new Array(arguments);
-    args[args.length - 1].data = this.headers.bytecode;
-    return this._class.new.apply(this._class, args);
+    throw new Error('Module was built without any deploy data.');
   };
 
-  var passthroughs = ['at', 'new'];
+  ContractWrapper.prototype.new = function () {
+    throw new Error('Module was built without any deploy data.');
+  };
+
+  var passthroughs = ['at'];
   for (var i = 0; i < passthroughs.length; i += 1) {
     ContractWrapper.prototype[passthroughs[i]] = (function (passthrough) {
       return function () {

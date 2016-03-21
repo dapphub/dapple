@@ -14,6 +14,7 @@ var Workspace = require('../lib/workspace');
 describe('class Workspace', function () {
   it('.initialize(emptydir) matches golden version', function () {
     var dir = fs.tmpdir();
+    console.log(dir);
     Workspace.initialize(dir);
     // fs.copySync(dir, testenv.golden.INIT_EMPTY_DIR); //  Create a new golden record
     var emptyDirs = ['build', 'contracts'];
@@ -25,6 +26,12 @@ describe('class Workspace', function () {
       excludeFilter: emptyDirs.join(',')
     });
     assert(diff.same, 'Workspace does not initialize with expected files.');
+  });
+
+  it('.initialize(initializeddir) throws', function () {
+    assert.throws(function () {
+      Workspace.initialize(testenv.golden.INIT_EMPTY_DIR);
+    }, /dappfile already exists/);
   });
 
   it('initializes successfully in golden package', function (done) {

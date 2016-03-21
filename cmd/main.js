@@ -132,7 +132,11 @@ if (cli.install) {
 // Dapple package and exit.
 //
 } else if (cli.init) {
-  Workspace.initialize(process.cwd());
+  try {
+    Workspace.initialize(process.cwd());
+  } catch (e) {
+    console.error('ERROR: ' + e.message);
+  }
 
 // If they ran the `new test` command, we're going to generate the boilerplate
 // sol files. This command is checked for before the `test` command otherwise
