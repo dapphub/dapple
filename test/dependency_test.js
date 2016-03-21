@@ -15,12 +15,13 @@ describe('Dependency', function () {
       assert.equal(dep.getVersion(), '9fe4f51');
     });
 
-    it('requires a commit hash', function () {
-      assert.throws(function () {
-        Dependency.fromDependencyString(
-          'https://github.com/nexusdev/dappsys.git');
-      });
-    });
+    // GIT URLS AND IPFS HASHES ARE DEPRECATED
+    // it('requires a commit hash', function () {
+    //   assert.throws(function () {
+    //     Dependency.fromDependencyString(
+    //       'https://github.com/nexusdev/dappsys.git');
+    //   });
+    // });
 
     it('handles git addresses with auth as well', function () {
       var dep = Dependency.fromDependencyString(
@@ -43,13 +44,13 @@ describe('Dependency', function () {
   });
 
   describe('construction from strings resolving to IPFS paths', function () {
-    it('translates Qmdeadbeef to an IPFS path', function () {
-      var dep = Dependency.fromDependencyString('Qmdeadbeef');
-      assert(dep.hasIPFSPath(), 'should have gotten an IPFS path');
-      assert.equal(dep.getName(), '');
-      assert.equal(dep.getPath(), 'ipfs://Qmdeadbeef');
-      assert.equal(dep.getVersion(), 'Qmdeadbeef');
-    });
+    // it('translates Qmdeadbeef to an IPFS path', function () {
+    //   var dep = Dependency.fromDependencyString('Qmdeadbeef');
+    //   assert(dep.hasIPFSPath(), 'should have gotten an IPFS path');
+    //   assert.equal(dep.getName(), '');
+    //   assert.equal(dep.getPath(), 'ipfs://Qmdeadbeef');
+    //   assert.equal(dep.getVersion(), 'Qmdeadbeef');
+    // });
 
     it('translates @Qmdeadbeef to an IPFS path', function () {
       var dep = Dependency.fromDependencyString('@Qmdeadbeef');
@@ -75,21 +76,21 @@ describe('Dependency', function () {
       assert.equal(dep.getVersion(), 'Qmdeadbeef');
     });
 
-    it('translates ipfs://Qmdeadbeef to an IPFS path', function () {
-      var dep = Dependency.fromDependencyString('ipfs://Qmdeadbeef');
-      assert(dep.hasIPFSPath(), 'should have gotten an IPFS path');
-      assert.equal(dep.getName(), '');
-      assert.equal(dep.getPath(), 'ipfs://Qmdeadbeef');
-      assert.equal(dep.getVersion(), 'Qmdeadbeef');
-    });
-
-    it('translates IpFs://Qmdeadbeef to an IPFS path', function () {
-      var dep = Dependency.fromDependencyString('ipfs://Qmdeadbeef');
-      assert(dep.hasIPFSPath(), 'should have gotten an IPFS path');
-      assert.equal(dep.getName(), '');
-      assert.equal(dep.getPath(), 'ipfs://Qmdeadbeef');
-      assert.equal(dep.getVersion(), 'Qmdeadbeef');
-    });
+    // it('translates ipfs://Qmdeadbeef to an IPFS path', function () {
+    //   var dep = Dependency.fromDependencyString('ipfs://Qmdeadbeef');
+    //   assert(dep.hasIPFSPath(), 'should have gotten an IPFS path');
+    //   assert.equal(dep.getName(), '');
+    //   assert.equal(dep.getPath(), 'ipfs://Qmdeadbeef');
+    //   assert.equal(dep.getVersion(), 'Qmdeadbeef');
+    // });
+    //
+    // it('translates IpFs://Qmdeadbeef to an IPFS path', function () {
+    //   var dep = Dependency.fromDependencyString('ipfs://Qmdeadbeef');
+    //   assert(dep.hasIPFSPath(), 'should have gotten an IPFS path');
+    //   assert.equal(dep.getName(), '');
+    //   assert.equal(dep.getPath(), 'ipfs://Qmdeadbeef');
+    //   assert.equal(dep.getVersion(), 'Qmdeadbeef');
+    // });
 
     it('allows overriding names of IPFS packages', function () {
       var dep = Dependency.fromDependencyString('dappsys2@Qmdeadbeef');
