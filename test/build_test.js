@@ -41,22 +41,36 @@ describe('class Builder', function () {
     var classes = testenv.golden.SOLC_OUT();
     var headers = Builder.extractClassHeaders(classes);
     var compiled = Builder.compileJsModule({
-      name: 'golden', headers: headers, deploy_data: true
+      name: 'golden', headers: headers, deployData: true,
+      packageRoot: testenv.golden.ROOT
     });
     // Uncomment to make new golden record
     // fs.writeFileSync(testenv.golden.JS_OUT_PATH(), compiled);
-    assert.deepEqual(testenv.golden.JS_OUT(), compiled);
+    assert.deepEqual(compiled, testenv.golden.JS_OUT());
     done();
   });
   it('writeJsHeader can also leave out the bytecode', function (done) {
     var classes = testenv.golden.SOLC_OUT();
     var headers = Builder.extractClassHeaders(classes);
     var compiled = Builder.compileJsModule({
-      name: 'golden', headers: headers, deploy_data: false
+      name: 'golden', headers: headers, deployData: false,
+      packageRoot: testenv.golden.ROOT
     });
     // Uncomment to make new golden record
-    // fs.writeFileSync(testenv.golden.JS_LITE_OUT_PATH(), compiled);
-    assert.deepEqual(testenv.golden.JS_LITE_OUT(), compiled);
+    // fs.writeFileSync(testenv.golden.NO_DEPLOY_JS_OUT_PATH(), compiled);
+    assert.deepEqual(compiled, testenv.golden.NO_DEPLOY_JS_OUT());
+    done();
+  });
+  it('writeJsHeader also lets the user override the dapple global', function (done) {
+    var classes = testenv.golden.SOLC_OUT();
+    var headers = Builder.extractClassHeaders(classes);
+    var compiled = Builder.compileJsModule({
+      name: 'golden', deployData: true, globalVar: 'my_global',
+      headers: headers, packageRoot: testenv.golden.ROOT
+    });
+    // Uncomment to make new golden record
+    // fs.writeFileSync(testenv.golden.MY_GLOBAL_JS_OUT_PATH(), compiled);
+    assert.deepEqual(compiled, testenv.golden.MY_GLOBAL_JS_OUT());
     done();
   });
   it('produces an importable JS file', function () {

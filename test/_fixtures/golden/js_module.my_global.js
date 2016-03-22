@@ -1,16 +1,11 @@
 'use strict';
 
-<% if (!globalVar) { %>// For geth
-if (typeof dapple === 'undefined') {
-  var dapple = {};
-}
-
-<% } %>if (typeof web3 === 'undefined' && typeof Web3 === 'undefined') {
+if (typeof web3 === 'undefined' && typeof Web3 === 'undefined') {
   var Web3 = require('web3');
 }
 
-<%= globalVar ? 'var ' + globalVar : "dapple['" + name + "']" %> = (function builder () {
-  var environments = <%= envs %>;
+var my_global = (function builder () {
+  var environments = {};
 
   function ContractWrapper (headers, _web3) {
     if (!_web3) {
@@ -22,25 +17,13 @@ if (typeof dapple === 'undefined') {
   }
 
   ContractWrapper.prototype.deploy = function () {
-    <% if (!deployData) {
-    %>throw new Error('Module was built without any deploy data.');<%
-      } else {
-    %>var args = new Array(arguments);
+    var args = new Array(arguments);
     args[args.length - 1].data = this.headers.bytecode;
-    return this._class.new.apply(this._class, args);<%
-    }%>
+    return this._class.new.apply(this._class, args);
   };
 
-  <% if (!deployData) {
-  %>ContractWrapper.prototype.new = function () {
-    throw new Error('Module was built without any deploy data.');
-  };
-
-  var passthroughs = ['at'];
-  <% } else {
-  %>var passthroughs = ['at', 'new'];
-  <% }
-  %>for (var i = 0; i < passthroughs.length; i += 1) {
+  var passthroughs = ['at', 'new'];
+  for (var i = 0; i < passthroughs.length; i += 1) {
     ContractWrapper.prototype[passthroughs[i]] = (function (passthrough) {
       return function () {
         return this._class[passthrough].apply(this._class, arguments);
@@ -50,7 +33,7 @@ if (typeof dapple === 'undefined') {
 
   function constructor (_web3, env) {
     if (!env) {
-      env = <%= env %>;
+      env = {};
     }
     while (typeof env !== 'object') {
       env = environments[env];
@@ -63,7 +46,10 @@ if (typeof dapple === 'undefined') {
       _web3 = new Web3(new Web3.providers.HttpProvider(env.rpcURL));
     }
 
-    this.headers = <%= headers %>;
+    this.headers = {
+      'contracts': {},
+      'version': {}
+    };
 
     this.classes = {};
     for (var key in this.headers) {
@@ -84,5 +70,5 @@ if (typeof dapple === 'undefined') {
 })();
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = <%= globalVar || "dapple['" + name + "']" %>;
+  module.exports = my_global;
 }

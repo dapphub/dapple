@@ -118,9 +118,11 @@ if (cli.install) {
   // Run our build pipeline.
   let jsBuildPipeline = req.pipelines
     .JSBuildPipeline({
-      deploy_data: !cli['--no-deploy-data'],
+      deployData: !cli['--no-deploy-data'],
       environment: env,
       environments: environments,
+      globalVar: cli['--global'],
+      name: workspace.dappfile.name,
       nameFilter: nameFilter,
       subpackages: cli['--subpackages'] || cli['-s']
     });
