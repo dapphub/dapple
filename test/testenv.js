@@ -32,6 +32,12 @@ module.exports = {
     NO_DEPLOY_JS_OUT: function () {
       return fs.readFileSync(this.NO_DEPLOY_JS_OUT_PATH(), 'utf8');
     },
+    MY_GLOBAL_JS_OUT_PATH: function () {
+      return path.join(__dirname, '_fixtures', 'golden', 'js_module.my_global.js');
+    },
+    MY_GLOBAL_JS_OUT: function () {
+      return fs.readFileSync(this.MY_GLOBAL_JS_OUT_PATH(), 'utf8');
+    },
     INIT_EMPTY_DIR: path.join(
       __dirname, '_fixtures', 'golden', 'golden_init'),
     FILTERED_SOLC_OUT_PATH: path.join(
