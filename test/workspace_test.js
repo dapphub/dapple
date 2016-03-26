@@ -14,7 +14,6 @@ var Workspace = require('../lib/workspace');
 describe('class Workspace', function () {
   it('.initialize(emptydir) matches golden version', function () {
     var dir = fs.tmpdir();
-    console.log(dir);
     Workspace.initialize(dir);
     // fs.copySync(dir, testenv.golden.INIT_EMPTY_DIR); //  Create a new golden record
     var emptyDirs = ['build', 'contracts'];

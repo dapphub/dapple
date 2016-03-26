@@ -12,5 +12,6 @@ environments:
             host: 'localhost'
             port: '4001'
         ethereum:
+            account: '0xdeadbeef'
             host: 'localhost'
             port: '8545'

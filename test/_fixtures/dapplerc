@@ -11,3 +11,4 @@ environments:
         ethereum:
             host: 'localhost'
             port: '8545'
+            account: '0xdeadbeef'
