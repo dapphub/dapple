@@ -242,8 +242,8 @@ if (cli.install) {
         subpackages: cli['--subpackages'] || cli['-s']
       })
       .pipe(req.pipelines.PublishPipeline({
-        environment: env,
         dappfile: workspace.dappfile,
+        environment: env,
         ipfs: rc.environment(env).ipfs,
         path: workspace.package_root,
         web3: (rc.environment(env).ethereum || 'internal')
