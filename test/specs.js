@@ -3,19 +3,17 @@
 var assert = require('chai').assert;
 var tv4 = require('tv4');
 
-var hyper_schema = require('../specs/hyper-schema.json');
-var schema = require('../specs/schema.json');
+var hyper_schema = require('../specs/hyper-schema.schema.json');
+var schema = require('../specs/schema.schema.json');
 
-var definitions = require('../specs/definitions.json');
-var dapplercSchema = require('../specs/dapplerc.json');
-var dappfileSchema = require('../specs/dappfile.json');
+var definitions = require('../specs/definitions.schema.json');
+var dapplercSchema = require('../specs/dapplerc.schema.json');
+var dappfileSchema = require('../specs/dappfile.schema.json');
 
 describe('specs', function () {
   it('definitions.json should be a valid json schema', function (done) {
     var valid = tv4.validate(definitions, hyper_schema);
-
     assert.isTrue(valid);
-
     done();
   });
 
