@@ -1,0 +1,12 @@
+site_name: Dapple Documentation
+theme: readthedocs
+pages:
+- Intro: index.md
+- Install: install.md
+- Overview: overview.md
+- Test: test.md
+- Packages: packages.md
+- Logging: logging.md
+- DappleScript: dapplescript.md
+- Dappfile: dappfile.md
+- Dapplerc: dapplerc.md
