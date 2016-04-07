@@ -2,6 +2,7 @@ site_name: Dapple Documentation
 repo_url: https://github.com/nexusdev/dapple
 site_description: Dapple user guide
 theme: readthedocs
+docs_dir: doc
 pages:
 - Intro: index.md
 - Install: install.md
