@@ -26,7 +26,7 @@ will normally reference IPFS objects and Ethereum contract addresses.
 The normal way to install Dapple is through npm:
 
     $ npm install -g dapple
-    $ dapple help
+    $ dapple --help
 
 #### Ubuntu 14.04 or above
 

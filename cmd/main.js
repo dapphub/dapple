@@ -7,11 +7,28 @@
 // Usage first.
 var fs = require('fs');
 var docopt = require('docopt');
-var doc = fs.readFileSync(__dirname + '/docopt.txt').toString();
+var cliSpec = require('../specs/cli.json');
 var packageSpec = require('../package.json');
-var cli = docopt.docopt(doc, {
-  version: packageSpec.version
+var clc = require('cli-color-tty')(true);
+var cli = docopt.docopt(getUsage(cliSpec), {
+  version: packageSpec.version,
+  help: false
 });
+
+// Builds the docopt usage from the spec
+function getUsage (cliSpec) {
+  const usage =
+    '    ' +
+    cliSpec.commands
+      .map(c => `dapple ${c.name} ${c.options.map(o => o.name).join(' ')}`)
+      .join('\n    ');
+  const options =
+    '    ' +
+    cliSpec.options
+      .map(o => o.name)
+      .join('\n    ');
+  return `Usage:\n${usage}\n\nOptions:\n${options}`;
+}
 
 // These requires take a lot of time to import.
 var req = require('lazreq')({
@@ -22,12 +39,41 @@ var req = require('lazreq')({
   path: 'path',
   pipelines: '../lib/pipelines.js',
   userHome: 'user-home',
-  vinyl: 'vinyl-fs'
+  vinyl: 'vinyl-fs',
+  doctor: '../lib/doctor.js'
 });
 
 var Workspace = require('../lib/workspace');
 var VMTest = require('../lib/vmtest');
 var rc = Workspace.getDappleRC();
+
+if (cli['--help']) {
+  // get the package HEAD hash to identify the version
+  const build = fs.readFileSync(__dirname + '/../.git/ORIG_HEAD').toString();
+
+  // apend the charactar `char` to a given string to match the desired length `number`
+  const appendChar = (str, char, number) => {
+    for (let i = str.length; i < number; i++) { str += char; }
+    return str;
+  };
+
+  const longestOption =
+    Math.max.apply(this, cliSpec.commands.map(c => Math.max.apply(this, c.options.map(o => o.name.length))));
+
+  const usage = cliSpec.commands
+    .map(c => {
+      let options = c
+        .options.map(o => clc.bold(appendChar(o.name, ' ', longestOption + 4)) + o.summary);
+      if (options.length > 0) options.push('');
+      return `${appendChar(clc.green('dapple ' + c.name), '_', longestOption + 18)}${c.summary}\n        ${options.join('\n        ')}`;
+    });
+
+  const options =
+    cliSpec.options
+      .map(o => o.name);
+
+  console.log(`dapple version: ${packageSpec.version}-${build.slice(0, 10)}\n\nUsage:\n    ${usage.join('\n    ')}\n\nOptions:\n    ${options.join('\n     ')}`);
+}
 
 if (cli.config || typeof (rc.path) === 'undefined') {
   let homeRC = req.path.join(req.userHome, '.dapplerc');
@@ -254,4 +300,7 @@ if (cli.install) {
 } else if (cli.ignore) {
   let workspace = Workspace.atPackageRoot();
   workspace.ignorePath(cli['<path>']);
+} else if (cli.doctor) {
+  let root = Workspace.findPackageRoot();
+  req.doctor(root);
 }

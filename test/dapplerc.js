@@ -7,8 +7,8 @@ var DappleRC = require('../lib/dapplerc.js');
 var path = require('path');
 var tv4 = require('tv4');
 
-var definitions = require('../specs/definitions.json');
-var dapplercSchema = require('../specs/dapplerc.json');
+var definitions = require('../specs/definitions.schema.json');
+var dapplercSchema = require('../specs/dapplerc.schema.json');
 
 tv4.addSchema('definitions', definitions);
 
