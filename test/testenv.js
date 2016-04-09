@@ -20,6 +20,12 @@ module.exports = {
     JS_OUT: function () {
       return fs.readFileSync(this.JS_OUT_PATH(), 'utf8');
     },
+    METEOR_OUT_PATH: function () {
+      return path.join(__dirname, '_fixtures', 'golden', 'meteor.js');
+    },
+    METEOR_OUT: function () {
+      return fs.readFileSync(this.METEOR_OUT_PATH(), 'utf8');
+    },
     SOLC_OUT_PATH: function () {
       return path.join(__dirname, '_fixtures', 'golden', 'solc_out.json');
     },

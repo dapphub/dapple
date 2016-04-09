@@ -122,6 +122,7 @@ if (cli.install) {
       environment: env,
       environments: environments,
       globalVar: cli['--global'],
+      template: cli['--template'],
       name: workspace.dappfile.name,
       nameFilter: nameFilter,
       subpackages: cli['--subpackages'] || cli['-s']
