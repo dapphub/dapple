@@ -78,5 +78,16 @@ describe('class Builder', function () {
     assert.isFunction(dappleModule.class);
     assert.isObject(dappleModule.environments);
   });
+  it('can also produce a Meteor-friendly file', function () {
+    var classes = testenv.golden.SOLC_OUT();
+    var headers = Builder.extractClassHeaders(classes);
+    var compiled = Builder.compileJsModule({
+      name: 'golden', headers: headers, deployData: true,
+      packageRoot: testenv.golden.ROOT, template: 'meteor'
+    });
+    // Uncomment to make new golden record
+    // fs.writeFileSync(testenv.golden.METEOR_OUT_PATH(), compiled);
+    assert.deepEqual(compiled, testenv.golden.METEOR_OUT());
+  });
   it.skip('has helpful error when directory layout misconfigured');
 });

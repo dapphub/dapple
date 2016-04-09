@@ -94,7 +94,8 @@
   },
   "semistandard": {
     "ignore": [
-      "doc"
+      "doc",
+      "test/_fixtures"
     ]
   }
 }
