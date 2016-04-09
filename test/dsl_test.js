@@ -62,7 +62,7 @@ describe('DSL', function () {
       if (err) throw err;
       assert.ok(parser.interpreter.success);
       assert(parser.interpreter.local.foo.value === 42);
-      parser.parse('var foo = 17', function (err, res) {
+      parser.parse('var foo = 42\nvar foo = 17', function (err, res) {
         if (err) throw err;
         assert.notOk(parser.interpreter.success);
         assert(parser.interpreter.local.foo.value === 42);
