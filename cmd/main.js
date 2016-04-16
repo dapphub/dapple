@@ -64,15 +64,16 @@ if (cli['--help']) {
     .map(c => {
       let options = c
         .options.map(o => clc.bold(appendChar(o.name, ' ', longestOption + 4)) + o.summary);
+      let required = c.options.filter(o => /^\s*\</.test(o.name)).map(o => o.name).join(' ');
       if (options.length > 0) options.push('');
-      return `${appendChar(clc.green('dapple ' + c.name), '_', longestOption + 18)}${c.summary}\n        ${options.join('\n        ')}`;
+      return `${appendChar(clc.green('dapple ' + c.name)+' '+required+' ', ' ', longestOption + 18)}${c.summary}\n        ${options.join('\n        ')}`;
     });
 
   const options =
     cliSpec.options
       .map(o => o.name);
 
-  console.log(`dapple version: ${packageSpec.version}-${build.slice(0, 10)}\n\nUsage:\n    ${usage.join('\n    ')}\n\nOptions:\n    ${options.join('\n     ')}`);
+  console.log(`dapple version: ${packageSpec.version}-${build.slice(0, 10)}\n\nUSAGE: dapple COMMAND [OPTIONS]\n\nCOMMANDS:\n    ${usage.join('\n    ')}\n\nOPTIONS:\n    ${options.join('\n     ')}`);
 }
 
 if (cli.config || typeof (rc.path) === 'undefined') {

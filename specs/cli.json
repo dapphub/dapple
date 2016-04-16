@@ -3,19 +3,19 @@
     {
       "name": "--help",
       "options" : [],
-      "summary" : "list this help file",
+      "summary" : "list this help message",
       "help": ""
     },
     {
       "name": "config",
       "options" : [],
-      "summary" : "configurate your environment",
+      "summary" : "configure your environment",
       "help": ""
     },
     {
       "name": "init",
       "options" : [],
-      "summary" : "initialize a new dapple project in the current folder",
+      "summary" : "initializes a new dapple project in the current folder",
       "help": ""
     },
     {
@@ -40,7 +40,7 @@
           "summary": "package name with specified url or version"
         }
       ],
-      "summary" : "install a package from dapphub",
+      "summary" : "install a package from dapphub or any other source",
       "help": ""
     },
     {
@@ -48,7 +48,7 @@
       "options" : [
         {
           "name": "[-r <RegExp>]",
-          "summary": "filter Classes with a regular expression"
+          "summary": "filter classes with a regular expression"
         },
         {
           "name": "[--global=<globalVar>]",
@@ -82,7 +82,7 @@
           "summary": "don't recompile your project and take all information from the last build"
         }
       ],
-      "summary" : "Runs a local testnet with all your tests",
+      "summary" : "runs a local testnet with all your tests",
       "help": ""
     },
     {
@@ -93,7 +93,7 @@
           "summary": "generates a new test class in your contracts folder"
         }
       ],
-      "summary" : "Generate objects",
+      "summary" : "generate objects",
       "help": ""
     },
     {
@@ -101,7 +101,7 @@
       "options" : [
         {
           "name": "<script>",
-          "summary": "path to the dapplescript file"
+          "summary": "path to the dapple-script file"
         },
         {
           "name": "[--force]",
@@ -142,7 +142,7 @@
           "summary": "default options"
         }
       ],
-      "summary" : "",
+      "summary" : "publishes the current project as a package to the registry",
       "help": ""
     },
     {
