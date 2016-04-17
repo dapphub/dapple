@@ -167,6 +167,7 @@ if (cli.install) {
     .JSBuildPipeline({
       deployData: !cli['--no-deploy-data'],
       environment: env,
+      optimize: cli['--optimize'],
       environments: environments,
       globalVar: cli['--global'],
       template: cli['--template'],
@@ -231,6 +232,7 @@ if (cli.install) {
   } else {
     initStream = req.pipelines
       .BuildPipeline({
+        optimize: cli['--optimize'],
         packageRoot: Workspace.findPackageRoot(),
         subpackages: cli['--subpackages'] || cli['-s'],
         report

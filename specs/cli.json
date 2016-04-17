@@ -192,6 +192,10 @@
     {
       "name": "--version",
       "summary": "prints out dapple Version"
+    },
+    {
+      "name": "--optimize",
+      "summary": "sends the optimize flag to solidity during the build process"
     }
   ]
 }
