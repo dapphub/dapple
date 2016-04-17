@@ -1,0 +1,15 @@
+site_name: Dapple Documentation
+repo_url: https://github.com/nexusdev/dapple
+site_description: Dapple user guide
+theme: readthedocs
+docs_dir: doc
+pages:
+- Intro: index.md
+- Install: install.md
+- Overview: overview.md
+- Test: test.md
+- Packages: packages.md
+- Logging: logging.md
+- DappleScript: dapplescript.md
+- Dappfile: dappfile.md
+- Dapplerc: dapplerc.md
