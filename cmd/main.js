@@ -66,7 +66,7 @@ if (cli['--help']) {
         .options.map(o => clc.bold(appendChar(o.name, ' ', longestOption + 4)) + o.summary);
       let required = c.options.filter(o => /^\s*\</.test(o.name)).map(o => o.name).join(' ');
       if (options.length > 0) options.push('');
-      return `${appendChar(clc.green('dapple ' + c.name)+' '+required+' ', ' ', longestOption + 18)}${c.summary}\n        ${options.join('\n        ')}`;
+      return `${appendChar(clc.green('dapple ' + c.name) + ' ' + required + ' ', ' ', longestOption + 18)}${c.summary}\n        ${options.join('\n        ')}`;
     });
 
   const options =
