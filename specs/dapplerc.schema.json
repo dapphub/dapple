@@ -6,7 +6,6 @@
       "title": "global environment specifications",
       "description": "named set of environments",
       "type": "object",
-      
       "default": {
         "default": {
           "ethereum": "internal"
