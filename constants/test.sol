@@ -6,7 +6,7 @@ contract Tester {
     _t = target;
   }
   function() {
-    _t.call(msg.data);
+    if(!_t.call(msg.data)) throw;
   }
 }
 
@@ -31,13 +31,13 @@ contract Test is Debug {
         var __endgas = msg.gas;
         log_named_uint("gas", (__startgas - __endgas) - __GAS_OVERHEAD);
     }
-    
+
     event eventListener(address _target, bool exact);
-    
+
     function expectEventsExact(address _target) {
       eventListener(_target, true);
     }
-    
+
     function fail() {
         failed = true;
     }
@@ -103,7 +103,6 @@ contract Test is Debug {
         }
     }
 
-
     /*[[[cog
     import cog
     types = ['bool', 'uint', 'int', 'address']
@@ -133,9 +132,8 @@ contract Test is Debug {
         cog.outl("        fail();")
         cog.outl("    }")
         cog.outl("}")
-
-
     ]]]*/
+
     function assertEq(bool a, bool b, bytes32 err) {
         if( a != b ) {
             log_bytes32('Not equal!');
