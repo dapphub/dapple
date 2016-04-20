@@ -3,21 +3,7 @@
   "type": "object",
   "properties": {
     "environments": {
-      "title": "global environment specifications",
-      "description": "named set of environments",
-      "type": "object",
-      "default": {
-        "default": {
-          "ethereum": "internal"
-        },
-        "evm": "default"
-      },
-
-      "patternProperties": {
-        "^\\w+$": { 
-          "$ref": "definitions#/definitions/environmentSpec"
-        }
-      }
+      "$ref": "dappfile#/definitions/environments"
     }
   },
   "additionalProperties": false,

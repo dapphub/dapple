@@ -32,9 +32,8 @@ describe('DappleRC', function () {
     var expected = fs.readYamlSync(fixtureRCExpanded);
     var rc = DappleRC.create({paths: [fixtureRC]});
     assert.deepEqual(rc.data, expected);
-
-    assert(tv4.validate(rc.data, dapplercSchema),
-      'dapplerc is not valid by schema' + tv4.error);
+    var valid = tv4.validate(rc.data, dapplercSchema);
+    assert(valid, 'dapplerc is not valid by schema' + tv4.error);
   });
 
   it('fills in unspecified properties with defaults', function () {

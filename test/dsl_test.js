@@ -32,7 +32,8 @@ describe('DSL', function () {
       },
       web3: 'internal',
       // web3: {host: '192.168.59.103', port:'8545'},
-      silent: true
+      silent: true,
+      confirmationBlocks: 1
     });
   });
 

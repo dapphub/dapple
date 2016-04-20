@@ -117,11 +117,20 @@
     "environments": {
       "title": "Environments",
       "description": "Local environments options",
+      "default": {
+        "default": {
+          "ethereum": "internal"
+        },
+        "evm": "default"
+      },
       "additionalProperties": false,
       "patternProperties": {
         "^\\w+$": {
           "title": "named environment specification",
-          "$ref": "definitions#/definitions/environmentSpec"
+          "oneOf": [
+            { "$ref": "definitions#/definitions/environmentRef" },
+            { "$ref": "definitions#/definitions/environmentDescription" }
+          ]
         }
       }
     }

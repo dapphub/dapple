@@ -262,7 +262,8 @@ if (cli.install) {
       simulate: !cli['--no-simulation'],
       throws: !cli['--force'],
       web3: (rc.environment(env).ethereum || 'internal'),
-      workspace: workspace
+      workspace: workspace,
+      confirmationBlocks: workspace.dappfile.environments[env].confirmationBlocks || 0
     }));
 } else if (cli.step) {
   let workspace = Workspace.atPackageRoot();
