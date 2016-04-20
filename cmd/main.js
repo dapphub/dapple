@@ -263,7 +263,7 @@ if (cli.install) {
       throws: !cli['--force'],
       web3: (rc.environment(env).ethereum || 'internal'),
       workspace: workspace,
-      confirmationBlocks: workspace.dappfile.environments[env].confirmationBlocks || 0
+      confirmationBlocks: workspace.dappfile.environments[env].confirmationBlocks|| 1
     }));
 } else if (cli.step) {
   let workspace = Workspace.atPackageRoot();
