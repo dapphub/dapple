@@ -251,6 +251,8 @@ if (cli.install) {
   let fileName = cli['<script>'];
   // TODO - refactor to wirkspace
   let file = fs.readFileSync(workspace.getPackageRoot() + '/' + fileName, 'utf8');
+  let confirmationBlocks = workspace.dappfile.environments[env].confirmationBlocks;
+  if (typeof confirmationBlocks === 'undefined') confirmationBlocks = 1;
   req.pipelines
       .BuildPipeline({
         packageRoot: Workspace.findPackageRoot(),
@@ -263,7 +265,7 @@ if (cli.install) {
       throws: !cli['--force'],
       web3: (rc.environment(env).ethereum || 'internal'),
       workspace: workspace,
-      confirmationBlocks: workspace.dappfile.environments[env].confirmationBlocks || 1
+      confirmationBlocks: confirmationBlocks
     }));
 } else if (cli.step) {
   let workspace = Workspace.atPackageRoot();
