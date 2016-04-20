@@ -99,6 +99,11 @@
       "type": "object",
       "title": "environment specification",
       "properties": {
+        "confirmationBlocks": {
+          "type": "number",
+          "title": "confirmation blocks",
+          "description": "confirmation time after each transaction"
+        },
         "ethereum": {
           "oneOf": [
             {
@@ -134,6 +139,7 @@
           "title": "ipfs access point",
           "type": "object",
           "required": [ "host", "port" ],
+          "blackbox": true,
           "properties": {
             "host": {
               "tittle": "host",
@@ -155,16 +161,16 @@
             }
           }
         }
-      },
-      "additionalProperties": false
+      }
 
     },
 
     "environmentSpec": {
-      "anyOf": [
+      "oneOf": [
         { "$ref": "#/definitions/environmentRef" },
         { "$ref": "#/definitions/environmentDescription" }
-      ]
+      ],
+      "additionalProperties": false
     },
 
     "environment": {
