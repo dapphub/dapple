@@ -252,7 +252,7 @@ if (cli.install) {
   // TODO - refactor to wirkspace
   let file = fs.readFileSync(workspace.getPackageRoot() + '/' + fileName, 'utf8');
   let confirmationBlocks = workspace.dappfile.environments[env].confirmationBlocks;
-  if(typeof confirmationBlocks === 'undefined') confirmationBlocks = 1;
+  if (typeof confirmationBlocks === 'undefined') confirmationBlocks = 1;
   req.pipelines
       .BuildPipeline({
         packageRoot: Workspace.findPackageRoot(),
