@@ -117,6 +117,7 @@ the `dappfile`
 
 * [Dappsys](https://github.com/nexusdev/dappsys) — a contract system framework (Nexus's "standard library")
 * [Feedbase](https://github.com/nexusdev/feedbase) — a simple paid feed app
+* [stringutils](https://github.com/Arachnid/solidity-stringutils) — string manipulation library
 
 #### More information
 
