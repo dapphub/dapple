@@ -10,6 +10,7 @@ var docopt = require('docopt');
 var cliSpec = require('../specs/cli.json');
 var packageSpec = require('../package.json');
 var clc = require('cli-color-tty')(true);
+var _ = require('lodash');
 var cli = docopt.docopt(getUsage(cliSpec), {
   version: packageSpec.version,
   help: false
@@ -117,6 +118,10 @@ if (cli.install) {
     process.exit(1);
   }
   let web3 = rc.environment(env).ethereum || 'internal';
+  let dappfileEnv = workspace.dappfile.environments &&
+                  workspace.dappfile.environments[env] ||
+                  {};
+  let environment = _.merge({}, rc.environment(env), dappfileEnv);
 
   let packages;
   if (cli['<package>']) {
@@ -132,7 +137,7 @@ if (cli.install) {
     packages = workspace.getDependencies();
   }
 
-  let success = req.Installer.install(packages, console, web3);
+  let success = req.Installer.install(packages, console, web3, environment);
 
   if (success && cli['--save'] && cli['<package>']) {
     workspace.addDependency(cli['<package>'], cli['<url-or-version>']);
@@ -288,6 +293,10 @@ if (cli.install) {
 } else if (cli.publish) {
   let workspace = Workspace.atPackageRoot();
   let env = cli['--environment'] || 'morden';
+  let dappfileEnv = workspace.dappfile.environments &&
+                  workspace.dappfile.environments[env] ||
+                  {};
+  let environment = _.merge({}, rc.environment(env), dappfileEnv);
   // TODO - find a nicer way to inherit and normalize environments: dapplerc -> dappfile -> cli settings
   req.pipelines
       .BuildPipeline({
@@ -296,10 +305,10 @@ if (cli.install) {
       })
       .pipe(req.pipelines.PublishPipeline({
         dappfile: workspace.dappfile,
-        environment: env,
         ipfs: rc.environment(env).ipfs,
         path: workspace.package_root,
-        web3: (rc.environment(env).ethereum || 'internal')
+        web3: (rc.environment(env).ethereum || 'internal'),
+        environment: environment
       }));
 } else if (cli.add) {
   let workspace = Workspace.atPackageRoot();
