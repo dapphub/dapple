@@ -16,7 +16,7 @@ describe('class Workspace', function () {
     var dir = fs.tmpdir();
     Workspace.initialize(dir);
     // fs.copySync(dir, testenv.golden.INIT_EMPTY_DIR); //  Create a new golden record
-    var emptyDirs = ['build', 'contracts'];
+    var emptyDirs = ['.dapple', 'build', 'contracts'];
     var ls = fs.readdirSync(dir);
     console.log(_.intersection(ls, emptyDirs), emptyDirs);
     assert.deepEqual(_.intersection(ls, emptyDirs), emptyDirs,
@@ -25,6 +25,7 @@ describe('class Workspace', function () {
     var diff = dircompare.compareSync(dir, testenv.golden.INIT_EMPTY_DIR, {
       excludeFilter: emptyDirs.join(',')
     });
+    console.log(diff);
     assert(diff.same, 'Workspace does not initialize with expected files.');
   });
 
