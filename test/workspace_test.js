@@ -18,6 +18,7 @@ describe('class Workspace', function () {
     // fs.copySync(dir, testenv.golden.INIT_EMPTY_DIR); //  Create a new golden record
     var emptyDirs = ['build', 'contracts'];
     var ls = fs.readdirSync(dir);
+    console.log(_.intersection(ls, emptyDirs), emptyDirs);
     assert.deepEqual(_.intersection(ls, emptyDirs), emptyDirs,
       'Workspace does not initialize with expected empty directories.');
 
