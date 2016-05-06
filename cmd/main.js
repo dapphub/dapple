@@ -178,6 +178,7 @@ if (cli.install) {
       template: cli['--template'],
       name: workspace.dappfile.name,
       nameFilter: nameFilter,
+      include_tests: cli['--tests'],
       subpackages: cli['--subpackages'] || cli['-s']
     });
 
