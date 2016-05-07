@@ -65,6 +65,10 @@
         {
           "name": "[--no-deploy-data]",
           "summary": "??? TODO"
+        },
+        {
+          "name": "[--tests]",
+          "summary": "include tests into the build"
         }
       ],
       "summary" : "compile and bundle your project",

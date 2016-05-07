@@ -3,7 +3,7 @@
   "type": "object",
   "properties": {
     "environments": {
-      "$ref": "dappfile#/definitions/environments"
+      "$ref": "definitions#/definitions/environments"
     }
   },
   "additionalProperties": false,
