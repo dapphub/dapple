@@ -86,6 +86,7 @@ contract Debug {
     event log_named_bytes31(bytes32 key, bytes31 val);
     event log_bytes32(bytes32 val);
     event log_named_bytes32(bytes32 key, bytes32 val);
+    event log_named_string(string key, string val);
     //[[[end]]]
 
     event _log_gas_use(uint gas);
