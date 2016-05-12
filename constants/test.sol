@@ -748,7 +748,27 @@ contract Test is Debug {
     }
     //[[[end]]]
 
+    function assertEq(bytes memory _a, bytes memory _b) {
+      if(_a.length != _b.length) {
+        log_bytes32('Not equal!');
+        log_named_string('A', string(_a));
+        log_named_string('B', string(_b));
+        fail();
+      }
+      for(uint8 i=0; i<_a.length; i++) {
+        if( _a[i] != _b[i] ) {
+          log_bytes32('Not equal!');
+          log_named_string('A', string(_a));
+          log_named_string('B', string(_b));
+          fail();
+        }
+      }
+    }
 
-
+    function assertEq(string memory a, string memory b) {
+      bytes memory _a = bytes(a);
+      bytes memory _b = bytes(b);
+      assertEq(_a, _b);
+    }
 
 }
