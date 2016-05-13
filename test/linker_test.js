@@ -151,4 +151,28 @@ describe('Linker', function () {
     assert.equal(linkedSources[example_hash], exampleOutput);
     assert.equal(linkedSources[dapple_contract_hash], dappleContractOutput);
   });
+
+  it('produces accurate import maps', function () {
+    var sources = {
+      'a.sol': 'import "b.sol"',
+      'b.sol': 'import "c.sol"',
+      'c.sol': ''
+    };
+    var imports = {
+      'a.sol': [],
+      'b.sol': ['a.sol'],
+      'c.sol': ['b.sol']
+    };
+    assert.deepEqual(Linker.importerMap(sources), imports);
+  });
+
+  it('can create lists of dependent files', function () {
+    var imports = {
+      'a.sol': [],
+      'b.sol': ['a.sol'],
+      'c.sol': ['b.sol']
+    };
+    var dependents = ['b.sol', 'a.sol'];
+    assert.deepEqual(Linker.dependentsList('c.sol', imports), dependents);
+  });
 });
