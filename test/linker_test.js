@@ -90,11 +90,11 @@ describe('Linker', function () {
   it('only puts valid contract names in the contract map', function () {
     var map = Linker.link(workspace, sources)[Linker.CONTRACTMAP_KEY];
     var contractNames = _.values(JSON.parse(map)).sort();
-    assert.deepEqual(contractNames, [
+    assert.deepEqual([
       'DappleLogger', 'DapplePkgContract', 'Debug', 'LinkerExample',
-      'ParenExample', 'PkgContract', 'PkgContract_Test',
+      'ParenExample', 'PkgContract', 'PkgContract', 'PkgContract_Test',
       'Reporter', 'Test', 'Tester'
-    ]);
+    ], contractNames);
   });
 
   it('replaces contract names with hashes', function () {
@@ -117,23 +117,62 @@ describe('Linker', function () {
       constants.PACKAGES_DIRECTORY + '/pkg/src/sol/contract.sol');
     var local_contract_hash = getHashpath(
       'linker_test_package/src/sol/pkg/contract.sol');
+    var dapple_contract_hash = getHashpath(
+      constants.PACKAGES_DIRECTORY + '/pkg/src/sol/dapple_contract.sol');
 
-    var template = _.template(fs.readFileSync(path.join(
+    var local_pkg_contract_hash = Linker.uniquifyContractName(
+      local_contract_hash, 'PkgContract'
+    );
+    var exampleTemplate = _.template(fs.readFileSync(path.join(
       workspace.getPackageRoot(), 'src.linked',
       'sol', 'linker_example.sol'), {encoding: 'utf8'}));
-
-    var expectedOutput = template({
+    var exampleOutput = exampleTemplate({
       contract_hash: contract_hash,
       local_contract_hash: local_contract_hash,
-      pkg_contract_hash: Linker.uniquifyContractName(
-        local_contract_hash, 'PkgContract'
-      ),
+      dapple_contract_hash: dapple_contract_hash,
+      pkg_contract_hash: local_pkg_contract_hash,
       dapple_pkg_contract_hash: Linker.uniquifyContractName(
-        contract_hash, 'DapplePkgContract'
+        dapple_contract_hash, 'DapplePkgContract'
       )
     });
 
+    var pkg_contract_hash = Linker.uniquifyContractName(
+      contract_hash, 'PkgContract'
+    );
+    var dappleContractTemplate = _.template(fs.readFileSync(path.join(
+      workspace.getPackageRoot(), 'src.linked',
+      'sol', 'dapple_contract.sol'), {encoding: 'utf8'}));
+    var dappleContractOutput = dappleContractTemplate({
+      contract_hash: contract_hash,
+      pkg_contract_hash: pkg_contract_hash
+    });
+
     var example_hash = getHashpath('/linker_example.sol');
-    assert.equal(linkedSources[example_hash], expectedOutput);
+    assert.equal(linkedSources[example_hash], exampleOutput);
+    assert.equal(linkedSources[dapple_contract_hash], dappleContractOutput);
+  });
+
+  it('produces accurate import maps', function () {
+    var sources = {
+      'a.sol': 'import "b.sol"',
+      'b.sol': 'import "c.sol"',
+      'c.sol': ''
+    };
+    var imports = {
+      'a.sol': [],
+      'b.sol': ['a.sol'],
+      'c.sol': ['b.sol']
+    };
+    assert.deepEqual(Linker.importerMap(sources), imports);
+  });
+
+  it('can create lists of dependent files', function () {
+    var imports = {
+      'a.sol': [],
+      'b.sol': ['a.sol'],
+      'c.sol': ['b.sol']
+    };
+    var dependents = ['b.sol', 'a.sol'];
+    assert.deepEqual(Linker.dependentsList('c.sol', imports), dependents);
   });
 });
