@@ -38,6 +38,9 @@ Dapple['golden'] = (function builder () {
       env = {};
     }
     while (typeof env !== 'object') {
+      if (!(env in environments)) {
+        throw new Error('Cannot resolve environment name: ' + env);
+      }
       env = environments[env];
     }
 
