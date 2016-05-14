@@ -113,10 +113,11 @@ emits the following:
 adds `Contract` objects instantiated from `web3.js` for each object in
 the `dappfile`
 
-#### TestRPC
-If you are using test rpc, remember that `dapple run` has a default confirmation time
-of 1 Block. To prevent a deadlock in TestRPC you have to set the confirmation time
-to zero in your testrpc environment:
+#### FAQ
+##### Can I use TestRPC with dapple?
+If you are using TestRPC, remember that `dapple run` has a default block
+confirmation time of one block. To prevent a deadlock you need to turn off the
+confirmation time testrpc environment:
 ```
 environments:
     test:
