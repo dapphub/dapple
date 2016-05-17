@@ -24,7 +24,7 @@ describe('specs', function () {
 
     var valid = tv4.validate(dapplercSchema, hyper_schema);
 
-    assert(valid, 'dapplerc.json is not a valid schema');
+    assert(valid, 'dapplerc.schema.json is not a valid schema');
     assert(tv4.missing.length === 0,
       'some references are missing: ' + JSON.stringify(tv4.missing));
 
