@@ -11,6 +11,23 @@ var cliSpec = require('../specs/cli.json');
 var packageSpec = require('../package.json');
 var clc = require('cli-color-tty')(true);
 var _ = require('lodash');
+
+
+var chainModule = require('dapple-chain');
+
+// REGISTER MODULES
+var registerModule = function (module) {
+  let prefixedCommands = module.cliSpec.commands.map( cmd => {
+    cmd.name = module.name + ' ' + cmd.name;
+    return cmd;
+  });
+  // add command line operations to dapples cli
+  cliSpec.commands = cliSpec.commands.concat(prefixedCommands);
+}
+registerModule(chainModule);
+
+
+
 var cli = docopt.docopt(getUsage(cliSpec), {
   version: packageSpec.version,
   help: false
@@ -320,4 +337,7 @@ if (cli.install) {
 } else if (cli.doctor) {
   let root = Workspace.findPackageRoot();
   req.doctor(root);
+} else if (cli.chain) {
+  let workspace = Workspace.atPackageRoot();
+  chainModule.controller.cli(cli, workspace);
 }

@@ -25,6 +25,12 @@
       "help": ""
     },
     {
+      "name": "chain",
+      "options": [],
+      "summary": "submodule to work on forked chain states",
+      "help": ""
+    },
+    {
       "name": "install",
       "options" : [
         {
