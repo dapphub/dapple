@@ -113,6 +113,17 @@ emits the following:
 adds `Contract` objects instantiated from `web3.js` for each object in
 the `dappfile`
 
+#### FAQ
+##### Can I use TestRPC with dapple?
+If you are using TestRPC, remember that `dapple run` has a default block
+confirmation time of one block. To prevent a deadlock you need to turn off the
+confirmation time testrpc environment:
+```
+environments:
+    test:
+        confirmationBlocks: 0
+```
+
 #### Example packages
 
 * [Dappsys](https://github.com/nexusdev/dappsys) — a contract system framework (Nexus's "standard library")
