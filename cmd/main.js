@@ -266,7 +266,8 @@ if (cli.install) {
   initStream
     .pipe(req.pipelines.TestPipeline({
       web3: rc.data.environments[env].ethereum || 'internal',
-      nameFilter: nameFilter
+      nameFilter: nameFilter,
+      mode: cli['--persistent']?'persistent':'temporary'
     }));
 } else if (cli.run) {
   let workspace = Workspace.atPackageRoot();

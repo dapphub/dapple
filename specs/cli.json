@@ -94,6 +94,10 @@
         {
           "name": "[--skip-build]",
           "summary": "don't recompile your project and take all information from the last build"
+        },
+        {
+          "name": "[--persistent]",
+          "summary": "persistently save the chain state to current branch"
         }
       ],
       "summary" : "runs a local testnet with all your tests",
