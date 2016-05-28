@@ -15,7 +15,9 @@ describe('streams.test', function () {
   it('[SLOW] emits one file for every failing test', function (done) {
     this.timeout(7000);
 
-    var web3 = Web3Factory.EVM();
+    var web3 = Web3Factory.EVM({
+      packageRoot: testenv.stream_test_dir
+    });
     var output = [];
 
     vinyl.src([classesPath])
@@ -28,9 +30,9 @@ describe('streams.test', function () {
       }, function (cb) {
         cb();
         assert.deepEqual(output.sort(), [
-          'Fails/test1 fails.stderr',
-          'Fails/test2 fails.stderr',
-          'FailsToo/test3 fails.stderr'
+          'Fails/test1 fails.stdout',
+          'Fails/test2 fails.stdout',
+          'FailsToo/test3 fails.stdout'
         ]);
         done();
       }));

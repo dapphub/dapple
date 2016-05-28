@@ -12,21 +12,18 @@ var packageSpec = require('../package.json');
 var clc = require('cli-color-tty')(true);
 var _ = require('lodash');
 
-
 var chainModule = require('dapple-chain');
 
 // REGISTER MODULES
 var registerModule = function (module) {
-  let prefixedCommands = module.cliSpec.commands.map( cmd => {
+  let prefixedCommands = module.cliSpec.commands.map(cmd => {
     cmd.name = module.name + ' ' + cmd.name;
     return cmd;
   });
   // add command line operations to dapples cli
   cliSpec.commands = cliSpec.commands.concat(prefixedCommands);
-}
+};
 registerModule(chainModule);
-
-
 
 var cli = docopt.docopt(getUsage(cliSpec), {
   version: packageSpec.version,
@@ -267,7 +264,7 @@ if (cli.install) {
     .pipe(req.pipelines.TestPipeline({
       web3: rc.data.environments[env].ethereum || 'internal',
       nameFilter: nameFilter,
-      mode: cli['--persistent']?'persistent':'temporary'
+      mode: cli['--persistent'] ? 'persistent' : 'temporary'
     }));
 } else if (cli.run) {
   let workspace = Workspace.atPackageRoot();

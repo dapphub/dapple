@@ -9,7 +9,7 @@ var testenv = require('./testenv.js');
 var through = require('through2');
 var Web3Factory = require('../lib/web3Factory.js');
 
-describe('DSL', function () {
+describe.skip('DSL', function () {
   this.timeout(1000000);
   var parser;
 
