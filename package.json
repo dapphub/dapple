@@ -93,7 +93,8 @@
     "eslint": "^1.10.3",
     "groc": "^0.8.0",
     "gulp": "^3.9.0",
-    "semistandard": "^7.0.5"
+    "semistandard": "^7.0.5",
+    "dapplescript": "^0.0.1"
   },
   "semistandard": {
     "ignore": [
