@@ -9,7 +9,7 @@ var testenv = require('./testenv.js');
 var through = require('through2');
 var Web3Factory = require('../lib/web3Factory.js');
 
-describe.skip('DSL', function () {
+describe('DSL', function () {
   this.timeout(1000000);
   var parser;
 
@@ -33,7 +33,7 @@ describe.skip('DSL', function () {
       web3: 'internal',
       // web3: {host: '192.168.59.103', port:'8545'},
       silent: true,
-      confirmationBlocks: 1
+      confirmationBlocks: 0
     });
   });
 
@@ -45,7 +45,7 @@ describe.skip('DSL', function () {
       if (err) throw err;
       assert(parser.interpreter.success);
       assert(parser.interpreter.local.foo.value === 'bar');
-      done();
+      parser.interpreter.web3Interface._web3.currentProvider.stop(done);
     });
   });
 
@@ -54,11 +54,11 @@ describe.skip('DSL', function () {
       if (err) throw err;
       assert(parser.interpreter.success);
       assert(parser.interpreter.local.foo.value === 42);
-      done();
+      parser.interpreter.web3Interface._web3.currentProvider.stop(done);
     });
   });
 
-  it('should fail if key is already taken', function (done) {
+  it.skip('should fail if key is already taken', function (done) {
     parser.parse('var foo = 42', function (err, res) {
       if (err) throw err;
       assert.ok(parser.interpreter.success);
@@ -67,7 +67,7 @@ describe.skip('DSL', function () {
         if (err) throw err;
         assert.notOk(parser.interpreter.success);
         assert(parser.interpreter.local.foo.value === 42);
-        done();
+        parser.interpreter.web3Interface._web3.currentProvider.stop(done);
       });
     });
   });
@@ -77,7 +77,7 @@ describe.skip('DSL', function () {
       if (err) throw err;
       assert.ok(parser.interpreter.success);
       assert.include(parser.interpreter.logs, 'buzz buzz\n');
-      done();
+      parser.interpreter.web3Interface._web3.currentProvider.stop(done);
     });
   });
 
@@ -86,7 +86,7 @@ describe.skip('DSL', function () {
       if (err) throw err;
       assert.ok(parser.interpreter.success);
       assert(parser.interpreter.global.foo.value === 17);
-      done();
+      parser.interpreter.web3Interface._web3.currentProvider.stop(done);
     });
   });
 
@@ -95,7 +95,7 @@ describe.skip('DSL', function () {
       if (err) throw err;
       assert.notOk(parser.interpreter.success);
       assert(parser.interpreter.global.foo.value === 17);
-      done();
+      parser.interpreter.web3Interface._web3.currentProvider.stop(done);
     });
   });
 
@@ -104,7 +104,7 @@ describe.skip('DSL', function () {
       if (err) throw err;
       assert.ok(parser.interpreter.success);
       assert(parser.interpreter.local.foo.value.length === 42);
-      done();
+      parser.interpreter.web3Interface._web3.currentProvider.stop(done);
     });
   });
 
@@ -113,7 +113,7 @@ describe.skip('DSL', function () {
       // TODO: test if foo got passed as an correct address
       if (err) throw err;
       assert.ok(parser.interpreter.success);
-      done();
+      parser.interpreter.web3Interface._web3.currentProvider.stop(done);
     });
   });
 
@@ -121,14 +121,14 @@ describe.skip('DSL', function () {
     parser.parse('var foo = new NoContract()', function (err, res) {
       if (err) throw err;
       assert.notOk(parser.interpreter.success);
-      done();
+      parser.interpreter.web3Interface._web3.currentProvider.stop(done);
     });
   });
 
   it.skip('should deploy contract with the right value', function (done) {
     parser.parse('var foo = new NoContract.value(24)()', function (err, res) {
       if (err) throw err;
-      done();
+      parser.interpreter.web3Interface._web3.currentProvider.stop(done);
     });
   });
 
@@ -137,7 +137,7 @@ describe.skip('DSL', function () {
   it('should call an address', function (done) {
     parser.parse('var foo = new Contract()\n foo.set(2) \n foo.get()', function (err, res) {
       if (err) throw err;
-      done();
+      parser.interpreter.web3Interface._web3.currentProvider.stop(done);
     });
   });
 
@@ -145,7 +145,7 @@ describe.skip('DSL', function () {
     parser.parse('var foo = new NoContract()\n foo.functionCall()', function (err, res) {
       if (err) throw err;
       assert.notOk(parser.interpreter.success);
-      done();
+      parser.interpreter.web3Interface._web3.currentProvider.stop(done);
     });
   });
 
@@ -154,7 +154,7 @@ describe.skip('DSL', function () {
       if (err) throw err;
       assert.ok(parser.interpreter.success);
       assert.include(parser.interpreter.logs, 'Logging test!\n');
-      done();
+      parser.interpreter.web3Interface._web3.currentProvider.stop(done);
     });
   });
 
@@ -179,22 +179,24 @@ describe.skip('DSL', function () {
       })
       .pipe(pipelines.RunPipeline({
         script: file,
-        silent: true
+        silent: true,
+        confirmationBlocks: 0
       }))
       .pipe(through.obj(function (file, enc, cb) {
         if (!/__deployScript\.[json|stderr]/.test(file.path)) {
           cb();
           return;
+        } else if (file.path === '__deployScript.json') {
+          var output = JSON.parse(String(file.contents));
+          assert(output.success, 'parser did not report success');
+          done();
+        } else {
+          cb();
         }
-
-        var output = JSON.parse(String(file.contents));
-        assert(output.success, 'parser did not report success');
-        cb();
-        done();
       }));
   });
 
-  it('allows passing raw values to constructors', function (done) {
+  it.skip('allows passing raw values to constructors', function (done) {
     let script = 'var bar = new ConstructorContract(42)\n' +
                  'var res = bar.constructorArg()' +
                  'export res';
@@ -211,7 +213,8 @@ describe.skip('DSL', function () {
       })
       .pipe(pipelines.RunPipeline({
         script: script,
-        silent: true
+        silent: true,
+        confirmationBlocks: 0
       }))
       .pipe(through.obj(function (file, enc, cb) {
         if (/__deployScript\.json/.test(file.path)) {
@@ -219,6 +222,7 @@ describe.skip('DSL', function () {
         }
         cb();
       }, function (cb) {
+        console.log(output.globals);
         assert(output.success, 'parser did not report success');
         assert.equal(output.globals.res, '42');
         cb();
@@ -226,7 +230,7 @@ describe.skip('DSL', function () {
       }));
   });
 
-  it('allows passing variables to constructors', function (done) {
+  it.skip('allows passing variables to constructors', function (done) {
     let script = 'var foo = 42\n' +
                  'var bar = new ConstructorContract(foo)\n' +
                  'var res = bar.constructorArg()' +

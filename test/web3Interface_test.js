@@ -7,8 +7,9 @@ var Web3Factory = require('../lib/web3Factory.js');
 var Web3Interface = require('../lib/web3Interface.js');
 
 describe('Web3Interface', function () {
-  it('uses the web3 default account to deploy contracts', function () {
+  it('uses the web3 default account to deploy contracts', function (done) {
     Web3Factory.EVM((err, web3) => {
+      if (err) return done(err);
       var iface = new Web3Interface({}, web3);
 
       web3.eth._sendTransaction = web3.eth.sendTransaction;
@@ -20,9 +21,13 @@ describe('Web3Interface', function () {
         className: 'Debug',
         args: []
       });
-      assert.equal(
-        web3.eth.defaultAccount,
-        web3.eth.getTransaction(receipt.transactionHash).from);
+      web3.eth.getTransaction(receipt.transactionHash, (err, tx) => {
+        if (err) throw new Error(err);
+        assert.equal(
+          web3.eth.defaultAccount,
+          tx.from);
+        web3.currentProvider.stop(done);
+      });
     });
   });
 });

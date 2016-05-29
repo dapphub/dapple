@@ -15,12 +15,13 @@ describe('streams.test', function () {
   it('[SLOW] emits one file for every failing test', function (done) {
     this.timeout(7000);
 
-    var web3 = Web3Factory.EVM({
+    Web3Factory.EVM({
       packageRoot: testenv.stream_test_dir
-    });
-    var output = [];
+    }, (err, web3) => {
+      if (err) return done(err);
+      var output = [];
 
-    vinyl.src([classesPath])
+      vinyl.src([classesPath])
       .pipe(streams.test({
         web3: web3
       }))
@@ -36,5 +37,6 @@ describe('streams.test', function () {
         ]);
         done();
       }));
+    });
   });
 });
