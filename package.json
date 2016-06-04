@@ -84,7 +84,7 @@
     "vinyl-fs": "^2.2.1",
     "web3": "^0.15.1",
     "write-yaml": "^0.2.2",
-    "dapple-chain": "^1.0.0"
+    "dapple-chain": "^0.0.2"
   },
   "engines": {
     "node": ">=5.0.0"
