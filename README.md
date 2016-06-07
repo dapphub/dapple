@@ -36,7 +36,7 @@ Solidity compiler, try following these steps to install them:
 Install Node.js:
 
     apt-get install -y curl
-    curl -sL https://deb.nodesource.com/setup_5.x | bash
+    curl -sL https://deb.nodesource.com/setup_6.x | bash
     apt-get update
     apt-get install -y nodejs
 
@@ -59,8 +59,8 @@ Install Dapple:
 
 If you can't or don't want to install Dapple and the Solidity compiler
 on your host machine, you can use the `dapple-docker` wrapper script
-to run the whole toolchain inside a Docker container.  This script is
-used instead of `dapple` and can be installed separately:
+to run the whole toolchain inside a Docker container.  This script can
+be used instead of `dapple` but must be installed separately:
 
     $ make docker-install
     $ dapple-docker help
@@ -68,27 +68,11 @@ used instead of `dapple` and can be installed separately:
 The current directory is automatically mounted into the containers.
 **Note:** If you're on OS X, this only works in your home directory.
 
-Your UID and GID are preserved by synthesizing a new user inside each
-container that mimics the properties of the user on your host machine.
-
-Use `dapple-docker-shell` to open a shell in a container:
-
-    ~$ cd src/dapple
-    ~/src/dapple$ dapple-docker-shell
-    john@63faad532599:~/src/dapple$ dapple help
-    john@63faad532599:~/src/dapple$ npm test
-    john@63faad532599:~/src/dapple$ # etc.
-
 ### Basic usage
 
-Use `dapple init` to generate a simple boilerplate `dappfile` along
-with a couple of other directories:
+Use `dapple init` to generate a project skeleton:
 
-    $ mkdir my-dapp
-    $ cd my-dapp
-    $ dapple init
-    $ ls
-    build  contracts  dappfile
+    mkdir foo; cd foo; dapple init
 
 By default, `build/` is where the output of `dapple build` gets put,
 and `contracts/` is where Dapple looks for your contract source files.
