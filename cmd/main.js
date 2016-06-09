@@ -65,9 +65,10 @@ var rc = Workspace.getDappleRC();
 if (cli['--help']) {
 
   var build='';
-  if(fs.existsSync(__dirname + '/../.git/ORIG_HEAD')) {
+  if(fs.existsSync(__dirname + '/../.git/HEAD')) {
     // get the package HEAD hash to identify the version
-    build = '-'+fs.readFileSync(__dirname + '/../.git/ORIG_HEAD').toString().slice(0, 10);
+    let ref = fs.readFileSync(__dirname + '/../.git/HEAD').toString().split(/\s/)[1];
+    build = '-'+fs.readFileSync(__dirname + `/../.git/${ref}`).toString().slice(0, 10);
   }
   // apend the charactar `char` to a given string to match the desired length `number`
   const appendChar = (str, char, number) => {
