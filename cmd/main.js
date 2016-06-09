@@ -63,9 +63,12 @@ var VMTest = require('../lib/vmtest');
 var rc = Workspace.getDappleRC();
 
 if (cli['--help']) {
-  // get the package HEAD hash to identify the version
-  const build = fs.readFileSync(__dirname + '/../.git/ORIG_HEAD').toString();
 
+  var build='';
+  if(fs.existsSync(__dirname + '/../.git/ORIG_HEAD')) {
+    // get the package HEAD hash to identify the version
+    build = '-'+fs.readFileSync(__dirname + '/../.git/ORIG_HEAD').toString().slice(0, 10);
+  }
   // apend the charactar `char` to a given string to match the desired length `number`
   const appendChar = (str, char, number) => {
     for (let i = str.length; i < number; i++) { str += char; }
@@ -88,7 +91,7 @@ if (cli['--help']) {
     cliSpec.options
       .map(o => o.name);
 
-  console.log(`dapple version: ${packageSpec.version}-${build.slice(0, 10)}\n\nUSAGE: dapple COMMAND [OPTIONS]\n\nCOMMANDS:\n    ${usage.join('\n    ')}\n\nOPTIONS:\n    ${options.join('\n     ')}`);
+  console.log(`dapple version: ${packageSpec.version}${build}\n\nUSAGE: dapple COMMAND [OPTIONS]\n\nCOMMANDS:\n    ${usage.join('\n    ')}\n\nOPTIONS:\n    ${options.join('\n     ')}`);
 }
 
 if (cli.config || typeof (rc.path) === 'undefined') {
