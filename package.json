@@ -85,7 +85,7 @@
     "web3": "^0.15.1",
     "write-yaml": "^0.2.2",
     "dapple-chain": "^0.0.4",
-    "dapplescript": "^0.0.2"
+    "dapplescript": "^0.0.3"
   },
   "engines": {
     "node": ">=5.0.0"
