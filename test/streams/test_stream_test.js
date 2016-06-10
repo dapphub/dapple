@@ -31,9 +31,9 @@ describe('streams.test', function () {
       }, function (cb) {
         cb();
         assert.deepEqual(output.sort(), [
-          'Fails/test1 fails.stdout',
-          'Fails/test2 fails.stdout',
-          'FailsToo/test3 fails.stdout'
+          'Fails/test1 fails.stderr',
+          'Fails/test2 fails.stderr',
+          'FailsToo/test3 fails.stderr'
         ]);
         done();
       }));

@@ -63,12 +63,11 @@ var VMTest = require('../lib/vmtest');
 var rc = Workspace.getDappleRC();
 
 if (cli['--help']) {
-
-  var build='';
-  if(fs.existsSync(__dirname + '/../.git/HEAD')) {
+  var build = '';
+  if (fs.existsSync(__dirname + '/../.git/HEAD')) {
     // get the package HEAD hash to identify the version
     let ref = fs.readFileSync(__dirname + '/../.git/HEAD').toString().split(/\s/)[1];
-    build = '-'+fs.readFileSync(__dirname + `/../.git/${ref}`).toString().slice(0, 10);
+    build = '-' + fs.readFileSync(__dirname + `/../.git/${ref}`).toString().slice(0, 10);
   }
   // apend the charactar `char` to a given string to match the desired length `number`
   const appendChar = (str, char, number) => {
@@ -246,6 +245,12 @@ if (cli.install) {
       /[A-Z\\\.\[\]\^\$\*\+\{\}\(\)\?\|]/.test(cli['<RegExp>']) ? '' : 'i');
   }
 
+  var testPipeline = req.pipelines.TestPipeline({
+      web3: rc.data.environments[env].ethereum || 'internal',
+      nameFilter: nameFilter,
+      mode: cli['--persistent'] ? 'persistent' : 'temporary'
+    });
+
   let initStream;
   if (cli['--skip-build']) {
     initStream = req.pipelines.BuiltClassesPipeline({
@@ -264,12 +269,7 @@ if (cli.install) {
       .pipe(req.vinyl.dest(Workspace.findBuildPath()));
   }
 
-  initStream
-    .pipe(req.pipelines.TestPipeline({
-      web3: rc.data.environments[env].ethereum || 'internal',
-      nameFilter: nameFilter,
-      mode: cli['--persistent'] ? 'persistent' : 'temporary'
-    }));
+  initStream.pipe(testPipeline);
 } else if (cli.run) {
   let workspace = Workspace.atPackageRoot();
   let env = cli['--environment'] || workspace.getEnvironment();

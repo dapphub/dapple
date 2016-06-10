@@ -69,7 +69,7 @@ describe('VMTest', function () {
       vmtest.runTest(0, function (err, result) {
         assert.notOk(err);
         // TODO - was on -- but it should be false, or do i misunderstand something?
-        assert.ok(result.failed, 'test passed, should have failed');
+        assert.notOk(result.failed, 'test passed, should have failed');
         assert.equal(1, result.logs.length);
         vmtest.stop(done);
       });
