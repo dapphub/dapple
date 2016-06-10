@@ -5,6 +5,13 @@
 Dapple hash a build in internal blockchain. It can either start a new by creating
 a new genesis block or "fork of" the current mainnet state.
 
+`dapple test` will run without leaving a state change on top of the current state.
+You can persistently change the changes caused by the test with the `--persistent`
+flag.
+
+`dapple run` executed on the internal environment will always cause a persisent
+state change!
+
 
 ### Usage
 ```
