@@ -84,7 +84,8 @@
     "vinyl-fs": "^2.2.1",
     "web3": "^0.15.1",
     "write-yaml": "^0.2.2",
-    "dapple-chain": "^0.0.2"
+    "dapple-chain": "^0.0.3",
+    "dapplescript": "^0.0.2"
   },
   "engines": {
     "node": ">=5.0.0"
@@ -93,8 +94,7 @@
     "eslint": "^1.10.3",
     "groc": "^0.8.0",
     "gulp": "^3.9.0",
-    "semistandard": "^7.0.5",
-    "dapplescript": "^0.0.1"
+    "semistandard": "^7.0.5"
   },
   "semistandard": {
     "ignore": [
