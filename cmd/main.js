@@ -246,10 +246,10 @@ if (cli.install) {
   }
 
   var testPipeline = req.pipelines.TestPipeline({
-      web3: rc.data.environments[env].ethereum || 'internal',
-      nameFilter: nameFilter,
-      mode: cli['--persistent'] ? 'persistent' : 'temporary'
-    });
+    web3: rc.data.environments[env].ethereum || 'internal',
+    nameFilter: nameFilter,
+    mode: cli['--persistent'] ? 'persistent' : 'temporary'
+  });
 
   let initStream;
   if (cli['--skip-build']) {
@@ -276,8 +276,8 @@ if (cli.install) {
   let fileName = cli['<script>'];
   // TODO - refactor to wirkspace
   let file = fs.readFileSync(workspace.getPackageRoot() + '/' + fileName, 'utf8');
-  var rc = Workspace.getDappleRC();
-  if(!workspace.dappfile.environments) delete workspace.dappfile.environments;
+  let rc = Workspace.getDappleRC();
+  if (!workspace.dappfile.environments) delete workspace.dappfile.environments;
   var state = _.extend({}, rc.data, workspace.dappfile);
   let confirmationBlocks = state.environments[env].confirmationBlocks;
   if (typeof confirmationBlocks === 'undefined') confirmationBlocks = 0;
