@@ -99,7 +99,7 @@ contract Test is Debug {
         if( !ok ) {
             log_bytes32(err);
             log_named_bytes32("  Expected", "[cannot show `bytes' value]");
-            log_named_bytes32("  Actual", "[cannot show `bytes' value]");
+            log_named_bytes32("    Actual", "[cannot show `bytes' value]");
             fail();
         }
     }
@@ -108,7 +108,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong fixed-point decimal");
             log_named_decimal("  Expected", b, decimals);
-            log_named_decimal("  Actual", a, decimals);
+            log_named_decimal("    Actual", a, decimals);
             fail();
         }
     }
@@ -127,7 +127,7 @@ contract Test is Debug {
         cog.outl("    if( a != b ) {");
         cog.outl("        log_bytes32(err);")
         cog.outl("        log_named_" + type + "('  Expected', b);")
-        cog.outl("        log_named_" + type + "('  Actual', a);")
+        cog.outl("        log_named_" + type + "('    Actual', a);")
         cog.outl("        fail();")
         cog.outl("    }")
         cog.outl("}")
@@ -137,7 +137,7 @@ contract Test is Debug {
         cog.outl("    if( a != b ) {");
         cog.outl("        log_bytes32(\"Error: Wrong `" + type + "' value\");")
         cog.outl("        log_named_" + type + "('  Expected', b);")
-        cog.outl("        log_named_" + type + "('  Actual', a);")
+        cog.outl("        log_named_" + type + "('    Actual', a);")
         cog.outl("        fail();")
         cog.outl("    }")
         cog.outl("}")
@@ -146,7 +146,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bool('  Expected', b);
-            log_named_bool('  Actual', a);
+            log_named_bool('    Actual', a);
             fail();
         }
     }
@@ -154,7 +154,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bool' value");
             log_named_bool('  Expected', b);
-            log_named_bool('  Actual', a);
+            log_named_bool('    Actual', a);
             fail();
         }
     }
@@ -162,7 +162,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_uint('  Expected', b);
-            log_named_uint('  Actual', a);
+            log_named_uint('    Actual', a);
             fail();
         }
     }
@@ -170,7 +170,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `uint' value");
             log_named_uint('  Expected', b);
-            log_named_uint('  Actual', a);
+            log_named_uint('    Actual', a);
             fail();
         }
     }
@@ -178,7 +178,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_int('  Expected', b);
-            log_named_int('  Actual', a);
+            log_named_int('    Actual', a);
             fail();
         }
     }
@@ -186,7 +186,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `int' value");
             log_named_int('  Expected', b);
-            log_named_int('  Actual', a);
+            log_named_int('    Actual', a);
             fail();
         }
     }
@@ -194,7 +194,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_address('  Expected', b);
-            log_named_address('  Actual', a);
+            log_named_address('    Actual', a);
             fail();
         }
     }
@@ -202,7 +202,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `address' value");
             log_named_address('  Expected', b);
-            log_named_address('  Actual', a);
+            log_named_address('    Actual', a);
             fail();
         }
     }
@@ -210,7 +210,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes1('  Expected', b);
-            log_named_bytes1('  Actual', a);
+            log_named_bytes1('    Actual', a);
             fail();
         }
     }
@@ -218,7 +218,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes1' value");
             log_named_bytes1('  Expected', b);
-            log_named_bytes1('  Actual', a);
+            log_named_bytes1('    Actual', a);
             fail();
         }
     }
@@ -226,7 +226,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes2('  Expected', b);
-            log_named_bytes2('  Actual', a);
+            log_named_bytes2('    Actual', a);
             fail();
         }
     }
@@ -234,7 +234,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes2' value");
             log_named_bytes2('  Expected', b);
-            log_named_bytes2('  Actual', a);
+            log_named_bytes2('    Actual', a);
             fail();
         }
     }
@@ -242,7 +242,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes3('  Expected', b);
-            log_named_bytes3('  Actual', a);
+            log_named_bytes3('    Actual', a);
             fail();
         }
     }
@@ -250,7 +250,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes3' value");
             log_named_bytes3('  Expected', b);
-            log_named_bytes3('  Actual', a);
+            log_named_bytes3('    Actual', a);
             fail();
         }
     }
@@ -258,7 +258,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes4('  Expected', b);
-            log_named_bytes4('  Actual', a);
+            log_named_bytes4('    Actual', a);
             fail();
         }
     }
@@ -266,7 +266,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes4' value");
             log_named_bytes4('  Expected', b);
-            log_named_bytes4('  Actual', a);
+            log_named_bytes4('    Actual', a);
             fail();
         }
     }
@@ -274,7 +274,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes5('  Expected', b);
-            log_named_bytes5('  Actual', a);
+            log_named_bytes5('    Actual', a);
             fail();
         }
     }
@@ -282,7 +282,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes5' value");
             log_named_bytes5('  Expected', b);
-            log_named_bytes5('  Actual', a);
+            log_named_bytes5('    Actual', a);
             fail();
         }
     }
@@ -290,7 +290,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes6('  Expected', b);
-            log_named_bytes6('  Actual', a);
+            log_named_bytes6('    Actual', a);
             fail();
         }
     }
@@ -298,7 +298,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes6' value");
             log_named_bytes6('  Expected', b);
-            log_named_bytes6('  Actual', a);
+            log_named_bytes6('    Actual', a);
             fail();
         }
     }
@@ -306,7 +306,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes7('  Expected', b);
-            log_named_bytes7('  Actual', a);
+            log_named_bytes7('    Actual', a);
             fail();
         }
     }
@@ -314,7 +314,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes7' value");
             log_named_bytes7('  Expected', b);
-            log_named_bytes7('  Actual', a);
+            log_named_bytes7('    Actual', a);
             fail();
         }
     }
@@ -322,7 +322,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes8('  Expected', b);
-            log_named_bytes8('  Actual', a);
+            log_named_bytes8('    Actual', a);
             fail();
         }
     }
@@ -330,7 +330,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes8' value");
             log_named_bytes8('  Expected', b);
-            log_named_bytes8('  Actual', a);
+            log_named_bytes8('    Actual', a);
             fail();
         }
     }
@@ -338,7 +338,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes9('  Expected', b);
-            log_named_bytes9('  Actual', a);
+            log_named_bytes9('    Actual', a);
             fail();
         }
     }
@@ -346,7 +346,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes9' value");
             log_named_bytes9('  Expected', b);
-            log_named_bytes9('  Actual', a);
+            log_named_bytes9('    Actual', a);
             fail();
         }
     }
@@ -354,7 +354,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes10('  Expected', b);
-            log_named_bytes10('  Actual', a);
+            log_named_bytes10('    Actual', a);
             fail();
         }
     }
@@ -362,7 +362,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes10' value");
             log_named_bytes10('  Expected', b);
-            log_named_bytes10('  Actual', a);
+            log_named_bytes10('    Actual', a);
             fail();
         }
     }
@@ -370,7 +370,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes11('  Expected', b);
-            log_named_bytes11('  Actual', a);
+            log_named_bytes11('    Actual', a);
             fail();
         }
     }
@@ -378,7 +378,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes11' value");
             log_named_bytes11('  Expected', b);
-            log_named_bytes11('  Actual', a);
+            log_named_bytes11('    Actual', a);
             fail();
         }
     }
@@ -386,7 +386,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes12('  Expected', b);
-            log_named_bytes12('  Actual', a);
+            log_named_bytes12('    Actual', a);
             fail();
         }
     }
@@ -394,7 +394,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes12' value");
             log_named_bytes12('  Expected', b);
-            log_named_bytes12('  Actual', a);
+            log_named_bytes12('    Actual', a);
             fail();
         }
     }
@@ -402,7 +402,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes13('  Expected', b);
-            log_named_bytes13('  Actual', a);
+            log_named_bytes13('    Actual', a);
             fail();
         }
     }
@@ -410,7 +410,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes13' value");
             log_named_bytes13('  Expected', b);
-            log_named_bytes13('  Actual', a);
+            log_named_bytes13('    Actual', a);
             fail();
         }
     }
@@ -418,7 +418,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes14('  Expected', b);
-            log_named_bytes14('  Actual', a);
+            log_named_bytes14('    Actual', a);
             fail();
         }
     }
@@ -426,7 +426,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes14' value");
             log_named_bytes14('  Expected', b);
-            log_named_bytes14('  Actual', a);
+            log_named_bytes14('    Actual', a);
             fail();
         }
     }
@@ -434,7 +434,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes15('  Expected', b);
-            log_named_bytes15('  Actual', a);
+            log_named_bytes15('    Actual', a);
             fail();
         }
     }
@@ -442,7 +442,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes15' value");
             log_named_bytes15('  Expected', b);
-            log_named_bytes15('  Actual', a);
+            log_named_bytes15('    Actual', a);
             fail();
         }
     }
@@ -450,7 +450,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes16('  Expected', b);
-            log_named_bytes16('  Actual', a);
+            log_named_bytes16('    Actual', a);
             fail();
         }
     }
@@ -458,7 +458,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes16' value");
             log_named_bytes16('  Expected', b);
-            log_named_bytes16('  Actual', a);
+            log_named_bytes16('    Actual', a);
             fail();
         }
     }
@@ -466,7 +466,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes17('  Expected', b);
-            log_named_bytes17('  Actual', a);
+            log_named_bytes17('    Actual', a);
             fail();
         }
     }
@@ -474,7 +474,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes17' value");
             log_named_bytes17('  Expected', b);
-            log_named_bytes17('  Actual', a);
+            log_named_bytes17('    Actual', a);
             fail();
         }
     }
@@ -482,7 +482,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes18('  Expected', b);
-            log_named_bytes18('  Actual', a);
+            log_named_bytes18('    Actual', a);
             fail();
         }
     }
@@ -490,7 +490,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes18' value");
             log_named_bytes18('  Expected', b);
-            log_named_bytes18('  Actual', a);
+            log_named_bytes18('    Actual', a);
             fail();
         }
     }
@@ -498,7 +498,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes19('  Expected', b);
-            log_named_bytes19('  Actual', a);
+            log_named_bytes19('    Actual', a);
             fail();
         }
     }
@@ -506,7 +506,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes19' value");
             log_named_bytes19('  Expected', b);
-            log_named_bytes19('  Actual', a);
+            log_named_bytes19('    Actual', a);
             fail();
         }
     }
@@ -514,7 +514,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes20('  Expected', b);
-            log_named_bytes20('  Actual', a);
+            log_named_bytes20('    Actual', a);
             fail();
         }
     }
@@ -522,7 +522,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes20' value");
             log_named_bytes20('  Expected', b);
-            log_named_bytes20('  Actual', a);
+            log_named_bytes20('    Actual', a);
             fail();
         }
     }
@@ -530,7 +530,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes21('  Expected', b);
-            log_named_bytes21('  Actual', a);
+            log_named_bytes21('    Actual', a);
             fail();
         }
     }
@@ -538,7 +538,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes21' value");
             log_named_bytes21('  Expected', b);
-            log_named_bytes21('  Actual', a);
+            log_named_bytes21('    Actual', a);
             fail();
         }
     }
@@ -546,7 +546,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes22('  Expected', b);
-            log_named_bytes22('  Actual', a);
+            log_named_bytes22('    Actual', a);
             fail();
         }
     }
@@ -554,7 +554,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes22' value");
             log_named_bytes22('  Expected', b);
-            log_named_bytes22('  Actual', a);
+            log_named_bytes22('    Actual', a);
             fail();
         }
     }
@@ -562,7 +562,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes23('  Expected', b);
-            log_named_bytes23('  Actual', a);
+            log_named_bytes23('    Actual', a);
             fail();
         }
     }
@@ -570,7 +570,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes23' value");
             log_named_bytes23('  Expected', b);
-            log_named_bytes23('  Actual', a);
+            log_named_bytes23('    Actual', a);
             fail();
         }
     }
@@ -578,7 +578,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes24('  Expected', b);
-            log_named_bytes24('  Actual', a);
+            log_named_bytes24('    Actual', a);
             fail();
         }
     }
@@ -586,7 +586,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes24' value");
             log_named_bytes24('  Expected', b);
-            log_named_bytes24('  Actual', a);
+            log_named_bytes24('    Actual', a);
             fail();
         }
     }
@@ -594,7 +594,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes25('  Expected', b);
-            log_named_bytes25('  Actual', a);
+            log_named_bytes25('    Actual', a);
             fail();
         }
     }
@@ -602,7 +602,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes25' value");
             log_named_bytes25('  Expected', b);
-            log_named_bytes25('  Actual', a);
+            log_named_bytes25('    Actual', a);
             fail();
         }
     }
@@ -610,7 +610,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes26('  Expected', b);
-            log_named_bytes26('  Actual', a);
+            log_named_bytes26('    Actual', a);
             fail();
         }
     }
@@ -618,7 +618,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes26' value");
             log_named_bytes26('  Expected', b);
-            log_named_bytes26('  Actual', a);
+            log_named_bytes26('    Actual', a);
             fail();
         }
     }
@@ -626,7 +626,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes27('  Expected', b);
-            log_named_bytes27('  Actual', a);
+            log_named_bytes27('    Actual', a);
             fail();
         }
     }
@@ -634,7 +634,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes27' value");
             log_named_bytes27('  Expected', b);
-            log_named_bytes27('  Actual', a);
+            log_named_bytes27('    Actual', a);
             fail();
         }
     }
@@ -642,7 +642,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes28('  Expected', b);
-            log_named_bytes28('  Actual', a);
+            log_named_bytes28('    Actual', a);
             fail();
         }
     }
@@ -650,7 +650,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes28' value");
             log_named_bytes28('  Expected', b);
-            log_named_bytes28('  Actual', a);
+            log_named_bytes28('    Actual', a);
             fail();
         }
     }
@@ -658,7 +658,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes29('  Expected', b);
-            log_named_bytes29('  Actual', a);
+            log_named_bytes29('    Actual', a);
             fail();
         }
     }
@@ -666,7 +666,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes29' value");
             log_named_bytes29('  Expected', b);
-            log_named_bytes29('  Actual', a);
+            log_named_bytes29('    Actual', a);
             fail();
         }
     }
@@ -674,7 +674,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes30('  Expected', b);
-            log_named_bytes30('  Actual', a);
+            log_named_bytes30('    Actual', a);
             fail();
         }
     }
@@ -682,7 +682,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes30' value");
             log_named_bytes30('  Expected', b);
-            log_named_bytes30('  Actual', a);
+            log_named_bytes30('    Actual', a);
             fail();
         }
     }
@@ -690,7 +690,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes31('  Expected', b);
-            log_named_bytes31('  Actual', a);
+            log_named_bytes31('    Actual', a);
             fail();
         }
     }
@@ -698,7 +698,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes31' value");
             log_named_bytes31('  Expected', b);
-            log_named_bytes31('  Actual', a);
+            log_named_bytes31('    Actual', a);
             fail();
         }
     }
@@ -706,7 +706,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32(err);
             log_named_bytes32('  Expected', b);
-            log_named_bytes32('  Actual', a);
+            log_named_bytes32('    Actual', a);
             fail();
         }
     }
@@ -714,7 +714,7 @@ contract Test is Debug {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes32' value");
             log_named_bytes32('  Expected', b);
-            log_named_bytes32('  Actual', a);
+            log_named_bytes32('    Actual', a);
             fail();
         }
     }
