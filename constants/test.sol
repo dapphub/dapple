@@ -104,6 +104,15 @@ contract Test is Debug {
         }
     }
 
+    function assertEqDecimal(uint a, uint b, uint decimals) {
+        if( a != b ) {
+            log_bytes32("Error: Wrong fixed-point decimal");
+            log_named_decimal("  Actual", a, decimals);
+            log_named_decimal("  Expected", b, decimals);
+            fail();
+        }
+    }
+
     /*[[[cog
     import cog
     types = ['bool', 'uint', 'int', 'address']
