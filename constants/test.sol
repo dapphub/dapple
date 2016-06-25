@@ -43,7 +43,7 @@ contract Test is Debug {
     }
     function assertTrue(bool what) {
         if( !what ) {
-            logs("Expected true but got false");
+            logs("Expected true, got false");
             fail();
         }
     }
@@ -55,7 +55,7 @@ contract Test is Debug {
     }
     function assertFalse(bool what) {
         if( what ) {
-            logs("Expected false but got true");
+            logs("Expected false, got true");
             fail();
         }
     }
@@ -79,8 +79,8 @@ contract Test is Debug {
         }
         if( !ok ) {
             log_bytes32("Error: Wrong `bytes' value");
-            log_named_bytes32("  Actual", "[cannot show `bytes' value]");
             log_named_bytes32("  Expected", "[cannot show `bytes' value]");
+            log_named_bytes32("  Actual", "[cannot show `bytes' value]");
             fail();
         }
     }
@@ -98,8 +98,8 @@ contract Test is Debug {
         }
         if( !ok ) {
             log_bytes32(err);
-            log_named_bytes32("  Actual", "[cannot show `bytes' value]");
             log_named_bytes32("  Expected", "[cannot show `bytes' value]");
+            log_named_bytes32("  Actual", "[cannot show `bytes' value]");
             fail();
         }
     }
@@ -107,8 +107,8 @@ contract Test is Debug {
     function assertEqDecimal(uint a, uint b, uint decimals) {
         if( a != b ) {
             log_bytes32("Error: Wrong fixed-point decimal");
-            log_named_decimal("  Actual", a, decimals);
             log_named_decimal("  Expected", b, decimals);
+            log_named_decimal("  Actual", a, decimals);
             fail();
         }
     }
@@ -126,8 +126,8 @@ contract Test is Debug {
         cog.outl(type + " a, " + type + " b, bytes32 err) {")
         cog.outl("    if( a != b ) {");
         cog.outl("        log_bytes32(err);")
-        cog.outl("        log_named_" + type + "('  Actual', a);")
         cog.outl("        log_named_" + type + "('  Expected', b);")
+        cog.outl("        log_named_" + type + "('  Actual', a);")
         cog.outl("        fail();")
         cog.outl("    }")
         cog.outl("}")
@@ -136,8 +136,8 @@ contract Test is Debug {
         cog.outl(type + " a, " + type + " b) {")
         cog.outl("    if( a != b ) {");
         cog.outl("        log_bytes32(\"Error: Wrong `" + type + "' value\");")
-        cog.outl("        log_named_" + type + "('  Actual', a);")
         cog.outl("        log_named_" + type + "('  Expected', b);")
+        cog.outl("        log_named_" + type + "('  Actual', a);")
         cog.outl("        fail();")
         cog.outl("    }")
         cog.outl("}")
@@ -145,576 +145,576 @@ contract Test is Debug {
     function assertEq(bool a, bool b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bool('  Actual', a);
             log_named_bool('  Expected', b);
+            log_named_bool('  Actual', a);
             fail();
         }
     }
     function assertEq(bool a, bool b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bool' value");
-            log_named_bool('  Actual', a);
             log_named_bool('  Expected', b);
+            log_named_bool('  Actual', a);
             fail();
         }
     }
     function assertEq(uint a, uint b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_uint('  Actual', a);
             log_named_uint('  Expected', b);
+            log_named_uint('  Actual', a);
             fail();
         }
     }
     function assertEq(uint a, uint b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `uint' value");
-            log_named_uint('  Actual', a);
             log_named_uint('  Expected', b);
+            log_named_uint('  Actual', a);
             fail();
         }
     }
     function assertEq(int a, int b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_int('  Actual', a);
             log_named_int('  Expected', b);
+            log_named_int('  Actual', a);
             fail();
         }
     }
     function assertEq(int a, int b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `int' value");
-            log_named_int('  Actual', a);
             log_named_int('  Expected', b);
+            log_named_int('  Actual', a);
             fail();
         }
     }
     function assertEq(address a, address b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_address('  Actual', a);
             log_named_address('  Expected', b);
+            log_named_address('  Actual', a);
             fail();
         }
     }
     function assertEq(address a, address b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `address' value");
-            log_named_address('  Actual', a);
             log_named_address('  Expected', b);
+            log_named_address('  Actual', a);
             fail();
         }
     }
     function assertEq1(bytes1 a, bytes1 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes1('  Actual', a);
             log_named_bytes1('  Expected', b);
+            log_named_bytes1('  Actual', a);
             fail();
         }
     }
     function assertEq1(bytes1 a, bytes1 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes1' value");
-            log_named_bytes1('  Actual', a);
             log_named_bytes1('  Expected', b);
+            log_named_bytes1('  Actual', a);
             fail();
         }
     }
     function assertEq2(bytes2 a, bytes2 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes2('  Actual', a);
             log_named_bytes2('  Expected', b);
+            log_named_bytes2('  Actual', a);
             fail();
         }
     }
     function assertEq2(bytes2 a, bytes2 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes2' value");
-            log_named_bytes2('  Actual', a);
             log_named_bytes2('  Expected', b);
+            log_named_bytes2('  Actual', a);
             fail();
         }
     }
     function assertEq3(bytes3 a, bytes3 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes3('  Actual', a);
             log_named_bytes3('  Expected', b);
+            log_named_bytes3('  Actual', a);
             fail();
         }
     }
     function assertEq3(bytes3 a, bytes3 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes3' value");
-            log_named_bytes3('  Actual', a);
             log_named_bytes3('  Expected', b);
+            log_named_bytes3('  Actual', a);
             fail();
         }
     }
     function assertEq4(bytes4 a, bytes4 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes4('  Actual', a);
             log_named_bytes4('  Expected', b);
+            log_named_bytes4('  Actual', a);
             fail();
         }
     }
     function assertEq4(bytes4 a, bytes4 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes4' value");
-            log_named_bytes4('  Actual', a);
             log_named_bytes4('  Expected', b);
+            log_named_bytes4('  Actual', a);
             fail();
         }
     }
     function assertEq5(bytes5 a, bytes5 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes5('  Actual', a);
             log_named_bytes5('  Expected', b);
+            log_named_bytes5('  Actual', a);
             fail();
         }
     }
     function assertEq5(bytes5 a, bytes5 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes5' value");
-            log_named_bytes5('  Actual', a);
             log_named_bytes5('  Expected', b);
+            log_named_bytes5('  Actual', a);
             fail();
         }
     }
     function assertEq6(bytes6 a, bytes6 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes6('  Actual', a);
             log_named_bytes6('  Expected', b);
+            log_named_bytes6('  Actual', a);
             fail();
         }
     }
     function assertEq6(bytes6 a, bytes6 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes6' value");
-            log_named_bytes6('  Actual', a);
             log_named_bytes6('  Expected', b);
+            log_named_bytes6('  Actual', a);
             fail();
         }
     }
     function assertEq7(bytes7 a, bytes7 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes7('  Actual', a);
             log_named_bytes7('  Expected', b);
+            log_named_bytes7('  Actual', a);
             fail();
         }
     }
     function assertEq7(bytes7 a, bytes7 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes7' value");
-            log_named_bytes7('  Actual', a);
             log_named_bytes7('  Expected', b);
+            log_named_bytes7('  Actual', a);
             fail();
         }
     }
     function assertEq8(bytes8 a, bytes8 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes8('  Actual', a);
             log_named_bytes8('  Expected', b);
+            log_named_bytes8('  Actual', a);
             fail();
         }
     }
     function assertEq8(bytes8 a, bytes8 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes8' value");
-            log_named_bytes8('  Actual', a);
             log_named_bytes8('  Expected', b);
+            log_named_bytes8('  Actual', a);
             fail();
         }
     }
     function assertEq9(bytes9 a, bytes9 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes9('  Actual', a);
             log_named_bytes9('  Expected', b);
+            log_named_bytes9('  Actual', a);
             fail();
         }
     }
     function assertEq9(bytes9 a, bytes9 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes9' value");
-            log_named_bytes9('  Actual', a);
             log_named_bytes9('  Expected', b);
+            log_named_bytes9('  Actual', a);
             fail();
         }
     }
     function assertEq10(bytes10 a, bytes10 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes10('  Actual', a);
             log_named_bytes10('  Expected', b);
+            log_named_bytes10('  Actual', a);
             fail();
         }
     }
     function assertEq10(bytes10 a, bytes10 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes10' value");
-            log_named_bytes10('  Actual', a);
             log_named_bytes10('  Expected', b);
+            log_named_bytes10('  Actual', a);
             fail();
         }
     }
     function assertEq11(bytes11 a, bytes11 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes11('  Actual', a);
             log_named_bytes11('  Expected', b);
+            log_named_bytes11('  Actual', a);
             fail();
         }
     }
     function assertEq11(bytes11 a, bytes11 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes11' value");
-            log_named_bytes11('  Actual', a);
             log_named_bytes11('  Expected', b);
+            log_named_bytes11('  Actual', a);
             fail();
         }
     }
     function assertEq12(bytes12 a, bytes12 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes12('  Actual', a);
             log_named_bytes12('  Expected', b);
+            log_named_bytes12('  Actual', a);
             fail();
         }
     }
     function assertEq12(bytes12 a, bytes12 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes12' value");
-            log_named_bytes12('  Actual', a);
             log_named_bytes12('  Expected', b);
+            log_named_bytes12('  Actual', a);
             fail();
         }
     }
     function assertEq13(bytes13 a, bytes13 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes13('  Actual', a);
             log_named_bytes13('  Expected', b);
+            log_named_bytes13('  Actual', a);
             fail();
         }
     }
     function assertEq13(bytes13 a, bytes13 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes13' value");
-            log_named_bytes13('  Actual', a);
             log_named_bytes13('  Expected', b);
+            log_named_bytes13('  Actual', a);
             fail();
         }
     }
     function assertEq14(bytes14 a, bytes14 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes14('  Actual', a);
             log_named_bytes14('  Expected', b);
+            log_named_bytes14('  Actual', a);
             fail();
         }
     }
     function assertEq14(bytes14 a, bytes14 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes14' value");
-            log_named_bytes14('  Actual', a);
             log_named_bytes14('  Expected', b);
+            log_named_bytes14('  Actual', a);
             fail();
         }
     }
     function assertEq15(bytes15 a, bytes15 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes15('  Actual', a);
             log_named_bytes15('  Expected', b);
+            log_named_bytes15('  Actual', a);
             fail();
         }
     }
     function assertEq15(bytes15 a, bytes15 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes15' value");
-            log_named_bytes15('  Actual', a);
             log_named_bytes15('  Expected', b);
+            log_named_bytes15('  Actual', a);
             fail();
         }
     }
     function assertEq16(bytes16 a, bytes16 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes16('  Actual', a);
             log_named_bytes16('  Expected', b);
+            log_named_bytes16('  Actual', a);
             fail();
         }
     }
     function assertEq16(bytes16 a, bytes16 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes16' value");
-            log_named_bytes16('  Actual', a);
             log_named_bytes16('  Expected', b);
+            log_named_bytes16('  Actual', a);
             fail();
         }
     }
     function assertEq17(bytes17 a, bytes17 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes17('  Actual', a);
             log_named_bytes17('  Expected', b);
+            log_named_bytes17('  Actual', a);
             fail();
         }
     }
     function assertEq17(bytes17 a, bytes17 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes17' value");
-            log_named_bytes17('  Actual', a);
             log_named_bytes17('  Expected', b);
+            log_named_bytes17('  Actual', a);
             fail();
         }
     }
     function assertEq18(bytes18 a, bytes18 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes18('  Actual', a);
             log_named_bytes18('  Expected', b);
+            log_named_bytes18('  Actual', a);
             fail();
         }
     }
     function assertEq18(bytes18 a, bytes18 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes18' value");
-            log_named_bytes18('  Actual', a);
             log_named_bytes18('  Expected', b);
+            log_named_bytes18('  Actual', a);
             fail();
         }
     }
     function assertEq19(bytes19 a, bytes19 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes19('  Actual', a);
             log_named_bytes19('  Expected', b);
+            log_named_bytes19('  Actual', a);
             fail();
         }
     }
     function assertEq19(bytes19 a, bytes19 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes19' value");
-            log_named_bytes19('  Actual', a);
             log_named_bytes19('  Expected', b);
+            log_named_bytes19('  Actual', a);
             fail();
         }
     }
     function assertEq20(bytes20 a, bytes20 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes20('  Actual', a);
             log_named_bytes20('  Expected', b);
+            log_named_bytes20('  Actual', a);
             fail();
         }
     }
     function assertEq20(bytes20 a, bytes20 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes20' value");
-            log_named_bytes20('  Actual', a);
             log_named_bytes20('  Expected', b);
+            log_named_bytes20('  Actual', a);
             fail();
         }
     }
     function assertEq21(bytes21 a, bytes21 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes21('  Actual', a);
             log_named_bytes21('  Expected', b);
+            log_named_bytes21('  Actual', a);
             fail();
         }
     }
     function assertEq21(bytes21 a, bytes21 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes21' value");
-            log_named_bytes21('  Actual', a);
             log_named_bytes21('  Expected', b);
+            log_named_bytes21('  Actual', a);
             fail();
         }
     }
     function assertEq22(bytes22 a, bytes22 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes22('  Actual', a);
             log_named_bytes22('  Expected', b);
+            log_named_bytes22('  Actual', a);
             fail();
         }
     }
     function assertEq22(bytes22 a, bytes22 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes22' value");
-            log_named_bytes22('  Actual', a);
             log_named_bytes22('  Expected', b);
+            log_named_bytes22('  Actual', a);
             fail();
         }
     }
     function assertEq23(bytes23 a, bytes23 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes23('  Actual', a);
             log_named_bytes23('  Expected', b);
+            log_named_bytes23('  Actual', a);
             fail();
         }
     }
     function assertEq23(bytes23 a, bytes23 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes23' value");
-            log_named_bytes23('  Actual', a);
             log_named_bytes23('  Expected', b);
+            log_named_bytes23('  Actual', a);
             fail();
         }
     }
     function assertEq24(bytes24 a, bytes24 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes24('  Actual', a);
             log_named_bytes24('  Expected', b);
+            log_named_bytes24('  Actual', a);
             fail();
         }
     }
     function assertEq24(bytes24 a, bytes24 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes24' value");
-            log_named_bytes24('  Actual', a);
             log_named_bytes24('  Expected', b);
+            log_named_bytes24('  Actual', a);
             fail();
         }
     }
     function assertEq25(bytes25 a, bytes25 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes25('  Actual', a);
             log_named_bytes25('  Expected', b);
+            log_named_bytes25('  Actual', a);
             fail();
         }
     }
     function assertEq25(bytes25 a, bytes25 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes25' value");
-            log_named_bytes25('  Actual', a);
             log_named_bytes25('  Expected', b);
+            log_named_bytes25('  Actual', a);
             fail();
         }
     }
     function assertEq26(bytes26 a, bytes26 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes26('  Actual', a);
             log_named_bytes26('  Expected', b);
+            log_named_bytes26('  Actual', a);
             fail();
         }
     }
     function assertEq26(bytes26 a, bytes26 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes26' value");
-            log_named_bytes26('  Actual', a);
             log_named_bytes26('  Expected', b);
+            log_named_bytes26('  Actual', a);
             fail();
         }
     }
     function assertEq27(bytes27 a, bytes27 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes27('  Actual', a);
             log_named_bytes27('  Expected', b);
+            log_named_bytes27('  Actual', a);
             fail();
         }
     }
     function assertEq27(bytes27 a, bytes27 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes27' value");
-            log_named_bytes27('  Actual', a);
             log_named_bytes27('  Expected', b);
+            log_named_bytes27('  Actual', a);
             fail();
         }
     }
     function assertEq28(bytes28 a, bytes28 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes28('  Actual', a);
             log_named_bytes28('  Expected', b);
+            log_named_bytes28('  Actual', a);
             fail();
         }
     }
     function assertEq28(bytes28 a, bytes28 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes28' value");
-            log_named_bytes28('  Actual', a);
             log_named_bytes28('  Expected', b);
+            log_named_bytes28('  Actual', a);
             fail();
         }
     }
     function assertEq29(bytes29 a, bytes29 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes29('  Actual', a);
             log_named_bytes29('  Expected', b);
+            log_named_bytes29('  Actual', a);
             fail();
         }
     }
     function assertEq29(bytes29 a, bytes29 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes29' value");
-            log_named_bytes29('  Actual', a);
             log_named_bytes29('  Expected', b);
+            log_named_bytes29('  Actual', a);
             fail();
         }
     }
     function assertEq30(bytes30 a, bytes30 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes30('  Actual', a);
             log_named_bytes30('  Expected', b);
+            log_named_bytes30('  Actual', a);
             fail();
         }
     }
     function assertEq30(bytes30 a, bytes30 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes30' value");
-            log_named_bytes30('  Actual', a);
             log_named_bytes30('  Expected', b);
+            log_named_bytes30('  Actual', a);
             fail();
         }
     }
     function assertEq31(bytes31 a, bytes31 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes31('  Actual', a);
             log_named_bytes31('  Expected', b);
+            log_named_bytes31('  Actual', a);
             fail();
         }
     }
     function assertEq31(bytes31 a, bytes31 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes31' value");
-            log_named_bytes31('  Actual', a);
             log_named_bytes31('  Expected', b);
+            log_named_bytes31('  Actual', a);
             fail();
         }
     }
     function assertEq32(bytes32 a, bytes32 b, bytes32 err) {
         if( a != b ) {
             log_bytes32(err);
-            log_named_bytes32('  Actual', a);
             log_named_bytes32('  Expected', b);
+            log_named_bytes32('  Actual', a);
             fail();
         }
     }
     function assertEq32(bytes32 a, bytes32 b) {
         if( a != b ) {
             log_bytes32("Error: Wrong `bytes32' value");
-            log_named_bytes32('  Actual', a);
             log_named_bytes32('  Expected', b);
+            log_named_bytes32('  Actual', a);
             fail();
         }
     }
