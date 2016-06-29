@@ -104,11 +104,20 @@ contract Test is Debug {
         }
     }
 
+    function assertEqDecimal(int a, int b, uint decimals) {
+        if( a != b ) {
+            log_bytes32("Error: Wrong fixed-point decimal");
+            log_named_decimal_int("  Expected", b, decimals);
+            log_named_decimal_int("    Actual", a, decimals);
+            fail();
+        }
+    }
+
     function assertEqDecimal(uint a, uint b, uint decimals) {
         if( a != b ) {
             log_bytes32("Error: Wrong fixed-point decimal");
-            log_named_decimal("  Expected", b, decimals);
-            log_named_decimal("    Actual", a, decimals);
+            log_named_decimal_uint("  Expected", b, decimals);
+            log_named_decimal_uint("    Actual", a, decimals);
             fail();
         }
     }

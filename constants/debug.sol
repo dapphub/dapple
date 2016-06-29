@@ -1,7 +1,8 @@
 contract Debug {
     event logs(bytes val);
 
-    event log_named_decimal(bytes32 key, uint val, uint decimals);
+    event log_named_decimal_int(bytes32 key, int val, uint decimals);
+    event log_named_decimal_uint(bytes32 key, uint val, uint decimals);
 
     // Generate log_* and log_named* functions
     /*[[[cog
