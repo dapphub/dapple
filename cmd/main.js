@@ -288,6 +288,7 @@ if (cli.install) {
       })
     .pipe(req.pipelines.RunPipeline({
       environment: env,
+      environments: workspace.getEnvironments(),
       script: file,
       simulate: !cli['--no-simulation'],
       throws: !cli['--force'],
