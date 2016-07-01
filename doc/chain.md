@@ -1,13 +1,13 @@
 
 # hypothetical chain states
 
-Dapple allows you with its test framework to build unit tests to test each part
-of your dApp in isolation before deploying it. But in complex systems the dApps
-rarely live in isolation. Instead they integrate with a rich subset of other
-dApps existing on ethereum's live network.
-The dapple-chain feature set allows you to test the integration of dApps into
-the real ethereum state by pretending to extend ethereums livenet state.
-Alongside reasoning about *hypothetical chain states* is now possible.
+Dapple allows you with its test framework to unit tests each part of your dApp
+in isolation before deploying it. But in complex systems dApps rarely live in
+isolation. Instead they integrate with a rich subset of other dApps existing on
+ethereum's live network. The dapple-chain feature set allows you to test the
+integration of dApps into the real ethereum state by pretending to extend
+ethereum's livenet state. Alongside reasoning about *hypothetical chain states*
+is now possible.
 
 Dapple-Chain provides lazy-loading with a pseudo light client implementation. You can fork of and work on the full ethereum blockchain **without having to download the
 blockchain** to your machine which lowers the entrance barrier for newcomers significantly and makes working with dapple light-weight.
@@ -18,9 +18,18 @@ Dapples lazy loading be will be extended with the ethereum's official [light cli
 
 For a first integration test we will test [DSEthToken@0x992c64ac907ef9e531e7ff8d06cec599778a0e72](https://github.com/nexusdev/dappsys/blob/04451acf23f017beecb1a4cad4702deadc929811/contracts/token/eth_wrapper.sol) which is
 provided by the [ Dappsys ](https://github.com/nexusdev/dappsys) framework.
-Our interation test should call the on-chain contract and display correctly its
-totalSupply. For this we create a new dapple project with a small test contract:
+
+First we initialize a new git and dapple project and install dappsys:
 ```
+git init
+dapple init
+git submodule add git@github.com:nexusdev/dappsys.git dapple_packages/dappsys
+```
+
+Our integration test should call the on-chain contract and display correctly its
+total supply. For this we create a new dapple project with a small test contract:
+```
+// contracts/test.sol
 import "dapple/test.sol";
 import "dappsys/token/eth_wrapper.sol";
 
@@ -38,7 +47,7 @@ contract IntegrationTest is Test {
     //@log a balance: `uint value2`
 
     // this will give us the balance of the address 0x00.00
-    uint value3 = dsEthToken.balanceOf(0x0)
+    uint value3 = dsEthToken.balanceOf(0x0);
     //@log 0 balance: `uint value3`
 
 
@@ -91,10 +100,10 @@ Summary
   Passed all 1 tests!
 ```
 
-Awesome there is a total of 463.2 eth and the balance of an address is 77.3eth 
-and there were no tokens burned e.g. 0x0 has no tokens.
-If we look again at the stats we see that they didn't change. This is because
-`dapple test` don't affect the state of the branch.
+Awesome: there is a total of 463.2 eth and the balance of an address is 77.3eth 
+and there were no tokens burned (e.g. 0x0 has no tokens).
+If we look again at the stats(`dapple chain status`) we see that they didn't change.
+This is because `dapple test` don't affect the persistent state of the branch.
 Now we simulate a scenario where the address `0x9f73bc871764c879fd9e0f524278373fa7875068`
 decides to burn all his ether. First we have to make sure or dapple project
 is aware of the DSEthToken contract, by including it in our local dappfile:
@@ -109,6 +118,7 @@ environments:
 
 Then we write a small dapplescript:
 ```
+// ./send.ds
 import eth_token
 eth_token.transfer(0,77300000000000000000)
 ```
@@ -131,10 +141,11 @@ GAS COST: 49793 for "call DSEthToken.transfer(0,77300000000000000000)"
   Successfully deployed!
 ```
 
-If we look now at our stats (`dapple chain status`) we see that our block height
+If we look now at our stats (`dapple chain status`), we see that our block height
 increased by one block. Also when we execute our test again to test the new
 balances, we see that the money is gone!
 ```
+$ dapple test --report
 Testing...
 
 IntegrationTest
@@ -151,8 +162,8 @@ IntegrationTest
 
 #### Chain
 
-Dapple hash a build in internal blockchain. It can either start a new by creating
-a new genesis block or "fork of" the current mainnet state.
+Dapple has a build in blockchain. It can either start a new by creating
+a new genesis block or "fork of" the current livenet state.
 
 `dapple test` will run without leaving a state change on top of the current state.
 You can persistently change the changes caused by the test with the `--persistent`
