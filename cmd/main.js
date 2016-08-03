@@ -179,7 +179,9 @@ if (cli.install) {
       name: workspace.dappfile.name,
       nameFilter: nameFilter,
       include_tests: cli['--tests'],
-      subpackages: cli['--subpackages'] || cli['-s']
+      subpackages: cli['--subpackages'] || cli['-s'],
+      dumpFile: cli['--dumpFile'],
+      dumpDir: cli['--dumpDir']
     });
 
   if (!jsBuildPipeline) process.exit(1);
