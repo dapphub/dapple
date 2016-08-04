@@ -180,8 +180,8 @@ if (cli.install) {
       nameFilter: nameFilter,
       include_tests: cli['--tests'],
       subpackages: cli['--subpackages'] || cli['-s'],
-      dumpFile: cli['--dumpFile'],
-      dumpDir: cli['--dumpDir']
+      dumpFile: cli['--dump-file'],
+      dumpDir: cli['--dump-dir']
     });
 
   if (!jsBuildPipeline) process.exit(1);
