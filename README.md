@@ -9,6 +9,8 @@
 Dapple is a Solidity developer multitool designed to manage the
 growing complexity of interconnected smart contract systems.
 
+*Warning*: Upcoming version 0.8 have backwards-incompatible package and dappfile definitions. There will be a migration script that should work for all but the most complex cases. Don't commit to the dependency management system too seriously in the meantime.
+
 Its core functionality encompasses three main areas:
 
 * Package management
@@ -43,7 +45,7 @@ By default, `build/` is where the output of `dapple build` gets put,
 and `contracts/` is where Dapple looks for your contract source files.
 Both of these are configured in your `dappfile` and can be overridden.
 
-Now try writing a contract and a test (see [Dapple test harness docs](https://slack.makerdao.com)):
+Now try writing a contract and a test (see [Dapple test harness docs](https://github.com/nexusdev/dapple/blob/master/doc/test.md)):
 
     $ vim contracts/dapp.sol
     $ vim contracts/dapp_test.sol
