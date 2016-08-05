@@ -115,44 +115,6 @@
       "help": ""
     },
     {
-      "name": "run",
-      "options" : [
-        {
-          "name": "<script>",
-          "summary": "path to the dapple-script file"
-        },
-        {
-          "name": "[--force]",
-          "summary": "owerwrite objects in the current environment"
-        },
-        {
-          "name": "[--no-simulation]",
-          "summary": "skips local simulation of the deploy and execute the script on the given environment"
-        },
-        {
-          "name": "[options]",
-          "summary": "default options"
-        }
-      ],
-      "summary" : "",
-      "help": ""
-    },
-    {
-      "name": "step",
-      "options" : [
-        {
-          "name": "<string>",
-          "summary": "dapple script as a string"
-        },
-        {
-          "name": "[options]",
-          "summary": "default options"
-        }
-      ],
-      "summary" : "",
-      "help": ""
-    },
-    {
       "name": "publish",
       "options" : [
         {
