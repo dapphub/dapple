@@ -5,11 +5,9 @@
 // to parse the arguments passed in.
 
 // Usage first.
-var fs = require('fs');
 var docopt = require('docopt');
 var cliSpec = require('../specs/cli.json');
 var packageSpec = require('../package.json');
-var clc = require('cli-color-tty')(true);
 var _ = require('lodash');
 var State = require('dapple-core/state.js');
 var utils = require('dapple-core/utils.js');
@@ -27,7 +25,6 @@ var cli = docopt.docopt(utils.getUsage(state.cliSpec), {
   version: packageSpec.version,
   help: false
 });
-
 
 // These requires take a lot of time to import.
 var req = require('lazreq')({
@@ -58,14 +55,10 @@ if (cli['--help']) {
   process.exit();
 }
 
-
 let workspace = Workspace.atPackageRoot();
 state.initLocalDb(workspace.package_root);
 
-
-
 if (cli.config || typeof (rc.path) === 'undefined') {
-
   console.log(' config deprecated ');
 
   // let homeRC = req.path.join(req.userHome, '.dapplerc');
