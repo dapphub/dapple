@@ -116,7 +116,7 @@ environments:
         address: '0xecf8f87f810ecf450940c9f60066b4a7a501d6a7'
 ```
 
-Then we write a small dapplescript:
+Then we write a small dapple-script:
 ```
 // ./send.ds
 import eth_token

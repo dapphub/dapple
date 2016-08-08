@@ -11,11 +11,11 @@ var cliSpec = require('../specs/cli.json');
 var packageSpec = require('../package.json');
 var clc = require('cli-color-tty')(true);
 var _ = require('lodash');
-var State = require('dapple-utils/state.js');
-var utils = require('dapple-utils/utils.js');
+var State = require('dapple-core/state.js');
+var utils = require('dapple-core/utils.js');
 
 var chainModule = require('dapple-chain');
-var scriptModule = require('dapplescript');
+var scriptModule = require('dapple-script');
 
 var state = new State(cliSpec);
 
@@ -209,8 +209,6 @@ if (cli.install) {
     nameFilter = new RegExp(cli['<RegExp>'],
       /[A-Z\\\.\[\]\^\$\*\+\{\}\(\)\?\|]/.test(cli['<RegExp>']) ? '' : 'i');
   }
-  
-
 
   // var provider = chainModule.web3Provider({
   //   mode: 'temporary'
