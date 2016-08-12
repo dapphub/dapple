@@ -1,4 +1,5 @@
 FROM ubuntu:15.10
+ENV TIMESTAMP 2016-07-06
 
 # Install Node.js
 RUN apt-get update && apt-get install -y curl
@@ -20,6 +21,7 @@ RUN apt-get update && apt-get install -y emacs vim
 
 # Install Dapple
 RUN apt-get update && apt-get install -y git build-essential python
+ENV TIMESTAMP 2016-07-19T20
 COPY package.json /dapple/package.json
 RUN cd dapple && npm install
 ENTRYPOINT ["/dapple/docker-entrypoint"]
