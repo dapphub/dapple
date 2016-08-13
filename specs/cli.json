@@ -67,6 +67,14 @@
           "summary": "??? TODO"
         },
         {
+          "name": "[--dump-file=<DumpFile>]",
+          "summary": "Dump all solidity files to a chosen json file for inspection and verification"
+        },
+        {
+          "name": "[--dump-dir=<DumpDir>]",
+          "summary": "Dump all solidity files to a chosen directory for inspection and verification"
+        },
+        {
           "name": "[--tests]",
           "summary": "include tests into the build"
         }
