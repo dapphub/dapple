@@ -14,12 +14,14 @@ var utils = require('dapple-core/utils.js');
 
 var chainModule = require('dapple-chain');
 var scriptModule = require('dapple-script');
+var coreModule = require('dapple-core');
 
 var state = new State(cliSpec);
 
 // Register modules
 state.registerModule(chainModule);
 state.registerModule(scriptModule);
+state.registerModule(coreModule);
 
 var cli = docopt.docopt(utils.getUsage(state.cliSpec), {
   version: packageSpec.version,
@@ -231,7 +233,8 @@ if (cli.install) {
         optimize: cli['--optimize'],
         packageRoot: Workspace.findPackageRoot(),
         subpackages: cli['--subpackages'] || cli['-s'],
-        report
+        report,
+        state
       })
       .pipe(req.vinyl.dest(Workspace.findBuildPath()));
   }
@@ -283,3 +286,5 @@ if (cli.install) {
 
   state.modules.script.controller.cli(state, cli, workspace, env, req.pipelines.BuildPipeline);
 }
+
+state.modules.core.controller.cli(cli, workspace, state);
