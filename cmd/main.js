@@ -30,7 +30,6 @@ var cli = docopt.docopt(utils.getUsage(state.cliSpec), {
 
 // These requires take a lot of time to import.
 var req = require('lazreq')({
-  DappleRCPrompter: '../lib/dapplerc_prompter.js',
   deasync: 'deasync',
   Installer: '../lib/installer.js',
   inquirer: 'inquirer',
@@ -43,7 +42,6 @@ var req = require('lazreq')({
 
 var Workspace = require('../lib/workspace');
 var VMTest = require('../lib/vmtest');
-var rc = Workspace.getDappleRC();
 
 if (cli['--help']) {
   utils.getHelp(__dirname, cliSpec, packageSpec);
@@ -60,87 +58,11 @@ if (cli['--help']) {
 let workspace = Workspace.atPackageRoot();
 state.initLocalDb(workspace.package_root);
 
-if (cli.config || typeof (rc.path) === 'undefined') {
-  console.log(' config deprecated ');
-
-  // let homeRC = req.path.join(req.userHome, '.dapplerc');
-  // let confirmed;
-  // let chosen = false;
-  //
-  // if (rc.path !== undefined && rc.path === homeRC) {
-  //   console.log('You already have a .dapplerc in your home directory!');
-  //   req.inquirer.prompt([{
-  //     type: 'confirm',
-  //     message: 'Proceeding will overwrite ~/.dapplerc. Proceed?',
-  //     name: 'confirmed',
-  //     default: false
-  //   }], function (res) {
-  //     chosen = true;
-  //     confirmed = res.confirmed;
-  //   });
-  //   req.deasync.loopWhile(function () { return !chosen; });
-  //
-  //   if (confirmed) {
-  //     Workspace.writeDappleRC(homeRC, req.DappleRCPrompter.prompt());
-  //   }
-  // } else {
-  //   console.log('No configuration found! Generating...');
-  //   Workspace.writeDappleRC(homeRC, req.DappleRCPrompter.prompt());
-  // }
-  // rc = Workspace.getDappleRC();
-}
-
-// If the user ran the `install` command, we're going to walk the dependencies
-// in the dappfile and pull them in as git submodules, if the current package is
-// a git repository. Otherwise we'll just clone them.
-if (cli.install) {
-  // let env = cli['--environment'] || workspace.getEnvironment();
-  let env = 'morden';
-
-  if (!(env in rc.data.environments)) {
-    console.error('Environment not defined: ' + env);
-    process.exit(1);
-  }
-  let web3 = rc.environment(env).ethereum || 'internal';
-  let dappfileEnv = workspace.dappfile.environments &&
-                  workspace.dappfile.environments[env] ||
-                  {};
-  let environment = _.merge({}, rc.environment(env), dappfileEnv);
-
-  let packages;
-  if (cli['<package>']) {
-    if (!cli['<url-or-version>']) {
-      // asume dapphub package
-      cli['<url-or-version>'] = 'latest';
-      // console.error('No version or URL specified for package.');
-      // process.exit(1);
-    }
-    packages = {};
-    packages[cli['<package>']] = cli['<url-or-version>'];
-  } else {
-    packages = workspace.getDependencies();
-  }
-
-  let success = req.Installer.install(packages, console, web3, environment);
-
-  if (success && cli['--save'] && cli['<package>']) {
-    workspace.addDependency(cli['<package>'], cli['<url-or-version>']);
-    workspace.writeDappfile();
-  }
-
 // If the user ran the `build` command, we're going to open the current directory
 // as if it were a package and commence with building.
 //
-} else if (cli.build) {
+if (cli.build) {
   console.log('Building...');
-
-  let env = cli['--environment'] || workspace.getEnvironment();
-  let environments = workspace.getEnvironments();
-
-  if (env && environments && !(env in environments)) {
-    console.error('Could not find environment in dappfile: ' + env);
-    process.exit(1);
-  }
 
   var nameFilter;
   if (cli['-r']) {
@@ -154,16 +76,15 @@ if (cli.install) {
   let jsBuildPipeline = req.pipelines
     .JSBuildPipeline({
       deployData: !cli['--no-deploy-data'],
-      environment: env,
       optimize: cli['--optimize'],
-      environments: environments,
       globalVar: cli['--global'],
       template: cli['--template'],
       name: workspace.dappfile.name,
       nameFilter: nameFilter,
       include_tests: cli['--tests'],
       subpackages: cli['--subpackages'] || cli['-s'],
-      modules: state.modules
+      modules: state.modules,
+      state
     });
 
   if (!jsBuildPipeline) process.exit(1);
@@ -190,13 +111,7 @@ if (cli.install) {
   console.log('Testing...');
 
   let nameFilter;
-  let env = cli['--environment'] || workspace.getEnvironment();
   let report = cli['--report'] || false;
-
-  if (!(env in rc.data.environments)) {
-    console.error('Environment not defined: ' + env);
-    process.exit(1);
-  }
 
   if (cli['-r']) {
     // if filter String contains upper case letters special regex chars,
@@ -213,7 +128,6 @@ if (cli.install) {
   // web3.eth.defaultAccount = provider.manager.blockchain.defaultAccount();
 
   var testPipeline = req.pipelines.TestPipeline({
-    web3: rc.data.environments[env].ethereum || 'internal',
     nameFilter: nameFilter,
     mode: cli['--persistent'] ? 'persistent' : 'temporary',
     state
@@ -240,30 +154,6 @@ if (cli.install) {
   }
 
   initStream.pipe(testPipeline);
-} else if (cli.publish) {
-  let env = cli['--environment'] || 'morden';
-  let dappfileEnv = workspace.dappfile.environments &&
-                  workspace.dappfile.environments[env] ||
-                  {};
-  let environment = _.merge({}, rc.environment(env), dappfileEnv);
-  // TODO - find a nicer way to inherit and normalize environments: dapplerc -> dappfile -> cli settings
-  req.pipelines
-      .BuildPipeline({
-        modules: state.modules,
-        packageRoot: Workspace.findPackageRoot(),
-        subpackages: cli['--subpackages'] || cli['-s']
-      })
-      .pipe(req.pipelines.PublishPipeline({
-        dappfile: workspace.dappfile,
-        ipfs: rc.environment(env).ipfs,
-        path: workspace.package_root,
-        web3: (rc.environment(env).ethereum || 'internal'),
-        environment: environment
-      }));
-} else if (cli.add) {
-  workspace.addPath(cli['<path>']);
-} else if (cli.ignore) {
-  workspace.ignorePath(cli['<path>']);
 } else if (cli.doctor) {
   let root = Workspace.findPackageRoot();
   req.doctor(root);
@@ -271,20 +161,8 @@ if (cli.install) {
 } else if (cli.chain) {
   state.modules.chain.controller.cli(cli, workspace, state);
 } else if (cli.script) {
-  // TODO - create one big global environmet out of State
-  let envName = cli['--environment'] || workspace.getEnvironment();
-  let dappfileEnv = workspace.dappfile.environments &&
-    workspace.dappfile.environments[envName] ||
-      {};
-  let environment = _.merge({}, rc.environment(envName), dappfileEnv);
 
-  let env = {
-    name: envName,
-    environment: environment,
-    modules: state.modules
-  };
-
-  state.modules.script.controller.cli(state, cli, workspace, env, req.pipelines.BuildPipeline);
+  state.modules.script.controller.cli(state, cli, workspace, req.pipelines.BuildPipeline);
 }
 
 state.modules.core.controller.cli(cli, workspace, state);

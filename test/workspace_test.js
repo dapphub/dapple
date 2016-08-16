@@ -74,11 +74,6 @@ describe('class Workspace', function () {
       assert.equal(undefined, Workspace.findPackageRoot(dir));
     });
 
-    it.skip('returns undefined if it hits .dapplerc', function () {
-      var dir = 'TODO';
-      var workspace = new Workspace(testenv.golden_package_dir);
-      assert.equal(undefined, workspace.findPackageRoot(dir));
-    });
   });
 
   describe('findBuildPath', function () {
