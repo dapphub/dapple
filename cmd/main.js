@@ -15,6 +15,7 @@ var utils = require('dapple-core/utils.js');
 var chainModule = require('dapple-chain');
 var scriptModule = require('dapple-script');
 var coreModule = require('dapple-core');
+var testModule = require('dapple-test');
 
 var state = new State(cliSpec);
 
@@ -22,6 +23,7 @@ var state = new State(cliSpec);
 state.registerModule(chainModule);
 state.registerModule(scriptModule);
 state.registerModule(coreModule);
+state.registerModule(testModule);
 
 var cli = docopt.docopt(utils.getUsage(state.cliSpec), {
   version: packageSpec.version,
@@ -41,7 +43,7 @@ var req = require('lazreq')({
 });
 
 var Workspace = require('../lib/workspace');
-var VMTest = require('../lib/vmtest');
+// var VMTest = require('../lib/vmtest');
 
 if (cli['--help']) {
   utils.getHelp(__dirname, cliSpec, packageSpec);
@@ -103,59 +105,14 @@ if (cli.build) {
 // that test would be triggered instead.
 //
 } else if (cli.new && cli.test) {
-  VMTest.writeTestTemplate(cli['<class>']);
+  // VMTest.writeTestTemplate(cli['<class>']);
 
 // If they ran the `test` command, we're going to run our build pipeline and
 // then pass the output on to our test pipeline, finally spitting out the
 // results to stdout and stderr (in case of failure).
 //
 } else if (cli.test) {
-  console.log('Testing...');
-
-  let nameFilter;
-  let report = cli['--report'] || false;
-
-  if (cli['-r']) {
-    // if filter String contains upper case letters special regex chars,
-    // assume the filtering is case sensitive, otherwise its insensitive
-    nameFilter = new RegExp(cli['<RegExp>'],
-      /[A-Z\\\.\[\]\^\$\*\+\{\}\(\)\?\|]/.test(cli['<RegExp>']) ? '' : 'i');
-  }
-
-  // var provider = chainModule.web3Provider({
-  //   mode: 'temporary'
-  // });
-  // provider.manager.blockchain.setGasLimit(900000000);
-  // var web3 = new Web3(provider);
-  // web3.eth.defaultAccount = provider.manager.blockchain.defaultAccount();
-
-  var testPipeline = req.pipelines.TestPipeline({
-    nameFilter: nameFilter,
-    mode: cli['--persistent'] ? 'persistent' : 'temporary',
-    state
-  });
-
-  let initStream;
-  if (cli['--skip-build']) {
-    initStream = req.pipelines.BuiltClassesPipeline({
-      buildRoot: Workspace.findBuildPath(),
-      packageRoot: Workspace.findPackageRoot(),
-      subpackages: cli['--subpackages'] || cli['-s']
-    });
-  } else {
-    initStream = req.pipelines
-      .BuildPipeline({
-        modules: state.modules,
-        optimize: cli['--optimize'],
-        packageRoot: Workspace.findPackageRoot(),
-        subpackages: cli['--subpackages'] || cli['-s'],
-        report,
-        state
-      })
-      .pipe(req.vinyl.dest(Workspace.findBuildPath()));
-  }
-
-  initStream.pipe(testPipeline);
+  state.modules.test.controller.cli(state, cli, req.pipelines.BuildPipeline);
 } else if (cli.doctor) {
   let root = Workspace.findPackageRoot();
   req.doctor(root);
