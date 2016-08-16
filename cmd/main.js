@@ -55,8 +55,10 @@ if (cli['--help']) {
   process.exit();
 }
 
+// TODO - refactor this
 let workspace = Workspace.atPackageRoot();
 state.initLocalDb(workspace.package_root);
+state.workspace = workspace;
 
 // If the user ran the `build` command, we're going to open the current directory
 // as if it were a package and commence with building.
@@ -159,10 +161,9 @@ if (cli.build) {
   req.doctor(root);
 // TODO make this modular
 } else if (cli.chain) {
-  state.modules.chain.controller.cli(cli, workspace, state);
+  state.modules.chain.controller.cli(cli, state);
 } else if (cli.script) {
-
-  state.modules.script.controller.cli(state, cli, workspace, req.pipelines.BuildPipeline);
+  state.modules.script.controller.cli(state, cli, req.pipelines.BuildPipeline);
 }
 
 state.modules.core.controller.cli(cli, workspace, state);

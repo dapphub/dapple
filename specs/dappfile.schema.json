@@ -41,7 +41,7 @@
           "title": "sol sources",
           "description": "Root directory of the solidity source files.",
           "type": "string",
-          "default": "contracts"
+          "default": "src"
         },
         "build_dir": {
           "title": "Build Directory",
