@@ -16,6 +16,7 @@ var chainModule = require('dapple-chain');
 var scriptModule = require('dapple-script');
 var coreModule = require('dapple-core');
 var testModule = require('dapple-test');
+var pkgModule = require('dapple-pkg');
 
 var state = new State(cliSpec);
 
@@ -24,6 +25,7 @@ state.registerModule(chainModule);
 state.registerModule(scriptModule);
 state.registerModule(coreModule);
 state.registerModule(testModule);
+state.registerModule(pkgModule);
 
 var cli = docopt.docopt(utils.getUsage(state.cliSpec), {
   version: packageSpec.version,
@@ -33,8 +35,6 @@ var cli = docopt.docopt(utils.getUsage(state.cliSpec), {
 // These requires take a lot of time to import.
 var req = require('lazreq')({
   deasync: 'deasync',
-  Installer: '../lib/installer.js',
-  inquirer: 'inquirer',
   path: 'path',
   pipelines: '../lib/pipelines.js',
   userHome: 'user-home',
@@ -121,6 +121,8 @@ if (cli.build) {
   state.modules.chain.controller.cli(cli, state);
 } else if (cli.script) {
   state.modules.script.controller.cli(state, cli, req.pipelines.BuildPipeline);
+} else if (cli.pkg) {
+  state.modules.pkg.controller.cli(state, cli, req.pipelines.BuildPipeline);
 }
 
 state.modules.core.controller.cli(cli, workspace, state);
