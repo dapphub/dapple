@@ -59,8 +59,9 @@ if (cli['--help']) {
 
 // TODO - refactor this
 let workspace = Workspace.atPackageRoot();
-state.initLocalDb(workspace.package_root);
-state.workspace = workspace;
+state.initWorkspace(workspace);
+// state.initLocalDb(workspace.package_root);
+// state.workspace = workspace;
 
 // If the user ran the `build` command, we're going to open the current directory
 // as if it were a package and commence with building.
