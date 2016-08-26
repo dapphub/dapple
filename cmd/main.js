@@ -9,6 +9,7 @@ var docopt = require('docopt');
 var cliSpec = require('../specs/cli.json');
 var State = require('dapple-core/state.js');
 var utils = require('dapple-core/utils.js');
+var packageSpec = require( '../package.json' );
 
 var chainModule = require('dapple-chain');
 var scriptModule = require('dapple-script');
@@ -37,13 +38,12 @@ var req = require('lazreq')({
   userHome: 'user-home',
   vinyl: 'vinyl-fs',
   doctor: '../lib/doctor.js',
-  packageSpec: '../package.json'
 });
 
 var Workspace = require('../lib/workspace');
 
 if (cli['--help']) {
-  utils.getHelp(__dirname, cliSpec, req.packageSpec);
+  utils.getHelp(__dirname, cliSpec, packageSpec);
   process.exit();
 } else if (cli.init) {
   try {
