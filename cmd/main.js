@@ -7,16 +7,13 @@
 // Usage first.
 var docopt = require('docopt');
 var cliSpec = require('../specs/cli.json');
-var packageSpec = require('../package.json');
-var _ = require('lodash');
 var State = require('dapple-core/state.js');
-var utils = require('dapple-core/utils.js');
 
 var chainModule = require('dapple-chain');
 var scriptModule = require('dapple-script');
 var coreModule = require('dapple-core');
 var testModule = require('dapple-test');
-var pkgModule = require('dapple-pkg');
+// var pkgModule = require('dapple-pkg');
 
 var state = new State(cliSpec);
 
@@ -25,7 +22,7 @@ state.registerModule(chainModule);
 state.registerModule(scriptModule);
 state.registerModule(coreModule);
 state.registerModule(testModule);
-state.registerModule(pkgModule);
+// state.registerModule(pkgModule);
 
 var cli = docopt.docopt(utils.getUsage(state.cliSpec), {
   version: packageSpec.version,
@@ -34,19 +31,19 @@ var cli = docopt.docopt(utils.getUsage(state.cliSpec), {
 
 // These requires take a lot of time to import.
 var req = require('lazreq')({
-  deasync: 'deasync',
   path: 'path',
   pipelines: '../lib/pipelines.js',
   userHome: 'user-home',
   vinyl: 'vinyl-fs',
-  doctor: '../lib/doctor.js'
+  doctor: '../lib/doctor.js',
+  utils: 'dapple-core/utils.js',
+  packageSpec: '../package.json'
 });
 
 var Workspace = require('../lib/workspace');
-// var VMTest = require('../lib/vmtest');
 
 if (cli['--help']) {
-  utils.getHelp(__dirname, cliSpec, packageSpec);
+  req.utils.getHelp(__dirname, cliSpec, req.packageSpec);
   process.exit();
 } else if (cli.init) {
   try {
@@ -105,13 +102,6 @@ if (cli.build) {
 // sol files. This command is checked for before the `test` command otherwise
 // that test would be triggered instead.
 //
-} else if (cli.new && cli.test) {
-  // VMTest.writeTestTemplate(cli['<class>']);
-
-// If they ran the `test` command, we're going to run our build pipeline and
-// then pass the output on to our test pipeline, finally spitting out the
-// results to stdout and stderr (in case of failure).
-//
 } else if (cli.test) {
   state.modules.test.controller.cli(state, cli, req.pipelines.BuildPipeline);
 } else if (cli.doctor) {
@@ -123,7 +113,7 @@ if (cli.build) {
 } else if (cli.script) {
   state.modules.script.controller.cli(state, cli, req.pipelines.BuildPipeline);
 } else if (cli.pkg) {
-  state.modules.pkg.controller.cli(state, cli, req.pipelines.BuildPipeline);
+  // state.modules.pkg.controller.cli(state, cli, req.pipelines.BuildPipeline);
 }
 
 state.modules.core.controller.cli(cli, workspace, state);
