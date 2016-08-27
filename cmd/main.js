@@ -7,16 +7,15 @@
 // Usage first.
 var docopt = require('docopt');
 var cliSpec = require('../specs/cli.json');
-var packageSpec = require('../package.json');
-var _ = require('lodash');
 var State = require('dapple-core/state.js');
 var utils = require('dapple-core/utils.js');
+var packageSpec = require( '../package.json' );
 
 var chainModule = require('dapple-chain');
 var scriptModule = require('dapple-script');
 var coreModule = require('dapple-core');
 var testModule = require('dapple-test');
-var pkgModule = require('dapple-pkg');
+// var pkgModule = require('dapple-pkg');
 
 new State(cliSpec, (err, state) => {
 
@@ -25,7 +24,7 @@ new State(cliSpec, (err, state) => {
   state.registerModule(scriptModule);
   state.registerModule(coreModule);
   state.registerModule(testModule);
-  state.registerModule(pkgModule);
+  // state.registerModule(pkgModule);
 
   var cli = docopt.docopt(utils.getUsage(state.cliSpec), {
     version: packageSpec.version,

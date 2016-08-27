@@ -48,6 +48,12 @@
           "description": "Directory, where all the build files should be stored.",
           "type": "string",
           "default": "build"
+        },
+        "packages_directory": {
+          "title": "Package Directory",
+          "description": "Dapple packages goes in here",
+          "type": "string",
+          "default": ".dapple/packages/"
         }
       }
     },
