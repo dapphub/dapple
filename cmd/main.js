@@ -80,6 +80,8 @@ state.initWorkspace(workspace, () => {
         nameFilter: nameFilter,
         include_tests: cli['--tests'],
         subpackages: cli['--subpackages'] || cli['-s'],
+        dumpFile: cli['--dumpFile'],
+        dumpDir: cli['--dumpDir'],
         modules: state.modules,
         state
       });
