@@ -64,7 +64,7 @@ Dapple['golden'] = (function builder () {
     this.objects = {};
     for (var i in env.objects) {
       var obj = env.objects[i];
-      this.objects[i] = this.classes[obj['class']].at(obj.address);
+      this.objects[i] = this.classes[obj['type']].at(obj.value);
     }
   }
 
