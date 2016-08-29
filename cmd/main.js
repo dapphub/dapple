@@ -15,7 +15,7 @@ var chainModule = require('dapple-chain');
 var scriptModule = require('dapple-script');
 var coreModule = require('dapple-core');
 var testModule = require('dapple-test');
-// var pkgModule = require('dapple-pkg');
+var pkgModule = require('dapple-pkg');
 
 var state = new State(cliSpec);
 
@@ -24,7 +24,7 @@ state.registerModule(chainModule);
 state.registerModule(scriptModule);
 state.registerModule(coreModule);
 state.registerModule(testModule);
-// state.registerModule(pkgModule);
+state.registerModule(pkgModule);
 
 var cli = docopt.docopt(utils.getUsage(state.cliSpec), {
   version: packageSpec.version,
