@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "cli-color-tty": "^2.0.0",
-    "dapple-core": "^0.1.8",
+    "dapple-core": "^0.1.9",
     "dapple-script": "^0.0.15",
     "dapple-test": "0.0.5-dev",
     "dapple-pkg": "^0.0.6-dev",
