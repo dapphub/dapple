@@ -13,12 +13,6 @@
       "help": ""
     },
     {
-      "name": "doctor",
-      "options" : [],
-      "summary" : "analyze your setup",
-      "help": ""
-    },
-    {
       "name": "build",
       "options" : [
         {
@@ -52,20 +46,13 @@
         {
           "name": "[--tests]",
           "summary": "include tests into the build"
+        },
+        {
+          "name": "[--no-optimize]",
+          "summary": "turn off the optimization step during compilation"
         }
       ],
       "summary" : "compile and bundle your project",
-      "help": ""
-    },
-    {
-      "name": "new",
-      "options" : [
-        {
-          "name": "test <class>",
-          "summary": "generates a new test class in your contracts folder"
-        }
-      ],
-      "summary" : "generate objects",
       "help": ""
     }
   ],
@@ -89,10 +76,6 @@
     {
       "name": "--version",
       "summary": "prints out dapple Version"
-    },
-    {
-      "name": "--optimize",
-      "summary": "sends the optimize flag to solidity during the build process"
     }
   ]
 }

@@ -77,7 +77,7 @@ state.initWorkspace(workspace, () => {
     let jsBuildPipeline = req.pipelines
       .JSBuildPipeline({
         deployData: !cli['--no-deploy-data'],
-        optimize: cli['--optimize'],
+        optimize: cli['--no-optimize'],
         globalVar: cli['--global'],
         template: cli['--template'],
         name: workspace.dappfile.name,
