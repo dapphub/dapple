@@ -259,7 +259,7 @@ if (cli.install) {
   let fileName = cli['<script>'];
   // TODO - refactor to wirkspace
   let file = fs.readFileSync(workspace.getPackageRoot() + '/' + fileName, 'utf8');
-  let confirmationBlocks = workspace.dappfile.environments[env].confirmationBlocks;
+  let confirmationBlocks = (env in workspace.dappfile.environments) && workspace.dappfile.environments[env].confirmationBlocks || 1;
   if (typeof confirmationBlocks === 'undefined') confirmationBlocks = 1;
   req.pipelines
       .BuildPipeline({
