@@ -61,12 +61,16 @@ state.initWorkspace(workspace, () => {
   if (cli.build) {
     console.log('Building...');
 
-    var nameFilter;
+    var contractFilter;
+    var functionFilter;
     if (cli['-r']) {
-      // if filter String contains upper case letters special regex chars,
-      // assume the filtering is case sensitive, otherwise its insensitive
-      nameFilter = new RegExp(cli['<RegExp>'],
-        /[A-Z\\\.\[\]\^\$\*\+\{\}\(\)\?\|]/.test(cli['<RegExp>']) ? '' : 'i');
+      let filter = cli['<filter>'].split('.');
+      contractFilter = new RegExp('^'+filter[0].split('*').join('.*')+"$", 'i');
+      if(filter.length > 1) {
+        functionFilter = new RegExp('^'+filter[1].split('*').join('.*')+"$", 'i');
+      } else {
+        functionFilter = /.*/;
+      }
     }
 
     // Run our build pipeline.
@@ -77,7 +81,8 @@ state.initWorkspace(workspace, () => {
         globalVar: cli['--global'],
         template: cli['--template'],
         name: workspace.dappfile.name,
-        nameFilter: nameFilter,
+        contractFilter,
+        functionFilter,
         include_tests: cli['--tests'],
         subpackages: cli['--subpackages'] || cli['-s'],
         dumpFile: cli['--dumpFile'],

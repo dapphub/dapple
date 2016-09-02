@@ -22,7 +22,7 @@
       "name": "build",
       "options" : [
         {
-          "name": "[-r <RegExp>]",
+          "name": "[-r <filter>]",
           "summary": "filter classes with a regular expression"
         },
         {
