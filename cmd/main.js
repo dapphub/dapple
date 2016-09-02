@@ -61,8 +61,8 @@ state.initWorkspace(workspace, () => {
   if (cli.build) {
     console.log('Building...');
 
-    var contractFilter;
-    var functionFilter;
+    var contractFilter = /.*/;
+    var functionFilter = /.*/;
     if (cli['-r']) {
       let filter = cli['<filter>'].split('.');
       contractFilter = new RegExp('^'+filter[0].split('*').join('.*')+"$", 'i');
