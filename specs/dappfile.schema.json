@@ -11,7 +11,7 @@
 
     "version": {
       "$ref": "#/definitions/version",
-      "default": "1.0.0"
+      "default": "0.0.1-dev"
     },
     "summary": {
       "$ref": "#/definitions/summary"
@@ -41,13 +41,19 @@
           "title": "sol sources",
           "description": "Root directory of the solidity source files.",
           "type": "string",
-          "default": "contracts"
+          "default": "src"
         },
         "build_dir": {
           "title": "Build Directory",
           "description": "Directory, where all the build files should be stored.",
           "type": "string",
           "default": "build"
+        },
+        "packages_directory": {
+          "title": "Package Directory",
+          "description": "Dapple packages goes in here",
+          "type": "string",
+          "default": ".dapple/packages/"
         }
       }
     },

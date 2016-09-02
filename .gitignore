@@ -7,3 +7,4 @@ pydapple/dist
 *.egg-info
 node_modules
 *.vim
+.dapple

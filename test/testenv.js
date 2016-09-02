@@ -1,6 +1,6 @@
 'use strict';
 
-var fs = require('../lib/file');
+var fs = require('dapple-core/file');
 var SourcePipeline = require('../lib/pipelines.js').SourcePipeline;
 var path = require('path');
 var through = require('through2');

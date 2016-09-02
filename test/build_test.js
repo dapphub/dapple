@@ -2,7 +2,7 @@
 'use strict';
 var _ = require('lodash');
 var assert = require('chai').assert;
-var fs = require('../lib/file');
+var fs = require('dapple-core/file');
 var path = require('path');
 var testenv = require('./testenv');
 var Workspace = require('../lib/workspace');
