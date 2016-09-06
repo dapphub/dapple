@@ -153,7 +153,8 @@ And leaves you with the new generated environment:
         value: '0x5ef7d2b3d9509cbe1d46abb4ca163abb8302a425'
         type: Token[bc365dfdfd4b67086a9483f7ce915da522a252b1b0289f1b8e07c16d06a476be]
       btc_usd:
-       0x0262
+        value: 0x0262
+        type: uint
 ```
 
 Services, like system, are currently in experimental mode, so use them with caution. Currently only `to_uint` is implemented. This will execute anything on your local machine and inject the result back into the script contract where you can use it further.

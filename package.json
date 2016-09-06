@@ -9,14 +9,22 @@
     "EVM"
   ],
   "license": "MIT",
-  "author": "Nikolai Mushegian <nikolai@nexusdev.us>",
+  "author": "Nexusdev <nikolai@nexusdev.us>",
   "contributors": [
     {
       "name": "Ryan Casey",
       "email": "ryan@nexusdev.us"
     },
     {
-      "name": "Denis Erfurt"
+      "name": "Nikolai Mushegian",
+      "email": "nikolai@nexusdev.us"
+    },
+    {
+      "name": "Daniel Brockman"
+    },
+    {
+      "name": "Denis Erfurt",
+      "email": "denis.erfurt@gmail.com"
     }
   ],
   "homepage": "dapple.info",
@@ -43,10 +51,11 @@
   },
   "dependencies": {
     "cli-color-tty": "^2.0.0",
-    "dapple-core": "^0.1.10",
-    "dapple-script": "^0.0.17",
-    "dapple-test": "0.0.6-dev",
+    "dapple-core": "^0.1.11",
+    "dapple-script": "^0.0.18",
+    "dapple-test": "0.0.7-dev",
     "dapple-pkg": "^0.0.6-dev",
+    "dapple-nss": "^1.0.0",
     "deasync": "^0.1.7",
     "docopt": "^0.6.2",
     "file": "^0.2.2",
