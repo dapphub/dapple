@@ -1,0 +1,10 @@
+name: mypackage
+version: 1.0.0
+layout:
+  sol_sources: contracts
+  build_dir: build
+  packages_directory: .dapple/packages
+environments:
+  master:
+    objects: {}
+    type: MORDEN
