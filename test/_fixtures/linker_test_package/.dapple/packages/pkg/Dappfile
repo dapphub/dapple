@@ -1,0 +1,5 @@
+name: "pkg"
+version: 0.0.1
+layout:
+    sol_sources: "src/sol"
+    build_dir: "build"
