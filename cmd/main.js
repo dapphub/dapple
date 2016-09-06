@@ -67,9 +67,9 @@ state.initWorkspace(workspace, () => {
     var functionFilter = /.*/;
     if (cli['-r']) {
       let filter = cli['<filter>'].split('.');
-      contractFilter = new RegExp('^'+filter[0].split('*').join('.*')+"$", 'i');
-      if(filter.length > 1) {
-        functionFilter = new RegExp('^'+filter[1].split('*').join('.*')+"$", 'i');
+      contractFilter = new RegExp('^' + filter[0].split('*').join('.*') + '$', 'i');
+      if (filter.length > 1) {
+        functionFilter = new RegExp('^' + filter[1].split('*').join('.*') + '$', 'i');
       } else {
         functionFilter = /.*/;
       }
