@@ -45,7 +45,7 @@ describe('class Workspace', function () {
       ' take in all the dappfiles at once', function () {
     var workspace = Workspace.atPackageRoot(testenv.golden_package_dir);
     var expectedDappfile = fs.readYamlSync(path.join(
-      testenv.golden_package_dir, 'dappfile'));
+      testenv.golden_package_dir, 'Dappfile'));
     assert.deepEqual(workspace.dappfile, expectedDappfile);
 
     assert(schemas.dappfile.validate(expectedDappfile),
