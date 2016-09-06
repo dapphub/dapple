@@ -1,0 +1,12 @@
+name: linker_test_package
+version: 1.0.0
+layout:
+  sol_sources: src/sol
+  build_dir: build
+  packages_directory: .dapple/packages
+dependencies:
+  pkg: 0.0.1
+environments:
+  master:
+    objects: {}
+    type: internal

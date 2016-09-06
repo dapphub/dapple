@@ -5,7 +5,7 @@ var _ = require('lodash');
 var assert = require('chai').assert;
 var constants = require('../lib/constants.js');
 var dircompare = require('dir-compare');
-var fs = require('../lib/file');
+var fs = require('dapple-core/file');
 var path = require('path');
 var schemas = require('../lib/schemas.js');
 var testenv = require('./testenv');
@@ -16,7 +16,7 @@ describe('class Workspace', function () {
     var dir = fs.tmpdir();
     Workspace.initialize(dir);
     // fs.copySync(dir, testenv.golden.INIT_EMPTY_DIR); //  Create a new golden record
-    var emptyDirs = ['.dapple', 'build', 'contracts'];
+    var emptyDirs = ['.dapple', 'build', 'src'];
     var ls = fs.readdirSync(dir);
     assert.deepEqual(_.intersection(ls, emptyDirs), emptyDirs,
       'Workspace does not initialize with expected empty directories.');
@@ -45,7 +45,7 @@ describe('class Workspace', function () {
       ' take in all the dappfiles at once', function () {
     var workspace = Workspace.atPackageRoot(testenv.golden_package_dir);
     var expectedDappfile = fs.readYamlSync(path.join(
-      testenv.golden_package_dir, 'dappfile'));
+      testenv.golden_package_dir, 'Dappfile'));
     assert.deepEqual(workspace.dappfile, expectedDappfile);
 
     assert(schemas.dappfile.validate(expectedDappfile),
@@ -73,12 +73,6 @@ describe('class Workspace', function () {
       var dir = fs.tmpdir();
       assert.equal(undefined, Workspace.findPackageRoot(dir));
     });
-
-    it.skip('returns undefined if it hits .dapplerc', function () {
-      var dir = 'TODO';
-      var workspace = new Workspace(testenv.golden_package_dir);
-      assert.equal(undefined, workspace.findPackageRoot(dir));
-    });
   });
 
   describe('findBuildPath', function () {
@@ -93,24 +87,6 @@ describe('class Workspace', function () {
       var dir = fs.tmpdir();
       assert.equal(undefined, Workspace.findBuildPath(dir));
     });
-  });
-
-  it('knows how to load .dapplerc', function () {
-    var fixtureRC = path.join(__dirname, '_fixtures', 'dapplerc');
-    var rc = Workspace.getDappleRC({paths: [fixtureRC]});
-    var expectedRC = fs.readYamlSync(fixtureRC + '.expanded');
-    assert.deepEqual(rc.data, expectedRC, 'did not load ' + fixtureRC);
-  });
-
-  it('knows how to make .dapplerc', function () {
-    var fixtureRC = path.join(__dirname, '_fixtures', 'dapplerc');
-    var expectedRC = fs.readYamlSync(fixtureRC + '.expanded');
-    var newRC = path.join(__dirname, '_fixtures', 'dapplerc_copy');
-    Workspace.writeDappleRC(newRC, expectedRC);
-    var rc = Workspace.getDappleRC({paths: [newRC]});
-    fs.removeSync(newRC); // Cleanup
-
-    assert.deepEqual(rc.data, expectedRC, 'did not create dapplerc');
   });
 
   it('throws an exception if the dappfile is empty', function () {
