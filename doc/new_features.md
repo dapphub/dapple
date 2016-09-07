@@ -7,7 +7,7 @@ This should provide an overview over the new features:
 * nexus-service-sidechain
 
 ### dapple chain
-On the heard of dapple chain lies the chain environment which
+At the heart of dapple chain lies the chain environment which
 includes
 * **chain type** (e.g. MORDEN, ETC, ETH or internal)
 * on external chain types, the **network** endpoint
@@ -19,7 +19,7 @@ includes
 
 > `dapple chain` is a Tool to manage chain environments.
 
-Lets have a look on its capabilities:
+Let's have a look at its capabilities:
 ```
 dapple status
 dapple chain new
@@ -28,7 +28,7 @@ dapple chain ls
 dapple chain checkout <name>
 ```
 
-Dapple new will launch a wizard which will guide you through the setup of a new chainenv:
+`dapple chain new` will launch a wizard which will guide you through the setup of a new chainenv:
 
 ```
 $ dapple chain new
@@ -42,7 +42,7 @@ $ dapple chain new
 ```
 On the second step you will get asked about the type. Choose
 internal if you want to start an internal chain from scratch.
-You can also choose to fork of the head state of ETH, ETC or MORDEN chains through our dapphub service. Forked chains will become internal chains. Note that dapple has an internal light client implementation - forked chains will lazy-load the state and appear, as if you would work on the real chain. But lets continue by selecting remote rpc:
+You can also choose to fork of the head state of ETH, ETC or MORDEN chains through our dapphub service. Forked chains will become internal chains. Note that dapple has an internal light client implementation - forked chains will lazy-load the state and appear as if you are working on the real chain. But let's continue by selecting remote rpc:
 
 ```
 ? Select chain connection remote
@@ -68,13 +68,13 @@ Additionally there are two experimental commands provided:
 
 If you are on an internal(or forked) chain, you can use server to launch an rpc server on `localhost:8545` and interact with your chain outside of dapple.
 
-You can use `fake <address>` command to fake the ownership of a certain address. From this point on, all transactions from the faked address will get accepted. This is useful for integration/scenario tests or just messing up with the current state.
+You can use the `fake <address>` command to fake the ownership of a certain address. From this point on, all transactions from the faked address will get accepted. This is useful for integration/scenario tests or just messing with the current state.
 
 ## dapple test
-Note that dapple chain will affect the testing behaviour: if you are on a remote rpc chain with known type (MORDEN, ETH, ETC) running `dapple test` will instantly create a temporary fork on the current head of the chain type and run the test against this fork, hence tests on remote chains are integration tests by default and you can use existing addresses inside your tests to access the current state of the chain-type. No transaction will get leaked to the real network. On CUSTOM remote rpc chains `dapple test` cannot fork, yet, therefore tests are unit tests by default. On internal(or forked) chain-types dapple-test is temporary and doesn't save the current state.
+Note that dapple chain will affect the testing behaviour: if you are on a remote rpc chain with known type (MORDEN, ETH, ETC) running `dapple test` will instantly create a temporary fork on the current head of the chain type and run the test against this fork, hence tests on remote chains are integration tests by default and you can use existing addresses inside your tests to access the current state of the chain-type. No transaction will get leaked to the real network. On CUSTOM remote rpc chains `dapple test` cannot fork yet, therefore tests are unit tests by default. On internal(or forked) chain-types dapple-test is temporary and doesn't save the current state.
 
 ## dapple script
-Also "migrations" is Solidity: just create a `something.ds.sol` file in your contracts directory, `import "dapple/script.sol";` and inherit your script contract from `Script` and thats it. Here we will go through an example Script during which I will explain each component:
+Also, "migrations" can be done with Solidity: just create a `something.ds.sol` file in your contracts directory, `import "dapple/script.sol";` and inherit your script contract from `Script` and that's it. Here we will go through an example Script during which I will explain each component:
 Suppose you are starting with the following environment in your Dappfile:
 ```
 ...
