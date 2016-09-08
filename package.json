@@ -51,9 +51,9 @@
   },
   "dependencies": {
     "cli-color-tty": "^2.0.0",
-    "dapple-core": "^0.1.11",
-    "dapple-script": "^0.0.18",
-    "dapple-test": "0.0.7-dev",
+    "dapple-core": "^0.1.12",
+    "dapple-script": "^0.0.19",
+    "dapple-test": "0.0.8-dev",
     "dapple-pkg": "^0.0.6-dev",
     "dapple-nss": "^1.0.0",
     "deasync": "^0.1.7",
