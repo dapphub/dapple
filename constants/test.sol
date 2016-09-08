@@ -22,12 +22,12 @@ contract Test is Debug {
     }
 
     modifier tests(bytes32 what) {
-        _
+        _;
     }
     modifier logs_gas() {
         var __GAS_OVERHEAD = 0; // TODO
         var __startgas = msg.gas;
-        _
+        _;
         var __endgas = msg.gas;
         log_named_uint("gas", (__startgas - __endgas) - __GAS_OVERHEAD);
     }
