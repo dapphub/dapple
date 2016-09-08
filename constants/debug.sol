@@ -96,7 +96,7 @@ contract Debug {
 
     modifier logs_gas() {
         uint _start_gas = msg.gas;
-        _
+        _;
         _log_gas_use(_start_gas - msg.gas);
     }
 }
