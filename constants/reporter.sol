@@ -4,7 +4,7 @@ contract Reporter is DappleLogger {
 
   modifier wrapCode(string what) {
     __startBlock(what);
-    _
+    _;
     __stopBlock();
   }
 
