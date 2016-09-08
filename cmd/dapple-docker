@@ -5,4 +5,5 @@ exec docker run --rm -it --net=host --name=dapple-$$ \
 -v "$HOME/.npm:$HOME/.npm" \
 -v "$HOME/.emacs:$HOME/.emacs:ro" \
 -v "$HOME/.vimrc:$HOME/.vimrc:ro" \
+-v "$HOME/.dapple:$HOME/.dapple" \
 dbrock/dapple "$@"
