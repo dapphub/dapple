@@ -57,8 +57,15 @@ if (cli['--help']) {
   process.exit();
 }
 
+// TODO - add flag to cli's which indicates wether this command is run out
+//        of a dapple package folder or globally. Take this flag to initialize
+//        a workspace. Remove migrate test since it is part of core.
+var workspace;
+if(!cli['migrate']) {
+  workspace = Workspace.atPackageRoot();
+}
+
 // TODO - refactor this
-let workspace = Workspace.atPackageRoot();
 state.initWorkspace(workspace, () => {
   if (cli.build) {
     console.log('Building...');
