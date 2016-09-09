@@ -61,7 +61,7 @@ if (cli['--help']) {
 //        of a dapple package folder or globally. Take this flag to initialize
 //        a workspace. Remove migrate test since it is part of core.
 var workspace;
-if(!cli['migrate']) {
+if (!cli['migrate']) {
   workspace = Workspace.atPackageRoot();
 }
 
