@@ -28,6 +28,8 @@ state.registerModule(testModule);
 state.registerModule(pkgModule);
 state.registerModule(nssModule);
 
+state.dapple_version = packageSpec.version;
+
 var cli = docopt.docopt(utils.getUsage(state.cliSpec), {
   version: packageSpec.version,
   help: false
