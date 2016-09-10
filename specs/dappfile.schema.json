@@ -13,6 +13,9 @@
       "$ref": "#/definitions/version",
       "default": "0.0.1-dev"
     },
+    "dapple_version": {
+      "$ref": "#/definitions/version"
+    },
     "summary": {
       "$ref": "#/definitions/summary"
     },
@@ -143,8 +146,7 @@
 
   "version": {
     "type": "string",
-    "title": "semver",
-    "pattern": "^\\d+\\.\\d+.\\d+$"
+    "title": "semver"
   },
 
   "files":{
