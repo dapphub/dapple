@@ -28,7 +28,7 @@ state.registerModule(coreModule);
 state.registerModule(testModule);
 state.registerModule(pkgModule);
 state.registerModule(nssModule);
-state.registerModule(execModule);
+// state.registerModule(execModule);
 
 state.dapple_version = packageSpec.version;
 
