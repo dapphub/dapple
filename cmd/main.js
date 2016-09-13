@@ -17,6 +17,7 @@ var coreModule = require('dapple-core');
 var testModule = require('dapple-test');
 var pkgModule = require('dapple-pkg');
 var nssModule = require('dapple-nss');
+var execModule = require('dapple-exec');
 
 var state = new State(cliSpec);
 
@@ -27,6 +28,7 @@ state.registerModule(coreModule);
 state.registerModule(testModule);
 state.registerModule(pkgModule);
 state.registerModule(nssModule);
+state.registerModule(execModule);
 
 state.dapple_version = packageSpec.version;
 
