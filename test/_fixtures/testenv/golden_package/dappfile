@@ -1,5 +1,0 @@
-name: "mypackage"
-version: 1.0.0
-layout:
-    sol_sources: "contracts"
-    build_dir: "build"

@@ -1,0 +1,7 @@
+name: "pkg"
+version: 0.0.1
+layout:
+    sol_sources: "contracts"
+    build_dir: "build"
+ignore:
+    - 'ignored.sol'

@@ -2,7 +2,7 @@
 'use strict';
 
 var assert = require('chai').assert;
-var fs = require('../lib/file');
+var fs = require('dapple-core/file');
 var NativeCompiler = require('../lib/native_compiler');
 var testenv = require('./testenv');
 

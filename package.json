@@ -1,6 +1,6 @@
 {
   "name": "dapple",
-  "version": "0.7.3-dev",
+  "version": "0.8.0-dev",
   "description": "Solidity developer multitool",
   "keywords": [
     "dapp",
@@ -9,14 +9,22 @@
     "EVM"
   ],
   "license": "MIT",
-  "author": "Nikolai Mushegian <nikolai@nexusdev.us>",
+  "author": "Nexus Development <contact@nexusdev.us>",
   "contributors": [
     {
       "name": "Ryan Casey",
       "email": "ryan@nexusdev.us"
     },
     {
-      "name": "Denis Erfurt"
+      "name": "Nikolai Mushegian",
+      "email": "nikolai@nexusdev.us"
+    },
+    {
+      "name": "Daniel Brockman"
+    },
+    {
+      "name": "Denis Erfurt",
+      "email": "denis.erfurt@gmail.com"
     }
   ],
   "homepage": "dapple.info",
@@ -42,38 +50,29 @@
     "defaults": "defaults"
   },
   "dependencies": {
-    "chai": "^3.4.1",
     "cli-color-tty": "^2.0.0",
-    "dapphub": "0.0.7",
-    "deasync": "^0.1.4",
-    "dir-compare": "0.0.2",
+    "dapple-core": "^0.1.17",
+    "dapple-script": "^0.0.21",
+    "dapple-test": "0.0.8-dev",
+    "dapple-pkg": "^0.0.6-dev",
+    "dapple-nss": "^1.0.0",
+    "deasync": "^0.1.7",
     "docopt": "^0.6.2",
-    "ethereumjs-lib": "^3.0.0",
-    "ethereumjs-util": "^4.0.1",
-    "ethersim": "git+https://github.com/nexusdev/ethersim",
     "file": "^0.2.2",
     "fs-extra": "^0.26.3",
-    "fs-readdir-recursive": "^1.0.0",
-    "geth": "^0.1.4",
-    "glob-fs": "^0.1.6",
     "gulp-filter": "^3.0.1",
     "gulp-ignore": "^2.0.1",
     "gulp-smake": "^0.2.2",
     "gulp-util": "^3.0.7",
     "inquirer": "^0.11.1",
-    "ipfs-api": "^2.13.1",
-    "ipfs-js": "0.0.8",
-    "jison": "^0.4.17",
     "js-yaml": "^3.5.2",
     "json-schema-defaults": "^0.1.1",
     "lazreq": "^0.1.1",
-    "lodash": "^3.10.1",
+    "lodash": "^4.15.0",
     "mkdirp": "^0.5.1",
-    "mocha": "^2.3.4",
     "multimatch": "^2.1.0",
     "read-yaml": "^1.0.0",
     "semver": "^5.1.0",
-    "shelljs": "^0.6.0",
     "solc": "^0.3.1-1",
     "stream-combiner": "^0.2.2",
     "through2": "^2.0.0",
@@ -83,16 +82,19 @@
     "vinyl": "^1.1.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-fs": "^2.2.1",
-    "web3": "^0.15.1",
+    "web3": "^0.16.0",
     "write-yaml": "^0.2.2"
   },
   "engines": {
-    "node": ">=5.0.0"
+    "node": ">=6.5.0"
   },
   "devDependencies": {
     "eslint": "^1.10.3",
     "groc": "^0.8.0",
+    "mocha": "^2.3.4",
     "gulp": "^3.9.0",
+    "chai": "^3.4.1",
+    "dir-compare": "0.0.2",
     "semistandard": "^7.0.5"
   },
   "semistandard": {
