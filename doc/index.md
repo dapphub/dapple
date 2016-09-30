@@ -5,7 +5,7 @@
 [![Build status](https://travis-ci.org/nexusdev/dapple.svg?branch=master)](https://travis-ci.org/nexusdev/dapple)
 [![Stories in Ready](https://badge.waffle.io/nexusdev/dapple.png?label=ready&title=Ready)](https://waffle.io/nexusdev/dapple)
 
-[Dapple](https://github.com/nexusdev/dapple) is a Solidity developer multitool designed to manage the
+Dapple is a Solidity developer multitool designed to manage the
 growing complexity of interconnected smart contract systems.
 
 Its core functionality encompasses three main areas:
@@ -19,3 +19,5 @@ ecosystem, due to each blockchain's universal singleton nature.
 
 The central data model for Dapple is the `dappfile`, whose definition
 will normally reference IPFS objects and Ethereum contract addresses.
+
+Repository: https://github.com/nexusdev/dapple
