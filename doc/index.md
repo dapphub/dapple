@@ -20,4 +20,4 @@ ecosystem, due to each blockchain's universal singleton nature.
 The central data model for Dapple is the `dappfile`, whose definition
 will normally reference IPFS objects and Ethereum contract addresses.
 
-Repository: https://github.com/nexusdev/dapple
+Repository: [https://github.com/nexusdev/dapple](https://github.com/nexusdev/dapple)
