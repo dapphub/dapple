@@ -1,6 +1,6 @@
 {
   "name": "dapple",
-  "version": "0.8.0-dev",
+  "version": "0.8.1",
   "description": "Solidity developer multitool",
   "keywords": [
     "dapp",
@@ -53,8 +53,8 @@
     "cli-color-tty": "^2.0.0",
     "dapple-core": "^0.1.17",
     "dapple-script": "^0.0.21",
-    "dapple-test": "0.0.8-dev",
-    "dapple-pkg": "^0.0.6-dev",
+    "dapple-test": "0.0.9",
+    "dapple-pkg": "^0.0.7-dev",
     "dapple-nss": "^1.0.0",
     "deasync": "^0.1.7",
     "docopt": "^0.6.2",
@@ -73,7 +73,7 @@
     "multimatch": "^2.1.0",
     "read-yaml": "^1.0.0",
     "semver": "^5.1.0",
-    "solc": "^0.3.1-1",
+    "solc": "^0.4.2",
     "stream-combiner": "^0.2.2",
     "through2": "^2.0.0",
     "tmp": "0.0.28",
