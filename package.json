@@ -1,6 +1,6 @@
 {
   "name": "dapple",
-  "version": "0.8.1",
+  "version": "0.8.3",
   "description": "Solidity developer multitool",
   "keywords": [
     "dapp",
@@ -36,7 +36,7 @@
     "url": "https://github.com/nexusdev/dapple/issues"
   },
   "scripts": {
-    "test": "./node_modules/semistandard/bin/cmd.js && ./node_modules/mocha/bin/mocha --recursive test/*",
+    "test": "./node_modules/semistandard/bin/cmd.js && ./node_modules/mocha/bin/mocha --recursive test/* && ./e2e_test.sh",
     "compileTests": "solc test/_fixtures/mocktest.sol --combined-json bin,abi,interface > test/_fixtures/mocktest.json"
   },
   "main": "lib.js",
@@ -51,8 +51,8 @@
   },
   "dependencies": {
     "cli-color-tty": "^2.0.0",
-    "dapple-core": "^0.1.17",
-    "dapple-script": "^0.0.21",
+    "dapple-core": "^0.1.18",
+    "dapple-script": "^0.0.24",
     "dapple-test": "0.0.9",
     "dapple-pkg": "^0.0.7-dev",
     "dapple-nss": "^1.0.0",

@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - "5.1"
+  - "6.4"
 
 addons:
   apt:
@@ -9,5 +9,5 @@ addons:
     packages:
     - g++-4.8
 
-env: 
-  - CXX=g++-4.8 
+env:
+  - CXX=g++-4.8
