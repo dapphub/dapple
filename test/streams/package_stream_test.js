@@ -30,7 +30,7 @@ describe('streams.package_stream', function () {
     var workspace = new Workspace(_.values(sources));
     var sourceDir = workspace.getSourcePath();
 
-    assert.deepEqual(Object.keys(sources), [
+    assert.deepEqual(_.uniq(Object.keys(sources).map(s => s.toLowerCase())), _.uniq([
       path.join(workspace.package_root, constants.PACKAGES_DIRECTORY, 'pkg',
         'Dappfile'),
       path.join(workspace.package_root,
@@ -39,6 +39,6 @@ describe('streams.package_stream', function () {
       path.join(sourceDir, 'example.sol'),
       path.join(sourceDir, 'example_test.sol'),
       path.join(sourceDir, 'subdirectory', 'example2.sol')
-    ]);
+    ].map(s => s.toLowerCase())));
   });
 });

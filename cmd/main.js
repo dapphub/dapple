@@ -100,7 +100,7 @@ state.initWorkspace(workspace, () => {
         dumpDir: cli['--dumpDir'],
         modules: state.modules,
         state,
-        packageRoot: state.workspace.package_root,
+        packageRoot: state.workspace.package_root
       });
 
     if (!jsBuildPipeline) process.exit(1);
