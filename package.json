@@ -36,7 +36,7 @@
     "url": "https://github.com/nexusdev/dapple/issues"
   },
   "scripts": {
-    "test": "./node_modules/semistandard/bin/cmd.js && ./node_modules/mocha/bin/mocha --recursive test/*",
+    "test": "./node_modules/semistandard/bin/cmd.js && ./node_modules/mocha/bin/mocha --recursive test/* && ./e2e_test.sh",
     "compileTests": "solc test/_fixtures/mocktest.sol --combined-json bin,abi,interface > test/_fixtures/mocktest.json"
   },
   "main": "lib.js",
