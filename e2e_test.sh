@@ -1,5 +1,5 @@
 #!/bin/sh
-WD=$TMPDIR/e2e
+WD=./e2e
 git clone https://github.com/nexusdev/rlp-calculator.git $WD
 DAPPLEDIR=$(pwd)
 cd $WD
