@@ -17,7 +17,7 @@ var coreModule = require('dapple-core');
 var testModule = require('dapple-test');
 var pkgModule = require('dapple-pkg');
 var nssModule = require('dapple-nss');
-var execModule = require('dapple-exec');
+// var execModule = require('dapple-exec');
 
 var state = new State(cliSpec);
 
@@ -99,7 +99,8 @@ state.initWorkspace(workspace, () => {
         dumpFile: cli['--dumpFile'],
         dumpDir: cli['--dumpDir'],
         modules: state.modules,
-        state
+        state,
+        packageRoot: state.workspace.package_root,
       });
 
     if (!jsBuildPipeline) process.exit(1);
