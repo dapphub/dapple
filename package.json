@@ -8,7 +8,7 @@
     "solidity",
     "EVM"
   ],
-  "license": "MIT",
+  "license": "GPLv3",
   "author": "Nexusdev <nikolai@nexusdev.us>",
   "contributors": [
     {
@@ -52,10 +52,10 @@
   "dependencies": {
     "cli-color-tty": "^2.0.0",
     "dapple-core": "^0.1.18",
+    "dapple-nss": "^1.0.0",
+    "dapple-pkg": "^0.0.7-dev",
     "dapple-script": "^0.0.24",
     "dapple-test": "0.0.9",
-    "dapple-pkg": "^0.0.7-dev",
-    "dapple-nss": "^1.0.0",
     "deasync": "^0.1.7",
     "docopt": "^0.6.2",
     "file": "^0.2.2",
