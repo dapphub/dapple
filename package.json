@@ -1,6 +1,6 @@
 {
   "name": "dapple",
-  "version": "0.8.5",
+  "version": "0.8.6",
   "description": "Solidity developer multitool",
   "keywords": [
     "dapp",
@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "cli-color-tty": "^2.0.0",
-    "dapple-core": "^0.1.18",
+    "dapple-core": "^0.1.20",
     "dapple-nss": "^1.0.0",
     "dapple-pkg": "^0.0.7-dev",
     "dapple-script": "^0.0.24",
