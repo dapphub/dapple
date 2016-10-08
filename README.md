@@ -5,6 +5,7 @@
 [![Chat](https://img.shields.io/badge/community-chat-brightgreen.svg?style=flat-square)](https://chat.makerdao.com/channel/dapple)
 [![Documentation](https://img.shields.io/badge/docs-master-brightgreen.svg?style=flat)](http://dapple.readthedocs.org/en/master/?badge=master)
 [![Stories in Ready](https://badge.waffle.io/nexusdev/dapple.png?label=ready&title=Ready)](https://waffle.io/nexusdev/dapple)
+[![Dependencies](https://david-dm.org/nexusdev/dapple.svg)](https://david-dm.org/nexusdev/dapple)
 
 Dapple is a Solidity developer multitool designed to manage the
 growing complexity of interconnected smart contract systems.
