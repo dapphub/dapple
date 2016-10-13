@@ -10,8 +10,6 @@
 Dapple is a Solidity developer multitool designed to manage the
 growing complexity of interconnected smart contract systems.
 
-*Warning*: Upcoming version 0.8 have backwards-incompatible package and dappfile definitions. There will be a migration script that should work for all but the most complex cases. Don't commit to the dependency management system too seriously in the meantime.
-
 Its core functionality encompasses three main areas:
 
 * Package management
