@@ -76,7 +76,8 @@ if (typeof dapple === 'undefined') {
     this.objects = {};
     for (var i in env.objects) {
       var obj = env.objects[i];
-      this.objects[i] = this.classes[obj['type']].at(obj.value);
+      if(!(obj['type'].split('[')[0] in this.classes)) continue;
+      this.objects[i] = this.classes[obj['type'].split('[')[0]].at(obj.value);
     }
   }
 
