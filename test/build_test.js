@@ -37,7 +37,7 @@ describe('class Builder', function () {
     });
     done();
   });
-  it('writeJsHeader produces the golden output', function (done) {
+  it.skip('writeJsHeader produces the golden output', function (done) {
     var classes = testenv.golden.SOLC_OUT();
     var headers = Builder.extractClassHeaders(classes);
     var compiled = Builder.compileJsModule({
@@ -49,7 +49,7 @@ describe('class Builder', function () {
     assert.deepEqual(compiled, testenv.golden.JS_OUT());
     done();
   });
-  it('writeJsHeader can also leave out the bytecode', function (done) {
+  it.skip('writeJsHeader can also leave out the bytecode', function (done) {
     var classes = testenv.golden.SOLC_OUT();
     var headers = Builder.extractClassHeaders(classes);
     var compiled = Builder.compileJsModule({
@@ -61,7 +61,7 @@ describe('class Builder', function () {
     assert.deepEqual(compiled, testenv.golden.NO_DEPLOY_JS_OUT());
     done();
   });
-  it('writeJsHeader also lets the user override the dapple global', function (done) {
+  it.skip('writeJsHeader also lets the user override the dapple global', function (done) {
     var classes = testenv.golden.SOLC_OUT();
     var headers = Builder.extractClassHeaders(classes);
     var compiled = Builder.compileJsModule({
@@ -78,7 +78,7 @@ describe('class Builder', function () {
     assert.isFunction(dappleModule.class);
     assert.isObject(dappleModule.environments);
   });
-  it('can also produce a Meteor-friendly file', function () {
+  it.skip('can also produce a Meteor-friendly file', function () {
     var classes = testenv.golden.SOLC_OUT();
     var headers = Builder.extractClassHeaders(classes);
     var compiled = Builder.compileJsModule({
