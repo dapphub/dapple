@@ -72,7 +72,7 @@
     "multimatch": "^2.1.0",
     "read-yaml": "^1.0.0",
     "semver": "^5.1.0",
-    "solc": "^0.4.2",
+    "solc": "^0.4.3",
     "stream-combiner": "^0.2.2",
     "through2": "^2.0.0",
     "tmp": "0.0.28",
