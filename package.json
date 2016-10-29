@@ -1,6 +1,6 @@
 {
   "name": "dapple",
-  "version": "0.8.16",
+  "version": "0.8.17",
   "description": "Solidity developer multitool",
   "keywords": [
     "dapp",
@@ -54,7 +54,7 @@
     "dapple-core": "^0.1.25",
     "dapple-pkg": "^0.0.7-dev",
     "dapple-script": "^0.0.27",
-    "dapple-test": "0.0.11",
+    "dapple-test": "0.0.12",
     "deasync": "^0.1.7",
     "docopt": "^0.6.2",
     "file": "^0.2.2",
