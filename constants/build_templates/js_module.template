@@ -52,14 +52,14 @@ if (typeof dapple === 'undefined') {
     if (!env) {
       env = <%= env %>;
     }
-    if(!("objects" in env) && typeof env === "object") {
+    if(typeof env === "object" && !("objects" in env)) {
       env = {objects: env};
     }
     while (typeof env !== 'object') {
       if (!(env in environments)) {
         throw new Error('Cannot resolve environment name: ' + env);
       }
-      env = environments[env];
+      env = {objects: environments[env]};
     }
 
     if (typeof _web3 === 'undefined') {
