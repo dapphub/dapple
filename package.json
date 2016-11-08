@@ -50,6 +50,7 @@
     "defaults": "defaults"
   },
   "dependencies": {
+    "async": "^2.1.2",
     "cli-color-tty": "^2.0.0",
     "dapple-core": "^0.1.25",
     "dapple-pkg": "^0.0.7-dev",
