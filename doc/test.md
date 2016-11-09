@@ -263,9 +263,9 @@ contract MyTest is Test, EventDefinitions {
 }
 ```
 
-## Reference
+# Reference
 
-####Modifiers
+##Modifiers
 
 #####tests(bytes32 what)
 
@@ -290,7 +290,7 @@ contract MyTest is Test {
 
 This modifier will cause the consumed gas to be logged as an event when you run your test case.
 
-####Assertions Functions
+##Assertions Functions
 
 Any `bytes32 error` parameter listed below will be logged to stdout if the assertion fails.
 
@@ -334,7 +334,7 @@ Any `bytes32 error` parameter listed below will be logged to stdout if the asser
 
 #####assertEq(string memory a, string memory b)
 
-####Logging events
+##Logging events
 
 In addition to Dapple's [logging framework](http://dapple.readthedocs.io/en/master/logging/), test contracts have access to events that are defined for the purposes of logging.
 
