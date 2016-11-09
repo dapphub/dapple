@@ -322,13 +322,13 @@ Any `bytes32 error` parameter listed below will be logged to stdout if the asser
 
 #####assertEq0(bytes a, bytes b, bytes32 err)
 
-#####assertEq\<N\>(bytes\<N\> a, bytes\<N\> b)
+#####assertEq<N\>(bytes<N\> a, bytes<N\> b)
 
-\<N\> in this case can be any number between 1 and 32. For example:
+<N\> in this case can be any number between 1 and 32. For example:
 
 `assertEq8(bytes8 a, bytes8 b)`
 
-#####assertEq\<N\>(bytes\<N\> a, bytes\<N\> b, bytes32 err)
+#####assertEq<N\>(bytes<N\> a, bytes<N\> b, bytes32 err)
 
 #####assertEq(bytes memory _a, bytes memory _b)
 
@@ -358,12 +358,12 @@ In addition to Dapple's [logging framework](http://dapple.readthedocs.io/en/mast
 
 #####log\_named_bytes(bytes32 key, bytes val)
 
-#####log_bytes\<N>(bytes\<N> val)
+#####log_bytes<N\>(bytes<N\> val)
 
-\<N\> in this case can be any number between 1 and 32. For example:
+<N\> in this case can be any number between 1 and 32. For example:
 
 `log_bytes8(bytes8 val)`
 
-#####log\_named_bytes\<N>(bytes32 key, bytes\<N> val)
+#####log\_named_bytes<N\>(bytes32 key, bytes<N\> val)
 
 #####log\_named_string(string key, string val)
