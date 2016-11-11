@@ -30,15 +30,15 @@ describe('streams.package_stream', function () {
     var workspace = new Workspace(_.values(sources));
     var sourceDir = workspace.getSourcePath();
 
-    assert.deepEqual(_.uniq(Object.keys(sources).map(s => s.toLowerCase())), _.uniq([
-      path.join(workspace.package_root, constants.PACKAGES_DIRECTORY, 'pkg',
-        'Dappfile'),
+    assert.deepEqual(_.uniq(Object.keys(sources).map(s => s.toLowerCase())).sort(), _.uniq([
       path.join(workspace.package_root,
         constants.PACKAGES_DIRECTORY, 'pkg', 'contracts', 'example.sol'),
-      path.join(workspace.package_root, 'Dappfile'),
+      path.join(workspace.package_root, constants.PACKAGES_DIRECTORY, 'pkg',
+        'Dappfile'),
       path.join(sourceDir, 'example.sol'),
       path.join(sourceDir, 'example_test.sol'),
-      path.join(sourceDir, 'subdirectory', 'example2.sol')
+      path.join(sourceDir, 'subdirectory', 'example2.sol'),
+      path.join(workspace.package_root, 'Dappfile')
     ].map(s => s.toLowerCase())));
   });
 });
