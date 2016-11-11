@@ -1,8 +1,7 @@
+# Tests
 Dapple provides a VM test harness so you can write your tests directly in Solidity. This is less flexible and sometimes more verbose than writing tests in the harness language, but the lack of a context switch makes writing unit tests more pleasant for the developer.
 
-# Tests
-## Simple Example
-## Advanced Example
+## Example
 Suppose you want to test this contract:
 
 ```js
@@ -67,6 +66,7 @@ are expected to crash: a `throw;` is expected somewhere in the scenario.
 ### Example
 
 Suppose the following contract:
+
 ```
 contract Contract {
   [...]
@@ -84,6 +84,7 @@ contract Contract {
 #### passing
 
 The following shows a passing test, because an expected throw actually happens:
+
 ```
 contract MyTest is Test {
   function testThrow() {
@@ -96,6 +97,7 @@ contract MyTest is Test {
 #### failing
 
 The following test fails, because the function name has a **wrong prefix**:
+
 ```
 contract MyTest is Test {
   function testCrash() {
@@ -106,6 +108,7 @@ contract MyTest is Test {
 ```
 
 The following test fails, because **no expected** throw happens:
+
 ```
 contract MyTest is Test {
   function testError() {
@@ -122,6 +125,7 @@ This test feature tests the exact emitted event sequence produced by a transacti
 
 #### Example
 A contract which implements a set of Events:
+
 ```
 contract EventDefinitions {
     event info(bytes data);
@@ -137,13 +141,13 @@ contract Contract is EventDefinitions {
 }
 ```
 
-In order to assert that in a scenario a correct sequence of events is emitted
+In order to assert that in a scenario a correct sequence of events is emitted,
 one can bind the events of contract instance with `expectEventsExact( <target> )`.
 After a binding, the test function has to emit the expected events in the same
 order in which they are expect in the bound instance.
-This assert the correct event **types**, correct **inputs** for a type and the 
-correct **order** of emits. Also expected but **not emitted** and **unexpected** 
-events are leading to a test fail.
+This asserts the correct event **types**, correct **inputs** for a type and the 
+correct **order** of emits. Also, expected events that are not emitted and **unexpected** 
+events result in a test failure.
 
 The easiest way to use this is to follow the pattern of defining events in their own
 container type like `EventDefinitions`, then have both the implementation and the tester
@@ -151,6 +155,7 @@ derive from it.
 
 ##### passing example
 The following shows a passing test:
+
 ```
 contract MyTest is Test, EventDefinitions {
 
@@ -169,6 +174,7 @@ contract MyTest is Test, EventDefinitions {
 
 ##### failing examples
 The following test will fail because of the wrong **order** of the events:
+
 ```
 contract MyTest is Test, EventDefinitions {
 
@@ -186,6 +192,7 @@ contract MyTest is Test, EventDefinitions {
 ```
 
 The following test will fail because of the wrong **type** of the events:
+
 ```
 contract MyTest is Test, EventDefinitions {
 
@@ -203,6 +210,7 @@ contract MyTest is Test, EventDefinitions {
 ```
 
 The following test will fail because of the wrong **content** of the events:
+
 ```
 contract MyTest is Test, EventDefinitions {
 
@@ -220,6 +228,7 @@ contract MyTest is Test, EventDefinitions {
 ```
 
 The following test will fail because an **unexpected** event is emited:
+
 ```
 contract MyTest is Test, EventDefinitions {
 
@@ -236,6 +245,7 @@ contract MyTest is Test, EventDefinitions {
 ```
 
 The following test will fail because an expected event is **not emited**:
+
 ```
 contract MyTest is Test, EventDefinitions {
 
@@ -253,4 +263,107 @@ contract MyTest is Test, EventDefinitions {
 }
 ```
 
-## Reference
+# Reference
+
+##Modifiers
+
+#####tests(bytes32 what)
+
+This modifier allows you to specify the function you intend to test as a string next to your testcase name.
+
+**Example:**
+
+```
+contract MyTest is Test {
+  
+  [...]
+  
+  function testUnsetNullValue() tests("unset") {
+    DSNullableMap map = new DSNullableMap();
+    assertTrue(map.unset("test"));
+  }
+
+}
+```
+
+#####logs_gas( )
+
+This modifier will cause the consumed gas to be logged as an event when you run your test case.
+
+##Assertions Functions
+
+Any `bytes32 error` parameter listed below will be logged to stdout if the assertion fails.
+
+#####assertTrue(bool what)
+
+#####assertTrue(bool what, bytes32 error)
+
+#####assertFalse(bool what)
+
+#####assertFalse(bool what, bytes32 error)
+
+#####assertEq(bool a, bool b)
+
+#####assertEq(bool a, bool b, bytes32 err)
+
+#####assertEq(uint a, uint b)
+
+#####assertEq(uint a, uint b, bytes32 err)
+
+#####assertEq(int a, int b)
+
+#####assertEq(int a, int b, bytes32 err)
+
+#####assertEq(address a, address b)
+
+#####assertEq(address a, address b, bytes32 err)
+
+#####assertEq0(bytes a, bytes b)
+
+#####assertEq0(bytes a, bytes b, bytes32 err)
+
+#####assertEq<N\>(bytes<N\> a, bytes<N\> b)
+
+<N\> in this case can be any number between 1 and 32. For example:
+
+`assertEq8(bytes8 a, bytes8 b)`
+
+#####assertEq<N\>(bytes<N\> a, bytes<N\> b, bytes32 err)
+
+#####assertEq(bytes memory _a, bytes memory _b)
+
+#####assertEq(string memory a, string memory b)
+
+##Logging events
+
+In addition to Dapple's [logging framework](http://dapple.readthedocs.io/en/master/logging/), test contracts have access to events that are defined for the purposes of logging.
+
+#####log_bool(bool val)
+
+#####log_named_bool(bytes32 key, bool val)
+
+#####log_uint(uint val)
+
+#####log\_named_uint(bytes32 key, uint val)
+
+#####log_int(int val)
+
+#####log\_named_int(bytes32 key, int val)
+
+#####log_address(address val)
+
+#####log\_named_address(bytes32 key, address val)
+
+#####log_bytes(bytes val)
+
+#####log\_named_bytes(bytes32 key, bytes val)
+
+#####log_bytes<N\>(bytes<N\> val)
+
+<N\> in this case can be any number between 1 and 32. For example:
+
+`log_bytes8(bytes8 val)`
+
+#####log\_named_bytes<N\>(bytes32 key, bytes<N\> val)
+
+#####log\_named_string(string key, string val)

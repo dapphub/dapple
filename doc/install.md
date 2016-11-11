@@ -22,7 +22,7 @@ $ dapple help
 We recommend a native solc compiler. Install the newest version following [this guide](https://solidity.readthedocs.org/en/latest/installing-solidity.html).
 
 ## Geth
-We recomment `geth` as a rpc client. Follow [this guide](https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum) to install geth.
+We recommend `geth` as a rpc client. Follow [this guide](https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum) to install geth.
 
 ## Ipfs
 Dapple uses Ipfs as its data layer. We recommend installing it following [this guide](https://ipfs.io/docs/install/).

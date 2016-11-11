@@ -33,7 +33,10 @@ call it with `dapple test --report`
 
 additional to the logging output to stdout a reporter can be enabled:
 In order to use the reporter, inherit from the Reporter contract:
+
 ```
+import "dapple/reporter.sol";
+
 contract MyTester is Reporter {
 [...]
 ```
