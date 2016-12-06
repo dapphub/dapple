@@ -1,9 +1,13 @@
 version: 0.0.1-dev
 tags: []
 layout:
-  sol_sources: src
-  build_dir: build
-  packages_directory: .dapple/packages/
+  sol_sources: ./src
+  build_dir: ./build
+  packages_directory: ./.dapple/packages/
 dependencies: {}
 ignore: []
 name: golden_init
+description: ''
+authors: []
+license: MIT
+keywords: []
