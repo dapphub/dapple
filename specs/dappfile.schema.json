@@ -9,6 +9,36 @@
       "$ref": "#/definitions/name"
     },
 
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+
+    "authors": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "title": "Name and Email of the authors",
+        "type": "string"
+      }
+    },
+
+    "license": {
+      "type": "string",
+      "default": "MIT",
+      "description": "Project Licence"
+    },
+
+    "keywords": {
+      "type": "array",
+      "default": [],
+      "description": "Keyword array",
+      "items": {
+        "title": "Keyword",
+        "type": "string"
+      }
+    },
+
     "version": {
       "$ref": "#/definitions/version",
       "default": "0.0.1-dev"
@@ -44,19 +74,22 @@
           "title": "sol sources",
           "description": "Root directory of the solidity source files.",
           "type": "string",
-          "default": "src"
+          "default": "src",
+          "pattern": "\\.\\/.*"
         },
         "build_dir": {
           "title": "Build Directory",
           "description": "Directory, where all the build files should be stored.",
           "type": "string",
-          "default": "build"
+          "default": "build",
+          "pattern": "\\.\\/.*"
         },
         "packages_directory": {
           "title": "Package Directory",
           "description": "Dapple packages goes in here",
           "type": "string",
-          "default": ".dapple/packages/"
+          "default": "./.dapple/packages/",
+          "pattern": "\\.\\/.*"
         }
       }
     },
@@ -166,5 +199,4 @@
       "type": "path"
     }
   }
-
 }

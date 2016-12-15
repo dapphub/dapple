@@ -1,155 +1,88 @@
-Dapple understands a simple domain specific language which allows you to write
-scripts to automatically set up contract systems on a specified chain.
-This includes deploying and calling contracts, logging values, persistently
-saving values, importing values from the current environment and dependant packages.
-
-## How to
-A script is usually written either to the package root or a `scripts` directory.
-It can be called with `dapple run <script> [--force] [--no-simulation] [options]`
-
-If only a specific expression needs to be executed it can be called without a 
-script with `dapple step <string> [options]`.
-
-The script is always executed against an environment which is specified in the users local `~/.dapplerc`.
-This happens in two steps: First the execution is **simulated** against the internal chain.
-This catches errors in the script. If an error occurs during the simulation,
-dapple throws an error and stops the execution. The `--force` flag can be specified,
-to force dapple to continue the execution despite an error.
-
-The simulation also gathers data about the script such as the exact gas prices for each
-operation. This prevents any errors which could be caused by wrong gas parameters.
-Only after after a simulation is executed successfully it is run against the specified environment.
-The simulation can also be omitted by run a script with the `--no-simulation` flag.
-
-Every operation, which actually triggers a chain state change (deploy, call) is
-verified after a standard confirmation time of 4 Blocks.
-
-### Operations
-
-#### deploy
+Also, "migrations" can be done with Solidity: just create a `something.ds.sol` file in your contracts directory, `import "dapple/script.sol";` and inherit your script contract from `Script` and that's it. Here we will go through an example Script during which I will explain each component:
+Suppose you are starting with the following environment in your Dappfile:
 ```
-new <class name> [. gas(<gas>) |. value(<value>) ]* ( <args> )
-```
-This deploys the class "Contract". A deploy statement is always indicated by
-the keyword `new` followed by a class name. The contract class has to be available
-in one of the contract source files of the dapple project.
-An custom amount of gas and value can be passed during the deploy by specifying
-`.gas(<gas>)` and value `.value(<value>)`.
-
-##### example
-```
-new Contract.value(1000000)("contract name")
-```
-#### call
-```
-<object>.<function name> [. gas(<gas>) | .value(<value>)]* ( <args> )
-```
-This send a transaction to an object by calling the specified function name.
-Gas and Value can be passed much like during a deploy.
-If the function is static, the call don't triggers a transaction and returns a value
-which can be saved to a variable.
-
-##### example
-```
-object.setName.value(100000)("name")
-```
-
-#### import
-```
-import [pkg .]* <var>
-```
-This imports a variable out of the current environment of the specified package tree.
-
-##### example
-```
-import pkg1.pkg2.contract
-```
-#### export
-```
-export <var>
-```
-This persistently saves a variable out of the current script scope to
-the current environment in the dappfile.
-
-##### example
-```
-var var = 2
-export var
-```
-
-#### log
-```
-var fortytwo = 42
-log fortytwo
-```
-This logs an arbitrary variable to stdout.
-
-
-### Example
-
-The script `./deployscript`
-```
-// import envObject from the current environment
-import envObject
-
-// import pkgObject from the current environment of the package "pkg"
-import pkg.pkgObject
-
-// deploy a new ContractA instance
-var internalObject = new ContractA()
-
-// string for later use
-var internalString = "objectName"
-
-// deploy a new ContractB instance with two addresses as parameters
-var externalObject = new ContractB( pkg.pkgObject, envObject, internalObject )
-
-// call a function on the contract
-externalObject.setName(internalString)
-
-// persistantly save a value
-export externalObject
-```
-
-run with:
-`dapple run ./deployscript -e morden`
-
-will produce the following output:
-```
-DEPLOYED: ContractA = 0x89e020ed6a30e8d5a05f6c6ee77a81c46934ba25
-GAS COST: 510111 for "new ContractA"
-Waiting for 4 confirmations: .... confirmed!
-DEPLOYED: ContractB = 0x17d41b0d0e290f9c6be4c610b7db654464ee6425
-GAS COST: 1666288 for "new ContractB"
-Waiting for 4 confirmations: .... confirmed!
-CALLED: ContractB("externalObject").setName(internalString)
-GAS COST: 18348 for "call ContractB.setName(internalString)"
-Waiting for 4 confirmations: .... confirmed!
-```
-
-and save the exports to the current dappfile under the executed environment:
-The dappfile `/dappfile`
-```
-[...]
-environments:
+...
   morden:
+    type: MORDEN
     objects:
-      externalObject:
-        class: ContractB
-        address: '0x17d41b0d0e290f9c6be4c610b7db654464ee6425'
-[...]
+      totalSupply:
+        value: '0xffffff'
+        type: uint
 ```
 
-## Roadmap
-The following planned features will get implemented next (not ordered):
+```
+import "dapple/script.sol";
+import "./token.sol";
 
-* Simulating the deployment on a real chain fork.
-* assertions
-* Type checking the script on compile time + type inference.
-    * This will reduce possible errors done while writing a script.
-* Call and return values from non-static functions.
-* Call functions which return multiple values
-* Saving and resuming a scripts state on every step.
-    * This prevents losing any information during a deploy.
-* Managing different addresses out of the coinbase which are performing operations.
-* Script subroutines and importing/calling the subroutinges from packages.
+contract SomeScript is Script {
+  event customEvent(uint value);
+
+  function SomeScript () {
+    // deploy a new Token contract with 0xffffff tokens
+    Token token = new Token(env.totalSupply);
+
+    // export token to the local environment
+    exportObject("mytoken", token);
+
+    // static function call
+    uint total = token.totalSupply();
+
+    // log the found totalSupply
+    customEvent(total);
+
+    // get the current btc/dollar price
+    uint btc_usd = system.to_uint("curl -s https://api.coindesk.com/v1/bpi/currentprice.json|jq '.bpi.USD.rate|tonumber|floor'");
+
+    // set btc_usd price
+    token.setPrice(btc_usd);
+
+    // export the set btc/usd price to the current environment
+    exportNumber("btc_usd", btc_usd);
+  }
+```
+
+And now we can run this script with `dapple script run SomeScript`
+which will create the following output:
+```
+
+   NEW   new Token(0xffffff) -> 0x5ef7d2b3d9509cbe1d46abb4ca163abb8302a425
+   |     GAS 114961
+   |     LOG owner
+   |         owner: 0x1f2da94743d6d5657a6138fa77d8b4be3c185605
+
+   GET   Token(0x5ef7d2b3d9509cbe1d46abb4ca163abb8302a425).totalSupply()
+   |     RES
+   |         uint256 supply = 0xffffff
+
+   TXR   Token(0x5ef7d2b3d9509cbe1d46abb4ca163abb8302a425).setPrice(0x0262)
+   |     GAS   23481
+   |     LOG newPriceSet
+   |         btc_usd: 0x0262
+
+   LOG   customEvent
+   |     value: 0xffffff
+
+```
+
+And leaves you with the new generated environment:
+```
+...
+  morden:
+    type: MORDEN
+    objects:
+      totalSupply:
+        value: '0xffffff'
+        type: uint
+      mytoken:
+        value: '0x5ef7d2b3d9509cbe1d46abb4ca163abb8302a425'
+        type: Token[bc365dfdfd4b67086a9483f7ce915da522a252b1b0289f1b8e07c16d06a476be]
+      btc_usd:
+        value: 0x0262
+        type: uint
+```
+
+Services, like system, are currently in experimental mode, so use them with caution. Currently only `to_uint` is implemented. This will execute anything on your local machine and inject the result back into the script contract where you can use it further.
+Apart from the default use cases you can set `txoff()` or `txon()` to switch between statically calling contracts or sending transactions. (note that transaction are issued by default unless you are calling a constant function).
+You can use the `setOrigin(<address>)` function to set your local address from which the following transactions should be triggered. Apart from that, feel free to use the full power of solidity. Just remember to **split your on-chain contracts and dapple-script contracts in to different files**.
+
+Execution dapple scripts on remote chains will run a simulation first and show you the result with a confirmation before it will start the execution against real chains. On internal chains, it gets executed immediately and persistently.
