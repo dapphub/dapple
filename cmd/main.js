@@ -68,7 +68,7 @@ var workspace;
 workspace = Workspace.atPackageRoot();
 
 // TODO - refactor this
-state.initWorkspace(workspace, () => {
+state.initWorkspace({workspace, cli}, () => {
   if (cli.build) {
     console.log('Building...');
 
