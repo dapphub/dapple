@@ -76,6 +76,10 @@
     {
       "name": "--version",
       "summary": "prints out dapple Version"
+    },
+    {
+      "name": "--no-migration",
+      "summary": "turn of local and global migration"
     }
   ]
 }
