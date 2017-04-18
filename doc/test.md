@@ -31,24 +31,36 @@ A dapple test might look like this:
 import 'dapple/test.sol'; // virtual "dapple" package imported when `dapple test` is run
 import 'myregistry.sol';
 
+contract ProxyTester is Tester {
+    function ProxyTester(address target) {
+        _t = target;
+    }
+    function set(bytes32 key, bytes32 value) {
+        MyRegistry(_t).set(key, value);
+    }
+}
+
 // Deriving from `Test` marks the contract as a test and gives you access to various test helpers.
 contract MyRegistryTest is Test {
     MyRegistry reg;
-    Tester proxy_tester;
+    ProxyTester proxy_tester;
     // The function called "setUp" with no arguments is
     // called on a fresh instance of this contract before
     // each test. TODO: Document when to put setup logic in
     // setUp vs subclass constructor when writing Test subclasses
     function setUp() {
         reg = new MyRegistry();
-        proxy_tester = new Tester();
-        proxy_tester._target(reg);
+        proxy_tester = new ProxyTester(reg);
     }
     function testCreatorIsCreator() {
         assertEq( address(this), reg._creator() );
     }
     function testFailNonCreatorSet() {
-        MyRegistry(proxy_tester).set("no", "stop");
+        proxy_tester.set("no", "stop");
+    }
+    function testSetAsCreator() {
+        reg.set("key", "value");
+        assertEq32("value", reg.get("key"));
     }
     event Set(bytes32 indexed key, bytes32 value);
     function testSetEvent() {
