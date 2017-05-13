@@ -1,4 +1,4 @@
-![Dapple](https://ipfs.pics/ipfs/QmdUKEX48hXDgG2Y4XkxKJMV8qojiLYGc2mtEncBcEnSLd)
+# ATTENTION: Dapple has been deprecated in favor of a new tool called [Dapp](https://dapp.readthedocs.io). Please use that instead.
 
 [![Version](https://img.shields.io/badge/version-0.8.9-8D86C9.svg?style=flat-square)](https://www.npmjs.com/package/dapple)
 [![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)](https://github.com/Flet/semistandard)
